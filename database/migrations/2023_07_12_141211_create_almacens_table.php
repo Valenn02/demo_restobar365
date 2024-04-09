@@ -17,9 +17,11 @@ class CreateAlmacensTable extends Migration
             $table->increments('id');
             $table->string('nombre_almacen', 100)->unique();
             $table->string('ubicacion')->nullable();
-            $table->string('encargado')->nullable();
+            $table->integer('encargado')->unsigned();
+            $table->foreign('encargado')->references('id')->on('users');
+            $table->integer('sucursal')->unsigned();
+            $table->foreign('sucursal')->references('id')->on('sucursales');
             $table->string('telefono')->nullable();
-            $table->string('lugar')->nullable();
             $table->string('observacion')->nullable();
             $table->boolean('condicion')->default(1);
             $table->timestamps();

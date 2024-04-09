@@ -21,10 +21,15 @@ class CreatePuntoVentas extends Migration
             $table->string('descripcion', 250);
             $table->string('nit', 50);
             $table->boolean('estado')->default(1);
+
             $table->foreign('idtipopuntoventa')->references('id')->on('tipo_punto_ventas');
             $table->foreign('idsucursal')->references('id')->on('sucursales');
             $table->timestamps();
         });
+
+        DB::table('punto_ventas')->insert(array('idtipopuntoventa' => '1', 'idsucursal' => '1', 
+            'nombre' => 'Punto_A', 'descripcion' => 'prueba', 'nit' => '00458', 'estado' => '1'));
+
     }
 
     /**

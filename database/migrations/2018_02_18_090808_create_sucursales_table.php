@@ -19,7 +19,8 @@ class CreateSucursalesTable extends Migration
             $table->increments('id');
             $table->integer('idempresa')->unsigned();
             $table->string('nombre', 50)->nullable();
-            $table->integer('codigoSucursal', 100)->unsigned();
+            //$table->integer('codigoSucursal', 100)->unsigned();
+            $table->integer('codigoSucursal')->unsigned();
             $table->string('direccion', 100)->unique();
             $table->string('correo');
             $table->string('telefono');

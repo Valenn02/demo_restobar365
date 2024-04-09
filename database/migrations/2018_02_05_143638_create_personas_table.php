@@ -22,9 +22,10 @@ class CreatePersonasTable extends Migration
             $table->string('direccion', 70)->nullable();
             $table->string('telefono', 20)->nullable();
             $table->string('email', 50)->nullable();
+            $table->boolean('estadoCli')->default(true); // Agrega el campo estadoCli de tipo booleano con valor predeterminado true
             $table->timestamps();
         });
-        DB::table('personas')->insert(array('id' => '1', 'nombre' => 'root', 'tipo_documento' => 'NA', 'num_documento' => '00000000', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'root@gmail.com'));
+        DB::table('personas')->insert(array('id' => '1', 'nombre' => 'root', 'tipo_documento' => 'NA', 'num_documento' => '00000000', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'root@gmail.com', 'estadoCli' => false ));
 
     }
 

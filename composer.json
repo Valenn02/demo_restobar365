@@ -15,7 +15,8 @@
         "mike42/escpos-php": "^4.0",
         "pusher/pusher-php-server": "^3.2",
         "setasign/fpdf": "^1.8",
-        "spatie/laravel-backup": "^5.12"
+        "spatie/laravel-backup": "^5.12",
+        "vlucas/phpdotenv": "^2.6"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

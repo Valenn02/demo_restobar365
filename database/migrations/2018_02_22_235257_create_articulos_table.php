@@ -15,37 +15,23 @@ class CreateArticulosTable extends Migration
     {
         Schema::create('articulos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idcategoria')->unsigned(); //Linea
-            $table->integer('idgrupo')->unsigned(); //aumente 14 junio
+            $table->integer('idcategoria_producto')->unsigned(); //Linea
             $table->integer('idproveedor')->unsigned(); //aumente 5 juio
-
             $table->integer('idmedida')->unsigned(); //new
 
-            $table->string('codigo', 50)->nullable();
             $table->string('nombre', 100)->unique(); //Nombre comercial
             $table->string('nombre_generico', 100); //aumente 5_julio
-            $table->integer('unidad_envase'); //aumente
-            $table->decimal('precio_list_unid', 11, 2)->nullable(); //aumente
-            $table->decimal('precio_costo_unid', 11, 2); //aumente
-            $table->decimal('precio_costo_paq', 11, 2); //aumente
-            $table->decimal('precio_venta', 11, 2); //precio presio2
+            $table->integer('unidad_paquete')->nullable(); //aumente
 
-            $table->decimal('precio_uno', 11, 2)->nullable();//AUMENTE 19/9/2023
-            $table->decimal('precio_dos', 11, 2)->nullable();//AUMENTE 19/9/2023
-            $table->decimal('precio_tres', 11, 2)->nullable();//AUMENTE 19/9/2023
-            $table->decimal('precio_cuatro', 11, 2)->nullable();//AUMENTE 19/9/2023
+            $table->decimal('precio_venta', 11, 2)->nullable(); //precio presio2
 
-            $table->integer('stock'); //stock minimo
+            $table->integer('stockmin')->nullable(); //stock minimo
             $table->string('descripcion', 256)->nullable(); //stock maximo
             $table->boolean('condicion')->default(1); // Controlado
             $table->timestamps();
 
-            $table->foreign('idcategoria')->references('id')->on('categorias');
-            $table->foreign('idgrupo')->references('id')->on('grupos');
+            $table->foreign('idcategoria_producto')->references('id')->on('categoria_producto');
             $table->foreign('idproveedor')->references('id')->on('proveedores');
-
-            //new
-            $table->decimal('costo_compra', 10, 2);
             $table->foreign('idmedida')->references('id')->on('medidas');
         });
     }

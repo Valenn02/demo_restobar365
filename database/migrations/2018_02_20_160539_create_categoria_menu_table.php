@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGruposTable extends Migration
+class CreateCategoriaMenuTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateGruposTable extends Migration
      */
     public function up()
     {
-        Schema::create('grupos', function (Blueprint $table) {
+        Schema::create('categoria_menu', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre_grupo', 100)->unique();
+            $table->string('nombre', 50);
+            $table->string('descripcion', 256)->nullable();
+            $table->boolean('condicion')->default(1);
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateGruposTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('grupos');
+        Schema::dropIfExists('categoria_menu');
     }
 }

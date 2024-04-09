@@ -64,6 +64,8 @@ class UserController extends Controller
             $persona->direccion = $request->direccion;
             $persona->telefono = $request->telefono;
             $persona->email = $request->email;
+            $persona->estadoCli = false;
+
             
             if($request->hasFile('fotografia'))
             {
@@ -91,6 +93,7 @@ class UserController extends Controller
             $user->id = $persona->id;
             $user->idrol = $request->idrol;
             $user->idsucursal = $request->idsucursal;
+            $user->idpuntoventa = 1;
             $user->usuario = $request->usuario;
             $user->password = bcrypt( $request->password);
             $user->condicion = '1';            

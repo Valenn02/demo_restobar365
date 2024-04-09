@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIndustriasTable extends Migration
+class CreateFotomenuTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateIndustriasTable extends Migration
      */
     public function up()
     {
-        Schema::create('industrias', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nombre', 100)->unique();
-            $table->boolean('estado')->default(1);
-            //$table->timestamps();
+        Schema::table('menu', function (Blueprint $table) {
+            //
+            $table->string('fotografia')->nullable();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateIndustriasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('industrias');
+        Schema::dropIfExists('fotomenu');
     }
 }
