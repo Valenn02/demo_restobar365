@@ -74,7 +74,7 @@
                             <li @click="menu=2" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Productos</a>
                             </li>
-                            <li @click="menu=30" class="nav-item">
+                            <li @click="menu=46" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Menu</a>
                             </li>
                             <li @click="menu=1" class="nav-item">

@@ -17,12 +17,12 @@ class menuController extends Controller
     public function create(Request $request)
     {
         
-        $request->validate([
-            'nombre' => 'required|unique:menu|max:100',
-            'precio_venta' => 'nullable|numeric',
-            'descripcion' => 'nullable|max:256',
-            'idcategoria_menu' => 'required|exists:categoria_menu,id',
-        ]);
+        //$request->validate([
+            //'nombre' => 'required|unique:menu|max:100',
+            //'precio_venta' => 'nullable|numeric',
+            //'descripcion' => 'nullable|max:256',
+            //'idcategoria_menu' => 'required|exists:categoria_menu,id',
+        //]);
 
         
         $menu = new menu();
@@ -30,6 +30,24 @@ class menuController extends Controller
         $menu->precio_venta = $request->precio_venta;
         $menu->descripcion = $request->descripcion;
         $menu->idcategoria_menu = $request->idcategoria_menu;
+        $menu->condicion = true;
+        if ($request->hasFile('fotografia')) {
+            if ($request->hasFile('fotografia')) {
+                $imagen = $request->file("fotografia");
+                $nombreimagen = Str::slug($request->nombre) . "." . $imagen->guessExtension();
+                $ruta = public_path("img/menu/");
+
+                // Crear el directorio si no existe
+                if (!File::isDirectory($ruta)) {
+                    File::makeDirectory($ruta, 0755, true);
+                }
+
+                // Copiar la imagen al directorio
+                copy($imagen->getRealPath(), $ruta . $nombreimagen);
+
+                $menu->fotografia = $nombreimagen;
+            }
+        }
         $menu->save();
 
         return response()->json($menu);    

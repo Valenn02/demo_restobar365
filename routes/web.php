@@ -119,6 +119,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/articulo/listarPdf', 'ArticuloController@listarPdf')->name('articulos_pdf');
         Route::get('/articulo/listarArticuloPedido', 'ArticuloController@listPedProve'); //aumente esto 21 sept
 
+        Route::post('/menu/registrar', 'menuController@create');
+
+        Route::get('/categoriamenu', 'categoriamenuController@index');
+        Route::post('/categoriamenu/registrar', 'categoriamenuController@create');
+
+
 
         Route::get('/proveedor', 'ProveedorController@index');
         Route::post('/proveedor/registrar', 'ProveedorController@store');

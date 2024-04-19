@@ -159,6 +159,10 @@
                 <reporteventas></reporteventas>
             </template>
 
+            <template v-if="menu==46">
+                <menulist></menulist>
+            </template>
+
             @elseif (Auth::user()->idrol == 2)
             <template v-if="menu==0">
                 <facturafueralinea></facturafueralinea>

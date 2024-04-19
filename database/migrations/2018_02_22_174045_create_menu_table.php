@@ -22,6 +22,7 @@ class CreateMenuTable extends Migration
             $table->string('nombre', 100)->unique(); //Nombre comercial
             $table->decimal('precio_venta', 11, 2)->nullable(); //precio presio2
             $table->string('descripcion', 256)->nullable(); //stock maximo
+            $table->boolean('condicion');
 
 
             $table->timestamps();
