@@ -5,13 +5,70 @@ namespace App\Http\Controllers;
 use App\menu;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Exception;
+use App\Exports\ProductExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class menuController extends Controller
 {
     //
-    public function index (){
-        $menu = menu::all(); 
-        return response()->json($menu); 
+    public function index (Request $request){
+        if (!$request->ajax())
+        return redirect('/');
+
+    $buscar = $request->buscar;
+    $criterio = $request->criterio;
+
+    if ($buscar == '') {
+        $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+
+            ->select(
+                'menu.id',
+                'menu.idcategoria_menu',
+                'menu.nombre',
+                'menu.precio_venta',
+                'menu.descripcion',
+                'menu.condicion',
+                'menu.fotografia',
+                'categoria_menu.nombre as nombre_categoria',
+
+            )
+            ->orderBy('menu.id', 'desc')->paginate(5);
+    } else {
+        $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+           
+            ->select(
+                'menu.id',
+                'menu.idcategoria_menu',
+                'menu.nombre',
+                'menu.precio_venta',
+                'menu.descripcion',
+                'menu.condicion',
+                'menu.fotografia',
+                'categoria_menu.nombre as nombre_categoria',
+
+            )
+            ->where('menu.' . $criterio, 'like', '%' . $buscar . '%')
+            ->orderBy('menu.id', 'desc')->paginate(5);
+    }
+
+
+    return [
+        'pagination' => [
+            'total' => $menu->total(),
+            'current_page' => $menu->currentPage(),
+            'per_page' => $menu->perPage(),
+            'last_page' => $menu->lastPage(),
+            'from' => $menu->firstItem(),
+            'to' => $menu->lastItem(),
+        ],
+        'articulos' => $menu
+    ];
     }
 
     public function create(Request $request)

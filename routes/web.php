@@ -120,9 +120,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/articulo/listarArticuloPedido', 'ArticuloController@listPedProve'); //aumente esto 21 sept
 
         Route::post('/menu/registrar', 'menuController@create');
+        Route::get('/menu', 'menuController@index');
+
 
         Route::get('/categoriamenu', 'categoriamenuController@index');
         Route::post('/categoriamenu/registrar', 'categoriamenuController@create');
+        Route::post('/categoriamenuPrincipal/registrar', 'categoriamenuController@createCategoria');
+        Route::put('/categoriamenu/actualizar', 'categoriamenuController@update');
+        Route::put('/categoriamenu/desactivar', 'categoriamenuController@desactivar');
+        Route::put('/categoriamenu/activar', 'categoriamenuController@activar');
+
+
 
 
 

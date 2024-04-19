@@ -37,7 +37,6 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
-                                    <th>Código</th>
                                     <th>Nombre</th>
                                     <th>Categorìa</th>
                                     <th>Precio</th>
@@ -63,26 +62,14 @@
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
-                                    <td v-text="articulo.id"></td>
                                     <td v-text="articulo.nombre"></td>
-                                    <td v-for="(precio, index) in precios" :key="precio.id">
-                                        <!-- Mostrar el precio correspondiente según el índice -->
-                                        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
-                                        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
-                                        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
-                                        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
-                                    </td>
-
-                                    <!-- <td v-if="rolUsuario === 1" v-text="articulo.precio_venta"></td> -->
-                                    <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta"></td>
-
                                     <td v-text="articulo.nombre_categoria"></td>
-
+                                    <td v-text="articulo.precio_venta"></td>
                                     <td v-text="articulo.descripcion"></td>
                                     <td class="text-center">
-                                        <img :src="'img/articulo/' + articulo.fotografia + '?t=' + new Date().getTime()"
+                                        <img :src="'img/menu/' + articulo.fotografia + '?t=' + new Date().getTime()"
                                             width="50" height="50" v-if="articulo.fotografia" ref="imagen">
-                                        <img :src="'img/articulo/' + 'defecto.jpg'" width="50" height="50" v-else
+                                        <img :src="'img/menu/' + 'defecto.jpg'" width="50" height="50" v-else
                                             ref="imagen">
                                     </td>
                                 </tr>
@@ -156,58 +143,11 @@
                                         @input="nombreProductoVacio = false"
                                         placeholder="Nombre de artículo">
                                     </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input">Unid.X Envase(*)</label>
-                                        <input type="text" 
-                                        v-model="unidad_envase" 
-                                        class="form-control"
-                                        :class="{ 'border-red': unidad_envaseVacio }"
-                                        @input="unidad_envaseVacio = false"
-                                        placeholder="Unid X Envase">
-                                    </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(Unid*.)</label>
-                                        <div class="input-group">
-                                            <input type="text" 
-                                                v-model="precio_costo_unid" 
-                                                class="form-control"
-                                                :class="{ 'border-red': precio_costo_unidVacio }"
-                                                @input="precio_costo_unidVacio = false"
-                                                placeholder="Unidad">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-primary"
-                                                    @click="calcularPrecioCostoUnid">Calcular</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(paq*.)</label>
-                                        <div class="input-group">
-                                            <input type="text" 
-                                            v-model="precio_costo_paq" 
-                                            class="form-control"
-                                            :class="{ 'border-red': precio_costo_paqVacio }"
-                                            @input="precio_costo_paqVacio = false"
-                                            placeholder="paquete">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-primary"
-                                                    @click="calcularPrecioCostoPaq">Calcular</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
+                                                     
                                 </div>
                                 <!---DERECHA-->
                                 <div class="col-md-6">
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Nombre Generico(*)</strong></label>
-                                        <input type="text" 
-                                        v-model="nombre_generico" 
-                                        class="form-control"
-                                        :class="{ 'border-red': nombre_genericoVacio }"
-                                        @input="nombre_genericoVacio = false"
-                                        placeholder="Uidad">
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-control-label" for="text-input"><strong>Precio(*)</strong></label>
                                         <input type="number" 
@@ -217,46 +157,9 @@
                                             @input="precio_ventaVacio = false"
                                             placeholder="">
                                     </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input">Costo Compra(*)</label>
-                                        <input type="number" 
-                                            v-model="costo_compra" 
-                                            class="form-control"
-                                            :class="{ 'border-red': costo_compraVacio }" 
-                                            @input="costo_compraVacio = false"
-                                            placeholder="">
-                                    </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input">Stock Minimo(*)</label>
-                                        <input type="number" 
-                                            v-model="stock" 
-                                            class="form-control"
-                                            :class="{ 'border-red': stockVacio }" 
-                                            @input="stockVacio = false"
-                                            placeholder="Ingrese estock minimo">
-                                    </div>
                                 </div>
                             </div>
                            
-                                                        
-                            <div v-for="(precio, index) in precios" :key="precio.id" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input" style="color: blue;">{{ precio.nombre_precio }}</label>
-                                <div class="col-md-4">
-                                    <input v-if="index === 0" type="text" class="form-control" placeholder="Precio" v-model="precio_uno">
-                                    <input v-if="index === 1" type="text" class="form-control" placeholder="Precio" v-model="precio_dos">
-                                    <input v-if="index === 2" type="text" class="form-control" placeholder="Precio" v-model="precio_tres">
-                                    <input v-if="index === 3" type="text" class="form-control" placeholder="Precio" v-model="precio_cuatro">
-                                </div>
-                                <div class=" input-group" style="width: 90px">
-                                    <input type="text" class="form-control" placeholder="Porcentaje" :value="precio.porcentage">
-                                    <div class="input-group-append">
-                                    <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <button type="button" class="btn btn-primary" @click="calcularPrecio(precio, index)">Calcular</button>
-                                </div>
-                            </div>
                             
                             <div class="row">
                                 <div class="col-md-4">
@@ -1320,11 +1223,12 @@ export default {
 
         listarArticulo(page, buscar, criterio) {
             let me = this;
-            var url = '/articulo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+            var url = '/menu?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.arrayArticulo = respuesta.articulos.data;
                 me.pagination = respuesta.pagination;
+                console.log('lista: ', me.arrayArticulo);
             })
                 .catch(function (error) {
                     console.log(error);
@@ -2079,7 +1983,7 @@ export default {
                                     //this.industriaseleccionada = {nombre: data['nombre_industria']};
                                     this.industriaseleccionada = { nombre: data['nombre_industria'], id: data['idindustria'] };
                                     //this.lineaseleccionada = {nombre: data['nombre_categoria']};
-                                    this.lineaseleccionada = { nombre: data['nombre_categoria'], id: data['idcategoria'] };
+                                    this.lineaseleccionada = { nombre: data['nombre_categoria'], id: data['idcategoria_menu'] };
                                     //this.marcaseleccionada = {nombre: data['nombre_marca']};
                                     this.marcaseleccionada = { nombre: data['nombre_marca'], id: data['idmarca'] };
                                     this.proveedorseleccionada = { nombre: data['nombre_proveedor'], id: data['idproveedor'] };

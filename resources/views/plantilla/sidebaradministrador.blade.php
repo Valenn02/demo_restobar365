@@ -66,19 +66,26 @@
                         </ul>
                     </li>
 
-                    <!--Menu Productos-->
+                    <!--Menu-->
+
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-tags"></i> Menu</a>
+                        <ul class="nav-dropdown-items">
+                            <li @click="menu=46" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Menu</a>
+                            </li>
+                            <li @click="menu=47" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Categoria Menu</a>
+                            </li>
+                           
+                        </ul>
+                    </li>
 
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-tags"></i> Productos</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=2" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Productos</a>
-                            </li>
-                            <li @click="menu=46" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Menu</a>
-                            </li>
-                            <li @click="menu=1" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Categoria Menu</a>
                             </li>
                             <li @click="menu=25" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Categoria Productos</a>

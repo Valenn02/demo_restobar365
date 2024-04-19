@@ -75,6 +75,8 @@ Vue.component('rolventa', require('./components/RegistroVentas.vue'));
 Vue.component('devoluciones', require('./components/Devoluciones.vue'));
 Vue.component('reporteventas', require('./components/ReporteVentasDiarias.vue'));
 Vue.component('menulist', require('./components/MenuLista.vue'));
+Vue.component('categoriamenu', require('./components/CategoriaMenu.vue'));
+
 
 
 const app = new Vue({
