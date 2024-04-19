@@ -19,6 +19,8 @@
         "vue": "^2.7.16"
     },
     "dependencies": {
+        "bootstrap": "^5.3.3",
+        "bootstrap-vue": "^2.23.1",
         "jspdf": "^2.5.1",
         "jspdf-autotable": "^3.8.1",
         "laravel-echo": "^1.4.0",
@@ -26,6 +28,7 @@
         "vue-barcode": "^1.1.0",
         "vue-select": "^2.5.0",
         "vue-template-compiler": "^2.7.16",
+        "vue-toasted": "^1.1.28",
         "xlsx": "^0.18.5"
     }
 }
