@@ -214,4 +214,20 @@ class UserController extends Controller
     
         return ['persona' => $persona->first()];
     }
+
+    public function selectUsuarios(Request $request)
+    {
+        if (!$request->ajax())
+            return redirect('/');
+
+        $filtro = $request->filtro;
+
+        $usuarios = User::join('personas', 'users.id', '=', 'personas.id')
+            ->where('personas.nombre', 'like', '%' . $filtro . '%')
+            ->select('users.id', 'personas.nombre as nombre')
+            ->orderBy('personas.nombre', 'asc')
+            ->get();
+
+        return ['usuarios' => $usuarios];
+    }
 }

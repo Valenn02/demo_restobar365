@@ -42,6 +42,7 @@
                                     <th>Precio</th>
                                     <th>Descripción</th>
                                     <th>Foto</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,6 +72,16 @@
                                             width="50" height="50" v-if="articulo.fotografia" ref="imagen">
                                         <img :src="'img/menu/' + 'defecto.jpg'" width="50" height="50" v-else
                                             ref="imagen">
+                                    </td>
+
+                                    <td>
+                                        <div v-if="articulo.condicion">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="badge badge-danger">Desactivado</span>
+                                        </div>
+                                        
                                     </td>
                                 </tr>
                             </tbody>
@@ -177,8 +188,7 @@
                                     <div class="form-group">
                                         <label class="form-control-label" for="text-input"><strong>Fotografia(*)</strong></label>
                                         <div class="input-group">
-                                            
-                                                <input type="file" @change="obtenerFotografia" class="form-control"
+                                            <input type="file" @change="obtenerFotografia" class="form-control"
                                             :class="{ 'border-red': fotografiaVacio }" 
                                             @input="fotografiaVacio = false"
                                             placeholder="fotografia usuario" ref="fotografiaInput">                                           
@@ -206,7 +216,7 @@
                             <div class="col-md-4">
                                
                                 <div class="form-group">
-                                    <label class="form-control-label" for="text-input">Linea(*)</label>
+                                    <label class="form-control-label" for="text-input">Categoria(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="lineaseleccionada.nombre"
                                         :class="{ 'border-red': lineaseleccionadaVacio }">
@@ -214,64 +224,8 @@
                                             <button class="btn btn-primary" type="button" @click="abrirModal2('Lineas')">...</button>
                                         </div>
                                     </div>
-                                </div>
-                                <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Marca(*)</label>
-                                    <div class="input-group">
-                                        <input type="text" disabled v-model="marcaseleccionada.nombre"
-                                        :class="{ 'border-red': marcaseleccionadaVacio }">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Marcas')">...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-            
-                                <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Industria(*)</label>
-                                    <div class="input-group">
-                                        <input type="text" disabled v-model="industriaseleccionada.nombre"
-                                        :class="{ 'border-red': industriaseleccionadaVacio }" />
-                                        <div class="input-group-append">
-                                            <button @click="abrirModal2('Industrias')" class="btn btn-primary">...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Proveedor(*)</label>
-                                    <div class="input-group">
-                                        <input type="text" disabled v-model="proveedorseleccionada.nombre"
-                                        :class="{ 'border-red': proveedorseleccionadaVacio }" />
-                                        <div class="input-group-append">
-                                            <button @click="abrirModal2('Proveedors')" class="btn btn-primary">...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                
-                                <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Grupo O Familia(*)</label>
-                                    <div class="input-group">
-                                        <input type="text" disabled v-model="gruposeleccionada.nombre_grupo"
-                                        :class="{ 'border-red': gruposeleccionadaVacio }" />
-                                        <div class="input-group-append">
-                                            <button @click="abrirModal2('Grupos')" class="btn btn-primary">...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Medida(*)</label>
-                                    <div class="input-group">
-                                        <input type="text" disabled v-model="medidaseleccionada.descripcion_medida"
-                                        :class="{ 'border-red': medidaseleccionadaVacio }" />
-                                        <div class="input-group-append">
-                                            <button @click="abrirModal6('Medidas')" class="btn btn-primary">...</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                   
+                                </div>     
+                            </div>                
                         </div>
                     </div>
 
@@ -1518,15 +1472,8 @@ export default {
         },
         //---actuslizar articulo
         actualizarArticulo() {
-            this.nombreProductoVacio = !this.nombre_producto;
-            this.codigoVacio = !this.codigo;
-            this.unidad_envaseVacio = !this.unidad_envase;
-            this.nombre_genericoVacio = !this.nombre_generico;
-            this.precio_costo_unidVacio = !this.precio_costo_unid;
-            this.precio_costo_paqVacio = !this.precio_costo_paq;
+            this.nombreProductoVacio = !this.nombre_producto;         
             this.precio_ventaVacio = !this.precio_venta;
-            this.costo_compraVacio = !this.costo_compra;
-            this.stockVacio = !this.stock;
             this.descripcionVacio = !this.descripcion;
             this.fotografiaVacio = !this.fotografia;
             if (this.validarArticulo()) {
@@ -1535,36 +1482,14 @@ export default {
             let me = this;
             let formData = new FormData();
             formData.append('id', this.articulo_id);
-            formData.append('idcategoria', this.lineaseleccionada.id);
-            formData.append('idindustria', this.industriaseleccionada.id);
-            formData.append('idmarca', this.marcaseleccionada.id);
-            formData.append('idproveedor', this.proveedorseleccionada.id);
-            formData.append('idgrupo', this.gruposeleccionada.id);//AUMENtE 5 julio
-
-            formData.append('codigo', this.codigo);
-            formData.append('nombre', this.nombre_producto);
-            formData.append('nombre_generico', this.nombre_generico);
-            formData.append('stock', this.stock);
+            formData.append('idcategoria_menu', this.lineaseleccionada.id);
+            formData.append('nombre', this.nombre_producto);   
             formData.append('precio_venta', this.precio_venta);
-
-            formData.append('precio_uno', this.precio_uno);
-            formData.append('precio_dos', this.precio_dos);
-            formData.append('precio_tres', this.precio_tres);
-            formData.append('precio_cuatro', this.precio_cuatro);
-
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);
 
-            formData.append('costo_compra', this.costo_compra);
-            formData.append('idmedida', this.medidaseleccionada.id);
-            //formData.append('id', this.articulo_id);
 
-            /*for (let [key, value] of formData.entries()) 
-            {
-                console.log(key, value);
-            }*/
-
-            axios.post('/articulo/actualizar', formData, {
+            axios.post('/menu/actualizar', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -1573,6 +1498,7 @@ export default {
                 //console.log("datos actuales",formData);
                 me.cerrarModal();
                 me.listarArticulo(1, '', 'nombre');
+                console.log(formData);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -1594,7 +1520,7 @@ export default {
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/articulo/desactivar', {
+                    axios.put('/menu/desactivar', {
                         'id': id
                     }).then(function (response) {
                         me.listarArticulo(1, '', 'nombre');
@@ -1633,7 +1559,7 @@ export default {
                 if (result.value) {
                     let me = this;
 
-                    axios.put('/articulo/activar', {
+                    axios.put('/menu/activar', {
                         'id': id
                     }).then(function (response) {
                         me.listarArticulo(1, '', 'nombre');
@@ -1850,7 +1776,6 @@ export default {
             if (!this.nombre_producto) this.errorMostrarMsjArticulo.push("sin nombre producto");
             //if (!this.nombre_generico) this.errorMostrarMsjArticulo.push("sin nombre generico");
             if (!this.descripcion) this.errorMostrarMsjArticulo.push("sin descipcion");
-            if (!this.stock) this.errorMostrarMsjArticulo.push("sin stock");
             if (!this.precio_venta) this.errorMostrarMsjArticulo.push("sin precio venta");
             //if (!this.costo_compra) this.errorMostrarMsjArticulo.push("sin costo compra");
             if (!this.fotografia) this.errorMostrarMsjArticulo.push("sin fotografia");
@@ -1862,69 +1787,22 @@ export default {
         cerrarModal() {
             this.modal = 0;
             this.tituloModal = '';
-            //this.idcategoria = 0;
-            //this.nombre_categoria = '';
-            //validacion para quitar borde rojo en los inputs
-            this.codigoVacio = false;
+
             this.nombreProductoVacio= false;
-            this.unidad_envaseVacio= false;
-            this.nombre_genericoVacio= false;
-            this.precio_costo_unidVacio= false;
-            this.precio_costo_paqVacio= false;
-            this.precio_ventaVacio= false;
-            this.costo_compraVacio= false;
-            this.stockVacio= false;
             this.descripcionVacio= false;
             this.fotografiaVacio= false;
             this.lineaseleccionadaVacio= false;
-            this.marcaseleccionadaVacio= false;
-            this.industriaseleccionadaVacio= false;
-            this.proveedorseleccionadaVacio= false;
-            this.gruposeleccionadaVacio= false;
-            this.medidaseleccionadaVacio= false;
+
             //
             this.codigo = '';
             this.nombre_producto = '';
-            this.nombre_generico = '';
             this.precio_venta = 0;
-            this.precio_costo_unid = 0;
-            this.precio_costo_paq = 0;
-            this.stock = 5;
             this.descripcion = '';
             this.fotografia = ''; //Pasando el valor limpio de la referencia
-            this.fotoMuestra = 'img/articulo/defecto.jpg';
+            this.fotoMuestra = '';
             this.lineaseleccionada.nombre = '';
-            this.marcaseleccionada.nombre = '';
-            this.industriaseleccionada.nombre = '';
-            this.proveedorseleccionada.nombre = '';
-            this.gruposeleccionada.nombre_grupo = '';
-            this.medidaseleccionada.descripcion_medida = '';
             this.errorArticulo = 0;
 
-            this.idmedida = 0;
-            this.costo_compra = 0;
-
-            this.precio_uno = 0;
-            this.precio_dos = 0;
-            this.precio_tres = 0;
-            this.precio_cuatro = 0;
-
-            // unidad_envaseVacio: false,
-            // nombre_genericoVacio: false,
-            // precio_costo_unidVacio: false,
-            // precio_costo_paqVacio: false,
-            // precio_ventaVacio: false,
-            // costo_compraVacio: false,
-            // stockVacio: false,
-            // descripcionVacio: false,
-            // fecha_vencimientoVacio: false,
-            // fotografiaVacio: false,
-            // lineaseleccionadaVacio: false,
-            // marcaseleccionadaVacio: false,
-            // industriaseleccionadaVacio: false,
-            // proveedorseleccionadaVacio: false,
-            // gruposeleccionadaVacio: false,
-            // medidaseleccionadaVacio: false,
         },
         abrirModal(modelo, accion, data = []) {
             switch (modelo) {
@@ -1961,43 +1839,14 @@ export default {
                                     this.tituloModal = 'Actualizar Artículo';
                                     this.tipoAccion = 2;
                                     this.articulo_id = data['id'];
-                                    this.codigo = data['codigo'];
                                     this.nombre_producto = data['nombre'];
-                                    this.nombre_generico = data['nombre_generico'];
-                                    this.unidad_envase = data['unidad_envase'];
-                                    this.precio_costo_unid = data['precio_costo_unid'];
-                                    this.stock = data['stock'];
-                                    this.precio_costo_paq = data['precio_costo_paq'];
-                                    this.costo_compra = data['costo_compra'];
-                                    this.idmedida = data['idmedida']; // new
-                                    // this.precio1=data['precio1'];
-
                                     this.precio_venta = data['precio_venta'];
-                                    // this.precio2=data['precio2'];
-                                    // this.precio3=data['precio3'];
                                     this.descripcion = data['descripcion'];
                                     this.fotografia = data['fotografia'];
-                                    this.fotoMuestra = data['fotografia'] ? 'img/articulo/' + data['fotografia'] : 'img/articulo/defecto.jpg';
-                                    //this.industriaseleccionada = { nombre: data['industriaseleccionada.nombre'] };
-
-                                    //this.industriaseleccionada = {nombre: data['nombre_industria']};
-                                    this.industriaseleccionada = { nombre: data['nombre_industria'], id: data['idindustria'] };
+                                    this.fotoMuestra = data['fotografia'] ? 'img/menu/' + data['fotografia'] : 'img/articulo/defecto.jpg';
                                     //this.lineaseleccionada = {nombre: data['nombre_categoria']};
                                     this.lineaseleccionada = { nombre: data['nombre_categoria'], id: data['idcategoria_menu'] };
-                                    //this.marcaseleccionada = {nombre: data['nombre_marca']};
-                                    this.marcaseleccionada = { nombre: data['nombre_marca'], id: data['idmarca'] };
-                                    this.proveedorseleccionada = { nombre: data['nombre_proveedor'], id: data['idproveedor'] };
-                                    //this.gruposeleccionada = {nombre_grupo: data['nombre_grupo']};
-                                    this.gruposeleccionada = { nombre_grupo: data['nombre_grupo'], id: data['idgrupo'] };
-                                    this.medidaseleccionada = { descripcion_medida: data['descripcion_medida'], id: data['idmedida'] };
 
-                                    this.precio_uno = data['precio_uno'];
-                                    this.precio_dos = data['precio_dos'];
-                                    this.precio_tres = data['precio_tres'];
-                                    this.precio_cuatro = data['precio_cuatro'];
-                                    // this.precios.forEach((precio) => {
-                                    //     this.calcularPrecio(precio);
-                                    // });
                                     break;
 
                                 }

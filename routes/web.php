@@ -121,6 +121,14 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::post('/menu/registrar', 'menuController@create');
         Route::get('/menu', 'menuController@index');
+        Route::post('/menu/actualizar', 'menuController@update');
+        Route::put('/menu/actualizar', 'menuController@update');
+        Route::put('/menu/desactivar', 'menuController@desactivar');
+
+        Route::get('/user/selectUser/filter', 'UserController@selectUsuarios');
+        Route::get('/sucursal/selectedSucursal/filter', 'SucursalController@selectedSucursal');
+
+
 
 
         Route::get('/categoriamenu', 'categoriamenuController@index');

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\categoria_menu;
+use App\menu;
+
 use Illuminate\Http\Request;
 
 class categoriamenuController extends Controller
@@ -88,6 +90,13 @@ class categoriamenuController extends Controller
         $categoria = categoria_menu::findOrFail($request->id);
         $categoria->condicion = '0';
         $categoria->save();
+
+        // Desactivar los artículos del menú que pertenecen a esta categoría
+        $menu = menu::where('idcategoria_menu', $categoria->id)->get();
+        foreach ($menu as $plato) {
+            $plato->condicion = '0';
+            $plato->save();
+        }
     }
 
     public function activar(Request $request)
@@ -96,6 +105,13 @@ class categoriamenuController extends Controller
         $categoria = categoria_menu::findOrFail($request->id);
         $categoria->condicion = '1';
         $categoria->save();
+
+        // Activas los artículos del menú que pertenecen a esta categoría
+        $menu = menu::where('idcategoria_menu', $categoria->id)->get();
+        foreach ($menu as $plato) {
+            $plato->condicion = '1';
+            $plato->save();
+        }
     }
 
     public function destroy($id)

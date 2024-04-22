@@ -110,24 +110,57 @@ class menuController extends Controller
         return response()->json($menu);    
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {  
-        $menu = menu::findOrFail($id);
-        $request->validate([
-            'nombre' => 'required|unique:menu,nombre,'.$menu->id.'|max:100',
-            'precio_venta' => 'nullable|numeric',
-            'descripcion' => 'nullable|max:256',
-            'idcategoria_menu' => 'required|exists:categoria_menu,id',
-        ]);
+      
+        if (!$request->ajax())
+            return redirect('/');
+
+            $menu = menu::findOrFail($request->id);
+            $menu->nombre = $request->nombre;
+            $menu->precio_venta = $request->precio_venta;
+            $menu->descripcion = $request->descripcion;
+            $menu->idcategoria_menu = $request->idcategoria_menu;
+
+            $nombreimagen = " ";
+            if ($request->hasFile('fotografia')) {
+                // Eliminar imagen anterior si existe
+                if ($menu->fotografia != '' && Storage::exists('public/img/menu/' . $menu->fotografia)) {
+                    Storage::delete('public/img/menu/' . $menu->fotografia);
+                }
+
+                $imagen = $request->file("fotografia");
+                $nombreimagen = Str::slug($request->nombre) . "." . $imagen->guessExtension();
+                $imagen->storeAs('public/img/menu', $nombreimagen);
+
+                $ruta = public_path("img/menu/");
+
+                // Copiar la imagen al directorio
+                copy($imagen->getRealPath(), $ruta . $nombreimagen);
+                $menu->fotografia = $nombreimagen;
+            }
+            $menu->save();
+            return response()->json($menu);    
+
+        } 
+
+        public function desactivar(Request $request)
+        {
+            if (!$request->ajax())
+                return redirect('/');
+            $menu = menu::findOrFail($request->id);
+            $menu->condicion = '0';
+            $menu->save();
+        }
     
-        $menu->nombre = $request->nombre;
-        $menu->precio_venta = $request->precio_venta;
-        $menu->descripcion = $request->descripcion;
-        $menu->idcategoria_menu = $request->idcategoria_menu;
-        $menu->save();
-    
-        return response()->json($menu);
-    }
+        public function activar(Request $request)
+        {
+            if (!$request->ajax())
+                return redirect('/');
+            $menu = menu::findOrFail($request->id);
+            $menu->condicion = '1';
+            $menu->save();
+        }
 
     //eliminar
     public function destroy($id)

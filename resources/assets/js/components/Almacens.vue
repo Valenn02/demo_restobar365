@@ -94,65 +94,78 @@
             <!-- Fin ejemplo de tabla Listado -->
         </div>
         <!--Inicio del modal agregar/actualizar-->
-        <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal " tabindex="-1" :class="{ 'mostrar': modal }" role="dialog" aria-labelledby="myModalLabel"
+            style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" v-text="tituloModal"></h4>
                         <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                    <form @submit.prevent="enviarFormulario">
+
+                        <div class="modal-body">
+
+
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre Almacen*</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="nombre_almacen" class="form-control" placeholder="Nombre almacen"> 
+                                <div class="col-md-6">
+                                    <label for="nombre_almacen" class="font-weight-bold">Nombre del almacén <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" id="nombre_almacen" v-model="datosFormulario.nombre_almacen"
+                                        class="form-control" placeholder="Ej. Almacén Principal"
+                                        @input="validarCampo('nombre_almacen')" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ubicacion" class="font-weight-bold">Ubicacion <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" id="ubicacion" v-model="datosFormulario.ubicacion"
+                                        class="form-control" placeholder="Ej. Calle 123, Ciudad"
+                                         @input="validarCampo('ubicacion')" />
                                 </div>
                             </div>
+
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Direccion(ubicacion)</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="ubicacion" class="form-control" placeholder="Ubicacion"> 
+                                <div class="col-md-6">
+                                    <label for="encargado" class="font-weight-bold">Encargado <span
+                                            class="text-danger">*</span></label>
+                                    <v-select  :on-search="selectUsuario" label="nombre" :options="arrayUsuario" placeholder="Buscar encargado..."
+                                        :onChange="getDatosUsuarios" v-model="usuarioSeleccionado">
+                                    </v-select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="telefono" class="font-weight-bold">Teléfono <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" id="telefono" v-model="datosFormulario.telefono"
+                                        class="form-control" placeholder="Ej. 123456789"
+                                         @input="validarCampo('telefono')" />
                                 </div>
                             </div>
+
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Encargado</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="encargado" class="form-control" placeholder="Ubicacion"> 
+                                <div class="col-md-6">
+                                    <label for="sucursal" class="font-weight-bold">Sucursal <span
+                                            class="text-danger">*</span></label>
+                                    <v-select :on-search="selectSucursal" label="nombre" :options="arraySucursal"
+                                       placeholder="Buscar Sucursales..."
+                                        :onChange="getDatosSucursales" v-model="sucursalSeleccionado">
+                                    </v-select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="observaciones" class="font-weight-bold">Observaciones</label>
+                                    <textarea id="observaciones" v-model="datosFormulario.observaciones"
+                                        class="form-control"
+                                        placeholder="Ej. Horario de funcionamiento, Capacitad de almacenamiento, etc."></textarea>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Telefono</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="telefono" class="form-control" placeholder="Ubicacion"> 
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Lugar</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="lugar" class="form-control" placeholder="Ubicacion"> 
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Observacion</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="observacion" class="form-control" placeholder="Ubicacion"> 
-                                </div>
-                            </div>
-                            <div v-show="errorIndustria" class="form-group row div-error">
-                                <div class="text-center text-error">
-                                    <div v-for="error in errorMostrarMsjIndustria" :key="error" v-text="error"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                        <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarAlmacen()">Guardar</button>
-                        <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarAlmacen()">Actualizar</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                            <button type="submit" v-if="tipoAccion == 1" class="btn btn-primary">Guardar</button>
+                            <button type="submit" v-if="tipoAccion == 2" class="btn btn-primary">Actualizar</button>
+                        </div>
+                    </form>
                 </div>
                 <!-- /.modal-content -->
             </div>
@@ -162,20 +175,29 @@
     </main>
 </template>
 <script>
+import vSelect from 'vue-select';
+
     export default {
         data (){
             return {
-                arrayAlmacen: [],
-                almacen_id:0,
+                arraySucursal: [],
+                sucursalSeleccionado: '',
+
+                arrayUsuario: [],
+                usuarioSeleccionado: '',
+
+                datosFormulario: {
                 nombre_almacen: '',
                 ubicacion: '',
-                encargado: '',
+                encargado: -1,
                 telefono: '',
-                lugar: '',
-                observacion: '',
+                sucursal: -1,
+                observaciones: ''
+                },
 
+                arrayAlmacen: [],
                 modal : 0,
-               tituloModal : '',
+                tituloModal : '',
                 tipoAccion : 0,
                 errorMostrarMsjIndustria: [],
                 errorIndustria : 0,
@@ -221,6 +243,9 @@
 
             }
         },
+        components: {
+        vSelect
+        },
         methods : {
             cambiarPagina(page,buscar,criterio){
                 let me = this;
@@ -242,23 +267,11 @@
                     console.log(error);
                 });
             },
-            registrarAlmacen(){
-                if (this.validarAlmacen()){
-                    return;
-                }
+            registrarAlmacen(data){
                 let me = this;
-
-                axios.post('/almacen/registrar',{
-                    'nombre_almacen': this.nombre_almacen,
-                    'ubicacion': this.ubicacion,   
-                    'encargado': this.encargado,  
-                    'telefono': this.telefono,
-                    'lugar': this.lugar,   
-                    'observacion': this.observacion,  
-                }).then(function (response) {
+                axios.post('/almacen/registrar', data).then(function (response) {
                     me.cerrarModal();
-                    //console.log(response)
-                    me.listarAlmacenes(1,'','nombre_almacen');
+                    me.listarAlmacenes(1, '', 'nombre_almacen');
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -295,6 +308,49 @@
 
                 return this.errorIndustria;
             },
+
+            selectUsuario(search, loading) {
+            let me = this;
+            loading(true)
+            let url = '/user/selectUser/filter?filtro=' + search;
+            axios.get(url).then(function (response) {
+                let respuesta = response.data;
+                me.arrayUsuario = respuesta.usuarios;
+                console.log(respuesta)
+                loading(false)
+            })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+
+            selectSucursal(search, loading) {
+            let me = this;
+            loading(true)
+            let url = '/sucursal/selectedSucursal/filter?filtro=' + search;
+            axios.get(url).then(function (response) {
+                let respuesta = response.data;
+                me.arraySucursal = respuesta.sucursales;
+                console.log(respuesta)
+                loading(false)
+            })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+            async enviarFormulario() {
+            console.log("Llego aca", this.datosFormulario);
+
+                    console.log(this.datosFormulario)
+                    if (this.tipoAccion == 2) {
+                        this.actualizarAlmacen(this.datosFormulario);
+                    } else {
+                        this.registrarAlmacen(this.datosFormulario);
+                    }
+
+        },
+
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
@@ -304,6 +360,8 @@
                 this.telefono='';
                 this.lugar='';
                 this.observacion='';
+                this.usuarioSeleccionado = '';
+
                 //this.descripcion='';
             },
             abrirModal(modelo, accion, data = []){

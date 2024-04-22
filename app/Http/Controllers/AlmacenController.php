@@ -47,14 +47,14 @@ class AlmacenController extends Controller
         $almacenes->ubicacion = $request->ubicacion;
         $almacenes->encargado = $request->encargado;
         $almacenes->telefono = $request->telefono;
-        $almacenes->lugar = $request->lugar;
+        $almacenes->sucursal = $request->sucursal;
         $almacenes->observacion = $request->observacion;
         Log::info('DATOS REGISTRO ALMACEN:', [
             'nombre_almacen' => $request->nombre_almacen,
             'ubicacion' => $request->ubicacion,
             'encargado' => $request->encargado,
             'telefono' => $request->telefono,
-            'lugar' => $request->lugar,
+            'sucursal' => $request->sucursal,
             'observacion' => $request->observacion,
         ]);
         $almacenes->save();
