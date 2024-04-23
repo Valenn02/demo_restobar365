@@ -21,14 +21,30 @@ class CajaController extends Controller
         if ($buscar==''){
             $cajas = Caja::join('sucursales', 'cajas.idsucursal', '=', 'sucursales.id')
             ->join('users', 'cajas.idusuario', '=', 'users.id')
-            ->select('cajas.id', 'cajas.idsucursal', 'sucursales.nombre as nombre_sucursal', 'cajas.idusuario', 'users.usuario as usuario', 'cajas.fechaApertura', 'cajas.fechaCierre', 'cajas.saldoInicial', 'cajas.depositos', 'cajas.salidas', 'cajas.ventasContado', 'cajas.ventasCredito', 'cajas.comprasContado', 'cajas.comprasCredito', 'cajas.saldoFaltante', 'cajas.saldoSobrante', 'cajas.saldoCaja', 'cajas.estado')
+            ->select('cajas.id', 'cajas.idsucursal', 'sucursales.nombre as nombre_sucursal',
+             'cajas.idusuario', 'users.usuario as usuario', 'cajas.fechaApertura', 
+             'cajas.fechaCierre', 'saldoInicial', 
+             'depositos', 
+             'salidas', 
+             'ventas',
+             'ventasContado',
+             'ventasCredito',
+             'pagosEfectivoVentas', 
+             'pagosEfecivocompras', 
+             'compras', 
+             'comprasContado',
+             'saldoFaltante', 
+             'PagoCuotaEfectivo', 
+             'saldoCaja', 
+             'estado',
+             'cuotasventasCredito')
             ->where('cajas.idsucursal', '=', \Auth::user()->idsucursal)
             ->orderBy('cajas.id', 'desc')->paginate(6);
         }
         else{
             $cajas = Caja::join('sucursales', 'cajas.idsucursal', '=', 'sucursales.id')
             ->join('users', 'cajas.idusuario', '=', 'users.id')
-            ->select('cajas.id', 'cajas.idsucursal', 'sucursales.nombre as nombre_sucursal', 'cajas.idusuario', 'users.usuario as usuario', 'cajas.fechaApertura', 'cajas.fechaCierre', 'cajas.saldoInicial', 'cajas.depositos', 'cajas.salidas', 'cajas.ventasContado', 'cajas.ventasCredito', 'cajas.comprasContado', 'cajas.comprasCredito', 'cajas.saldoFaltante', 'cajas.saldoSobrante', 'cajas.saldoCaja', 'cajas.estado')
+            ->select('cajas.id', 'cajas.idsucursal', 'sucursales.nombre as nombre_sucursal', 'cajas.idusuario', 'users.usuario as usuario', 'cajas.fechaApertura', 'cajas.fechaCierre', 'cajas.saldoInicial', 'cajas.depositos', 'cajas.salidas', 'cajas.ventas','cajas.pagosEfectivoVentas', 'cajas.compras', 'cajas.pagosEfecivocompras', 'cajas.saldoFaltante', 'cajas.PagoCuotaEfectivo', 'cajas.saldoCaja', 'cajas.estado')
             ->where('cajas.'.$criterio, 'like', '%'. $buscar . '%')
             ->orderBy('cajas.id', 'desc')->paginate(6);
         }
@@ -54,6 +70,7 @@ class CajaController extends Controller
         $caja->idusuario = \Auth::user()->id;
         $caja->fechaApertura = now()->setTimezone('America/La_Paz');
         $caja->saldoInicial = $request->saldoInicial;
+        $caja->saldoCaja = $request->saldoInicial;
         
         $caja->estado = '1';
         $caja->save();
@@ -118,6 +135,7 @@ class CajaController extends Controller
         $caja = Caja::findOrFail($request->id);
         $caja->fechaCierre = now()->setTimezone('America/La_Paz');
         $caja->estado = '0';
+        $caja->saldoFaltante = ($request->saldoFaltante)-($caja->saldoCaja);
         $caja->save();
     }
 

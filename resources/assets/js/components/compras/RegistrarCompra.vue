@@ -112,9 +112,9 @@
         <br>
         <b>Costo unitario</b> {{this.arrayArticuloSeleccionado.precio_costo_unid}}
         <br>
-        <b>Costo paquete</b> {{this.arrayArticuloSeleccionado.unidad_envase*this.arrayArticuloSeleccionado.precio_costo_unid}}
+        <b>Costo paquete</b> {{this.arrayArticuloSeleccionado.unidad_paquete*this.arrayArticuloSeleccionado.precio_costo_unid}}
         <br>
-        <b>Unidades por envase</b> {{this.arrayArticuloSeleccionado.unidad_envase}}
+        <b>Unidades por envase</b> {{this.arrayArticuloSeleccionado.unidad_paquete}}
 
         </p>
         </div>
@@ -202,17 +202,12 @@ v-if="this.arrayArticuloSeleccionado.fotografia"      width="50" height="50"  re
                         <tr>
                             <th>Acciones</th>
                             <th>Codigo</th>
-
                             <th>Producto</th>
                             <th>Costo unitario</th>
-
                             <th>Unidad por Paquete</th>
                             <th>Paquetes</th>
-
                             <th>Unidades</th>
-
                             <th>Fecha vencimiento</th>
-
                             <th>Subtotal</th>
                         </tr>
                     </thead>
@@ -318,6 +313,7 @@ export default {
             proveedorSeleccionado:"",
             tipoUnidadSeleccionada: "Unidades",
             fechavencimiento:null,
+            unidad_paquete:0.0,
             arrayArticuloSeleccionadoLocal:{},
             AlmacenSeleccionado:'1',
             arrayAlmacenes:[],
@@ -384,7 +380,7 @@ export default {
         resultadoMultiplicacion() {
             if (this.arrayArticuloSeleccionado){
                 if ( this.tipoUnidadSeleccionada=="Paquetes"){
-                return this.cantidad * (this.arrayArticuloSeleccionado.precio_costo_unid*this.arrayArticuloSeleccionado.unidad_envase);
+                return this.cantidad * (this.arrayArticuloSeleccionado.precio_costo_unid*this.arrayArticuloSeleccionado.unidad_paquete);
 
             }else{
                 return this.cantidad * this.arrayArticuloSeleccionado.precio_costo_unid;
@@ -593,11 +589,11 @@ export default {
                         codigo:me.arrayArticuloSeleccionado.codigo,
                         articulo: me.arrayArticuloSeleccionado.nombre,
                         precio: me.arrayArticuloSeleccionado.precio_costo_unid,
-                        unidad_x_paquete:me.arrayArticuloSeleccionado.unidad_envase,
+                        unidad_x_paquete:me.arrayArticuloSeleccionado.unidad_paquete,
                         
 
                         fecha_vencimiento:me.fechavencimiento,
-                        cantidad: me.cantidad*me.arrayArticuloSeleccionado.unidad_envase,
+                        cantidad: me.cantidad*me.arrayArticuloSeleccionado.unidad_paquete,
                     });
                     }else{
                         
@@ -609,7 +605,7 @@ export default {
                         codigo:me.arrayArticuloSeleccionado.codigo,
                         articulo: me.arrayArticuloSeleccionado.nombre,
                         precio: me.arrayArticuloSeleccionado.precio_costo_unid,
-                        unidad_x_paquete:me.arrayArticuloSeleccionado.unidad_envase,
+                        unidad_x_paquete:me.arrayArticuloSeleccionado.unidad_paquete,
 
                         fecha_vencimiento:me.fechavencimiento,
                         cantidad: me.cantidad,

@@ -45,10 +45,10 @@
                                                 <i class="icon-check"></i>
                                             </button>
                                         </td>
-                                        <td v-text="articulo.codigo"></td>
+                                        <td v-text="articulo.id"></td>
                                         <td v-text="articulo.nombre"></td>
                                         <td v-text="articulo.precio_costo_unid"></td>
-                                        <td v-text="articulo.precio_costo_unid*articulo.unidad_envase"></td>
+                                        <td v-text="articulo.precio_costo_unid*articulo.unidad_paquete"></td>
                                         <td v-text="articulo.nombre_proveedor"></td>
                                         <td>
                                             <div v-if="articulo.condicion">

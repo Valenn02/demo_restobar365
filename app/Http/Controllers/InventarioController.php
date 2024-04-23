@@ -443,12 +443,12 @@ class InventarioController extends Controller
             ->join('personas', 'proveedores.id', '=', 'personas.id')
             ->select(
                 'articulos.nombre as nombre_producto',
-                'articulos.unidad_envase',
+                'articulos.unidad_paquete',
                 'almacens.nombre_almacen',
                 DB::raw('SUM(inventarios.saldo_stock) as saldo_stock_total')
             )
             ->where('inventarios.idalmacen', '=', $idAlmacen)
-            ->groupBy('articulos.nombre', 'almacens.nombre_almacen','articulos.unidad_envase')
+            ->groupBy('articulos.nombre', 'almacens.nombre_almacen','articulos.unidad_paquete')
             ->orderBy('articulos.nombre')
             ->orderBy('almacens.nombre_almacen');
             //->get();
@@ -462,7 +462,7 @@ class InventarioController extends Controller
             ->join('personas', 'proveedores.id', '=', 'personas.id')
             ->select(
                 'articulos.nombre as nombre_producto',
-                'articulos.unidad_envase',
+                'articulos.unidad_paquete',
                 'articulos.precio_costo_unid',
                 'inventarios.saldo_stock',
                 \DB::raw('DATE_FORMAT(ingresos.fecha_hora, "%d-%m-%Y") as fecha_ingreso'),
