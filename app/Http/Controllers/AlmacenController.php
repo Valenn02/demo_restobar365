@@ -12,18 +12,21 @@ class AlmacenController extends Controller
     public function index(Request $request)
     {
 
-        if (!$request->ajax())
+         if (!$request->ajax())
             return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
 
-        if ($buscar == '') {
-            $almacenes = Almacen::orderBy('id', 'desc')->paginate(3);
-        } else {
-            $almacenes = Almacen::where($criterio, 'like', '%' . $buscar . '%')->orderBy('id', 'desc')->paginate(3);
-        }
-
+        $almacenes = Almacen::join('users', 'almacens.encargado', '=', 'users.id')
+            ->join('personas', 'users.id', '=', 'personas.id')
+            ->join('sucursales', 'almacens.sucursal', '=', 'sucursales.id')
+            ->select('almacens.*', 'personas.nombre as nombre_encargado', 'sucursales.nombre as nombre_sucursal')
+            ->when($buscar, function ($query) use ($buscar, $criterio) {
+                return $query->where('personas.nombre', 'like', '%' . $buscar . '%');
+            })
+            ->orderBy('almacens.id', 'desc')
+            ->paginate(6);
 
         return [
             'pagination' => [
@@ -63,7 +66,7 @@ class AlmacenController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax())
-            return redirect('/');
+        return redirect('/');
 
         $almacenes = Almacen::findOrFail($request->id);
 
@@ -71,14 +74,14 @@ class AlmacenController extends Controller
         $almacenes->ubicacion = $request->ubicacion;
         $almacenes->encargado = $request->encargado;
         $almacenes->telefono = $request->telefono;
-        $almacenes->lugar = $request->lugar;
+        $almacenes->sucursal = $request->sucursal;
         $almacenes->observacion = $request->observacion;
         Log::info('ACTUALIZAR ALMACEN:', [
             'nombre_almacen' => $request->nombre_almacen,
             'ubicacion' => $request->ubicacion,
             'encargado' => $request->encargado,
             'telefono' => $request->telefono,
-            'lugar' => $request->lugar,
+            'sucursal' => $request->sucursal,
             'observacion' => $request->observacion,
         ]);
         $almacenes->save();

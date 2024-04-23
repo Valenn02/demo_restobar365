@@ -29,6 +29,7 @@
         "vue-select": "^2.5.0",
         "vue-template-compiler": "^2.7.16",
         "vue-toasted": "^1.1.28",
-        "xlsx": "^0.18.5"
+        "xlsx": "^0.18.5",
+        "yup": "^1.4.0"
     }
 }

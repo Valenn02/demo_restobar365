@@ -6,6 +6,9 @@ use App\Empresa;
 use Illuminate\Http\Request;
 use App\Sucursales;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class SucursalController extends Controller
 {
@@ -53,19 +56,28 @@ class SucursalController extends Controller
 
     public function store(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) {
+            return redirect('/');
+        }
+
+        // Registra la información en el log antes de realizar la operación de almacenamiento
+        Log::info('Datos recibidos para registrar una nueva sucursal:', $request->all());
+
         $sucursal = new Sucursales();
-        //$sucursal->idempresa = $request->idempresa;
+
         $sucursal->idempresa = Empresa::first()->id;
         $sucursal->nombre = $request->nombre;
-        $sucursal->direccion = $request->direccion;
-        $sucursal->correo = $request->correo;
+        $sucursal->direccion = $request->direccion ?? '';
+        $sucursal->correo = $request->correo ?? '';
         $sucursal->telefono = $request->telefono;
         $sucursal->departamento = $request->departamento;
         $sucursal->codigoSucursal = $request->codigoSucursal;
 
         $sucursal->condicion = '1';
         $sucursal->save();
+
+        // Registra la información en el log después de realizar la operación de almacenamiento
+        Log::info('Nueva sucursal registrada con éxito:', ['id' => $sucursal->id]);
     }
     //---------hasa qui
     //-------actualizar datos
