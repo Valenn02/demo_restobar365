@@ -44,7 +44,8 @@ class ArticuloController extends Controller
                     
                     'medidas.descripcion_medida',
                     //aumente 5 julio
-
+                    'articulos.precio_costo_unid',
+                    'articulos.precio_costo_paq',
                     'articulos.precio_venta',
                     'articulos.stockmin',
                     'personas.nombre as nombre_proveedor',
@@ -64,7 +65,8 @@ class ArticuloController extends Controller
                     'articulos.idcategoria_producto',
                     'articulos.nombre',
                     'categoria_producto.nombre as nombre_categoria',
-                    
+                    'articulos.precio_costo_unid',
+                    'articulos.precio_costo_paq',
                     'articulos.precio_venta',
                     'articulos.stockmin',
                     'personas.nombre as nombre_proveedor',
@@ -220,8 +222,8 @@ class ArticuloController extends Controller
 
         $articulo->stockmin = $request->stock;
         $articulo->idproveedor = $request->idproveedor;
-        //$articulo->precio_costo_unid = '0.00';
-        //$articulo->precio_costo_paq = '0.00';
+        $articulo->precio_costo_unid = $request->precio_costo_unid;
+        $articulo->precio_costo_paq = $request->precio_costo_paq;
         $articulo->descripcion = $request->descripcion;
         //$articulo->fecha_vencimiento = $request->fecha_vencimiento;
         $articulo->condicion = '1';
@@ -286,6 +288,8 @@ class ArticuloController extends Controller
             $articulo->idmedida = $request->idmedida;
             //$articulo->condicion = '1';
             $articulo->unidad_paquete = $request->unidad_paquete;
+            $articulo->precio_costo_unid = $request->precio_costo_unid;
+            $articulo->precio_costo_paq = $request->precio_costo_paq;
             $nombreimagen = " ";
             if ($request->hasFile('fotografia')) {
                 // Eliminar imagen anterior si existe
