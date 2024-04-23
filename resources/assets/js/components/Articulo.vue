@@ -40,10 +40,8 @@
                                     <th>Código</th>
                                     <th>Nombre</th>
                                     <!-- <th>Presio1</th> -->
-                                    <th v-for="precio in precios" :key="precio.id">{{ precio.nombre_precio }}</th>
-                                    
-                                    <!-- <th v-if="rolUsuario === 1">Presio venta</th> -->
-                                    <th v-if="rolUsuario === 1 && mostrarCostos === 1">Precio venta</th>
+                                    <th>Precio</th>
+            
 
                                     <th>Categorìa</th>
                                     <th>Descripción</th>
@@ -70,12 +68,7 @@
                                         </template>
                                     <td v-text="articulo.id"></td>
                                     <td v-text="articulo.nombre"></td>
-                                    <td v-for="(precio, index) in precios" :key="precio.id">
-                                        <!-- Mostrar el precio correspondiente según el índice -->
-                                        <span v-if="index === 0">{{ articulo.precio_uno }}</span>
-                                        <span v-if="index === 1">{{ articulo.precio_dos }}</span>
-                                        <span v-if="index === 2">{{ articulo.precio_tres }}</span>
-                                        <span v-if="index === 3">{{ articulo.precio_cuatro }}</span>
+                                    <td v-text="articulo.precio_venta">
                                     </td>
 
                                     <!-- <td v-if="rolUsuario === 1" v-text="articulo.precio_venta"></td> -->
@@ -161,7 +154,7 @@
                                         @input="nombreProductoVacio = false"
                                         placeholder="Nombre de artículo">
                                     </div>
-                                    <div style="display: none;" class="form-group">
+                                    <div class="form-group">
                                         <label class="form-control-label" for="text-input">Unid.X Envase(*)</label>
                                         <input type="text" 
                                         v-model="unidad_envase" 
@@ -231,7 +224,7 @@
                                             @input="costo_compraVacio = false"
                                             placeholder="">
                                     </div>
-                                    <div style="display: none;" class="form-group">
+                                    <div class="form-group">
                                         <label class="form-control-label" for="text-input">Stock Minimo(*)</label>
                                         <input type="number" 
                                             v-model="stock" 
@@ -244,7 +237,7 @@
                             </div>
                            
                                                         
-                            <div v-for="(precio, index) in precios" :key="precio.id" class="form-group row">
+                            <div style="display: none;" v-for="(precio, index) in precios" :key="precio.id" class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input" style="color: blue;">{{ precio.nombre_precio }}</label>
                                 <div class="col-md-4">
                                     <input v-if="index === 0" type="text" class="form-control" placeholder="Precio" v-model="precio_uno">
@@ -340,7 +333,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: none;" class="form-group">
+                                <div class="form-group">
                                     <label class="form-control-label" for="text-input">Proveedor(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="proveedorseleccionada.nombre"
@@ -363,7 +356,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: none;" class="form-group">
+                                <div class="form-group">
                                     <label class="form-control-label" for="text-input">Medida(*)</label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="medidaseleccionada.descripcion_medida"
@@ -1604,7 +1597,7 @@ export default {
             formData.append('idcategoria', this.lineaseleccionada.id);
            // formData.append('idindustria', this.industriaseleccionada.id);
             //formData.append('idmarca', this.marcaseleccionada.id);
-            //formData.append('idproveedor', this.proveedorseleccionada.id);
+            formData.append('idproveedor', this.proveedorseleccionada.id);
             //formData.append('idgrupo', this.gruposeleccionada.id);//AUMENtE 5 julio
 
             //formData.append('precio_costo_unid', this.precio_costo_unid);
@@ -1613,8 +1606,8 @@ export default {
             //formData.append('codigo', this.codigo);
             formData.append('nombre', this.nombre_producto);
             //formData.append('nombre_generico', this.nombre_generico);//AUMENtE 5 julio
-            //formData.append('unidad_envase', this.unidad_envase);
-            //formData.append('stock', this.stock);
+            formData.append('unidad_paquete', this.unidad_envase);
+            formData.append('stock', this.stock);
             formData.append('precio_venta', this.precio_venta);
 
            // formData.append('precio_uno', this.precio_uno);
@@ -1625,7 +1618,7 @@ export default {
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);
 
-            //formData.append('idmedida', this.medidaseleccionada.id);
+            formData.append('idmedida', this.medidaseleccionada.id);
             //formData.append('costo_compra', this.costo_compra);
             console.log("FORMDATA",formData);
             axios.post('/articulo/registrar', formData, {
@@ -1682,20 +1675,20 @@ export default {
 
             formData.append('costo_compra', this.costo_compra);
             formData.append('idmedida', this.medidaseleccionada.id);
+            formData.append('unidad_paquete', this.unidad_envase);
             //formData.append('id', this.articulo_id);
 
             /*for (let [key, value] of formData.entries()) 
             {
                 console.log(key, value);
             }*/
-
             axios.post('/articulo/actualizar', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(function (response) {
                 //alert("Datos actualizados con éxito");
-                //console.log("datos actuales",formData);
+                console.log("datos actuales",formData);
                 me.cerrarModal();
                 me.listarArticulo(1, '', 'nombre');
             }).catch(function (error) {
@@ -2090,9 +2083,9 @@ export default {
                                     this.codigo = data['codigo'];
                                     this.nombre_producto = data['nombre'];
                                     this.nombre_generico = data['nombre_generico'];
-                                    this.unidad_envase = data['unidad_envase'];
+                                    this.unidad_envase = data['unidad_paquete'];
                                     this.precio_costo_unid = data['precio_costo_unid'];
-                                    this.stock = data['stock'];
+                                    this.stock = data['stockmin'];
                                     this.precio_costo_paq = data['precio_costo_paq'];
                                     this.costo_compra = data['costo_compra'];
                                     this.idmedida = data['idmedida']; // new
@@ -2109,7 +2102,7 @@ export default {
                                     //this.industriaseleccionada = {nombre: data['nombre_industria']};
                                     this.industriaseleccionada = { nombre: data['nombre_industria'], id: data['idindustria'] };
                                     //this.lineaseleccionada = {nombre: data['nombre_categoria']};
-                                    this.lineaseleccionada = { nombre: data['nombre_categoria'], id: data['idcategoria'] };
+                                    this.lineaseleccionada = { nombre: data['nombre_categoria'], id: data['idcategoria_producto'] };
                                     //this.marcaseleccionada = {nombre: data['nombre_marca']};
                                     this.marcaseleccionada = { nombre: data['nombre_marca'], id: data['idmarca'] };
                                     this.proveedorseleccionada = { nombre: data['nombre_proveedor'], id: data['idproveedor'] };

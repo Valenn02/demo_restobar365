@@ -26,92 +26,52 @@ class ArticuloController extends Controller
         $criterio = $request->criterio;
 
         if ($buscar == '') {
-            $articulos = Articulo::join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
+            $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->join('industrias', 'articulos.idindustria', '=', 'industrias.id')
-                ->join('marcas', 'articulos.idmarca', '=', 'marcas.id')
-                ->join('grupos', 'articulos.idgrupo', '=', 'grupos.id')
                 ->join('medidas', 'articulos.idmedida', '=', 'medidas.id')
 
                 ->select(
                     'articulos.id',
-                    'articulos.idcategoria',
+                    'articulos.idcategoria_producto',
                     'articulos.idproveedor',
                     //aumente 7 julio
-                    'articulos.idindustria',
-                    //aumente 7 julio
-                    'articulos.idmarca',
-                    //aumente 7 julio
-                    'articulos.idgrupo',
-                    //aumente 7 julio
                     'articulos.idmedida',
-                    'articulos.codigo',
                     'articulos.nombre',
                     'articulos.nombre_generico',
-                    'articulos.costo_compra',
-                    //aumente12julio
 
-                    'articulos.unidad_envase',
-                    'articulos.precio_list_unid',
-                    'articulos.precio_costo_unid',
-                    'articulos.precio_costo_paq',
-
-                    'categorias.nombre as nombre_categoria',
-                    'industrias.nombre as nombre_industria',
-                    'marcas.nombre as nombre_marca',
-                    'grupos.nombre_grupo',
+                    'categoria_producto.nombre as nombre_categoria',
+                    
                     'medidas.descripcion_medida',
                     //aumente 5 julio
 
-                    'articulos.precio_uno',
-                    'articulos.precio_dos',
-                    'articulos.precio_tres',
-                    'articulos.precio_cuatro',
-
                     'articulos.precio_venta',
-                    'articulos.stock',
+                    'articulos.stockmin',
                     'personas.nombre as nombre_proveedor',
                     'articulos.descripcion',
                     'articulos.condicion',
-                    'articulos.fotografia'
+                    'articulos.fotografia',
+                    'articulos.unidad_paquete'
                 )
                 ->orderBy('articulos.id', 'desc')->paginate(5);
         } else {
             $articulos = Articulo::join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
-                ->join('industrias', 'articulos.idindustria', '=', 'industrias.id')
-                ->join('marcas', 'articulos.idmarca', '=', 'marcas.id')
-                ->join('grupos', 'articulos.idgrupo', '=', 'grupos.id')
+                ->join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
+
                 ->select(
                     'articulos.id',
-                    'articulos.idcategoria',
-                    'articulos.codigo',
+                    'articulos.idcategoria_producto',
                     'articulos.nombre',
-
-                    'articulos.unidad_envase',
-                    'articulos.precio_list_unid',
-                    'articulos.precio_costo_unid',
-                    'articulos.precio_costo_paq',
-
-                    'categorias.nombre as nombre_categoria',
-                    'industrias.nombre as nombre_industria',
-                    'marcas.nombre as nombre_marca',
-                    'grupos.nombre_grupo',
-                    //aumente 5 julio
-
-                    'articulos.precio_uno',
-                    'articulos.precio_dos',
-                    'articulos.precio_tres',
-                    'articulos.precio_cuatro',
-
+                    'categoria_producto.nombre as nombre_categoria',
+                    
                     'articulos.precio_venta',
-                    'articulos.stock',
+                    'articulos.stockmin',
                     'personas.nombre as nombre_proveedor',
                     'articulos.descripcion',
                     'articulos.condicion',
-                    'articulos.fotografia'
+                    'articulos.fotografia',
+                    'articulos.unidad_paquete'
                 )
                 ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
                 ->orderBy('articulos.id', 'desc')->paginate(5);
@@ -249,33 +209,19 @@ class ArticuloController extends Controller
         if (!$request->ajax())
             return redirect('/');
         $articulo = new Articulo();
-        $articulo->idcategoria = $request->idcategoria;
-        $articulo->idmarca ='185';
-        $articulo->idindustria = '1';
-        $articulo->idgrupo = '1'; //aumente 12 junio
-
-        $articulo->idmedida = '1'; //new
-
-        $articulo->codigo = '1';
-
+        $articulo->idcategoria_producto = $request->idcategoria;
+        $articulo->idmedida = $request->idmedida; //new
         $articulo->nombre = $request->nombre;
-
         $articulo->nombre_generico = $articulo->nombre; //aumete 12julio
 
-        $articulo->unidad_envase = '1';
+        $articulo->unidad_paquete = $request->unidad_paquete;
         $articulo->precio_venta = $request->precio_venta;
+        //$articulo->costo_compra = '0.00'; //new
 
-        $articulo->precio_uno = '0.00';
-        $articulo->precio_dos = '0.00';
-        $articulo->precio_tres = '0.00';
-        $articulo->precio_cuatro = '0.00';
-
-        $articulo->costo_compra = '0.00'; //new
-
-        $articulo->stock = '1000';
-        $articulo->idproveedor = '2';
-        $articulo->precio_costo_unid = '0.00';
-        $articulo->precio_costo_paq = '0.00';
+        $articulo->stockmin = $request->stock;
+        $articulo->idproveedor = $request->idproveedor;
+        //$articulo->precio_costo_unid = '0.00';
+        //$articulo->precio_costo_paq = '0.00';
         $articulo->descripcion = $request->descripcion;
         //$articulo->fecha_vencimiento = $request->fecha_vencimiento;
         $articulo->condicion = '1';
@@ -327,31 +273,19 @@ class ArticuloController extends Controller
             DB::beginTransaction();
 
             $articulo = Articulo::findOrFail($request->id);
-            $articulo->idcategoria = $request->idcategoria;
-
-            $articulo->idmarca = $request->idmarca;
-            $articulo->idindustria = $request->idindustria;
-            $articulo->idgrupo = $request->idgrupo;
-
-            $articulo->codigo = $request->codigo;
+            $articulo->idcategoria_producto = $request->idcategoria;
             $articulo->nombre = $request->nombre;
 
-            $articulo->nombre_generico = $request->nombre_generico; //aumente esto 5 julio
+            $articulo->nombre_generico = $request->nombre; //aumente esto 5 julio
 
             $articulo->precio_venta = $request->precio_venta;
-
-            $articulo->precio_uno = $request->precio_uno;
-            $articulo->precio_dos = $request->precio_dos;
-            $articulo->precio_tres = $request->precio_tres;
-            $articulo->precio_cuatro = $request->precio_cuatro;
-
-            $articulo->stock = $request->stock;
+            $articulo->stockmin = $request->stock;
             $articulo->descripcion = $request->descripcion;
             //$articulo->fecha_vencimiento = $request->fecha_vencimiento;
             $articulo->idproveedor = $request->idproveedor;
             $articulo->idmedida = $request->idmedida;
             //$articulo->condicion = '1';
-
+            $articulo->unidad_paquete = $request->unidad_paquete;
             $nombreimagen = " ";
             if ($request->hasFile('fotografia')) {
                 // Eliminar imagen anterior si existe
