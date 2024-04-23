@@ -105,17 +105,17 @@ class ArticuloController extends Controller
         $idProveedor = $request->idProveedor;
 
         if ($buscar == '') {
-            $articulos = Articulo::join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
+            $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre', 'categorias.nombre as nombre_categoria', 'articulos.precio_costo_unid', 'articulos.stock', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_envase', 'articulos.fotografia')
+                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia')
                 ->where('proveedores.id', '=', $idProveedor)
                 ->orderBy('articulos.id', 'desc')->paginate(10);
         } else {
-            $articulos = Articulo::join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
+            $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre', 'categorias.nombre as nombre_categoria', 'articulos.precio_costo_unid', 'articulos.stock', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_envase', 'articulos.fotografia')
+                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia')
                 ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
                 ->orderBy('articulos.id', 'desc')->paginate(10);
         }
