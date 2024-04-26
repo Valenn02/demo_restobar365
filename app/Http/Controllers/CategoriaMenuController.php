@@ -7,23 +7,23 @@ use App\menu;
 
 use Illuminate\Http\Request;
 
-class categoriamenuController extends Controller
+class CategoriaMenuController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
 
         if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-        
-        if ($buscar==''){
+
+        if ($buscar == '') {
             $menuCate = categoria_menu::orderBy('id', 'desc')->paginate(3);
+        } else {
+            $menuCate = categoria_menu::where($criterio, 'like', '%' . $buscar . '%')->orderBy('id', 'desc')->paginate(3);
         }
-        else{
-            $menuCate = categoria_menu::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(3);
-        }
-        
+
 
         return [
             'pagination' => [
@@ -39,44 +39,44 @@ class categoriamenuController extends Controller
     }
     public function create(Request $request)
     {
-        
+
         $request->validate([
             'nombre' => 'required|unique:menu|max:100',
             'descripcion' => 'nullable',
             'condicion' => 'nullable',
         ]);
 
-        
+
         $menuCate = new categoria_menu();
         $menuCate->nombre = $request->nombre;
         $menuCate->descripcion = $request->descripcion;
         $menuCate->condicion = $request->condicion;
         $menuCate->save();
 
-        return response()->json($menuCate);    
+        return response()->json($menuCate);
     }
 
     public function createCategoria(Request $request)
     {
-        
+
         $request->validate([
             'nombre' => 'required|unique:menu|max:100',
             'descripcion' => 'nullable',
             'condicion' => 'nullable',
         ]);
 
-        
+
         $menuCate = new categoria_menu();
         $menuCate->nombre = $request->nombre;
         $menuCate->descripcion = $request->descripcion;
         $menuCate->condicion = true;
         $menuCate->save();
 
-        return response()->json($menuCate);    
+        return response()->json($menuCate);
     }
 
     public function update(Request $request)
-    {  
+    {
         if (!$request->ajax()) return redirect('/');
         $menu = categoria_menu::findOrFail($request->id);
         $menu->nombre = $request->nombre;
@@ -119,5 +119,17 @@ class categoriamenuController extends Controller
         $menu = categoria_menu::findOrFail($id);
         $menu->delete();
         return response()->json(['message' => '¡menú ha sido eliminado correctamente!']);
+    }
+
+    public function getAllCatogoriasMenu(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $categorias_menu = categoria_menu::where('condicion', '=', '1')
+            ->select('id', 'nombre', 'descripcion')
+            ->orderBy('nombre', 'asc')
+            ->get();
+
+        return ['categorias_menu' =>  $categorias_menu];
     }
 }

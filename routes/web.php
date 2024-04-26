@@ -55,7 +55,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/ingreso/desactivar', 'IngresoController@desactivar');
         Route::get('/ingreso/obtenerCabecera', 'IngresoController@obtenerCabecera');
         Route::get('/ingreso/obtenerDetalles', 'IngresoController@obtenerDetalles');
-
     });
 
     Route::group(['middleware' => ['Vendedor']], function () {
@@ -119,11 +118,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/articulo/listarPdf', 'ArticuloController@listarPdf')->name('articulos_pdf');
         Route::get('/articulo/listarArticuloPedido', 'ArticuloController@listPedProve'); //aumente esto 21 sept
 
-        Route::post('/menu/registrar', 'menuController@create');
-        Route::get('/menu', 'menuController@index');
-        Route::post('/menu/actualizar', 'menuController@update');
-        Route::put('/menu/actualizar', 'menuController@update');
-        Route::put('/menu/desactivar', 'menuController@desactivar');
+        Route::post('/menu/registrar', 'MenuController@create');
+        Route::get('/menu', 'MenuController@index');
+        Route::post('/menu/actualizar', 'MenuController@update');
+        Route::put('/menu/actualizar', 'MenuController@update');
+        Route::put('/menu/desactivar', 'MenuController@desactivar');
 
         Route::get('/user/selectUser/filter', 'UserController@selectUsuarios');
         Route::get('/sucursal/selectedSucursal/filter', 'SucursalController@selectedSucursal');
@@ -131,12 +130,13 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 
-        Route::get('/categoriamenu', 'categoriamenuController@index');
-        Route::post('/categoriamenu/registrar', 'categoriamenuController@create');
-        Route::post('/categoriamenuPrincipal/registrar', 'categoriamenuController@createCategoria');
-        Route::put('/categoriamenu/actualizar', 'categoriamenuController@update');
-        Route::put('/categoriamenu/desactivar', 'categoriamenuController@desactivar');
-        Route::put('/categoriamenu/activar', 'categoriamenuController@activar');
+        Route::get('/categoriamenu', 'CategoriaMenuController@index');
+        Route::post('/categoriamenu/registrar', 'CategoriaMenuController@create');
+        Route::post('/categoriamenuPrincipal/registrar', 'CategoriaMenuController@createCategoria');
+        Route::put('/categoriamenu/actualizar', 'CategoriaMenuController@update');
+        Route::put('/categoriamenu/desactivar', 'CategoriaMenuController@desactivar');
+        Route::put('/categoriamenu/activar', 'CategoriaMenuController@activar');
+        Route::get('/categorias_menu/getAll', 'CategoriaMenuController@getAllCatogoriasMenu');
 
 
 
@@ -180,8 +180,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/cuota/actualizar', 'CuotasCreditoController@update');
         Route::get('/cuota/eliminar', 'CuotasCreditoController@destroy');
 
-        
-// cotizacionventa
+
+        // cotizacionventa
         Route::get('/cotizacionventa', 'CotizacionVentaController@index');
         Route::post('/cotizacionventa/registrar', 'CotizacionVentaController@store');
         Route::put('/cotizacionventa/desactivar', 'CotizacionVentaController@desactivar');
@@ -268,7 +268,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/factura/sincronizarParametricaEventosSignificativos', 'VentaController@sincronizarParametricaEventosSignificativos');
         Route::get('/factura/sincronizarParametricaUnidadMedida', 'VentaController@sincronizarParametricaUnidadMedida');
         Route::get('/factura/obtenerDatosMotivoAnulacion', 'FacturaController@obtenerDatosMotivoAnulacion');
-    
+
 
         //--INDUSTRIA--
         //registrar
@@ -288,7 +288,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Obtener último numero de comprobante
         Route::get('/ruta-a-tu-endpoint-laravel-para-obtener-ultimo-comprobante', 'VentaController@obtenerUltimoComprobante');
-        
+
         //Obtener último numero de codigoSucursal
         Route::get('/ruta-api-para-obtener-ultimo-codigo-sucursal', 'SucursalController@obtenerUltimoCodigoSucursal');
 
@@ -358,8 +358,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         //REPORTES
         Route::get('/ventas-diarias', 'VentaController@reporteVentasDiarias');
-
-
     });
 
     //RUTA PARA RECUPERAR LA SESSION CON EL ID DE LA PERSONA LOGUEADA

@@ -13,6 +13,7 @@ use App\Exports\ProductExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Inventario;
 use App\Articulo;
+use App\menu;
 use App\Precio;
 
 class ArticuloController extends Controller
@@ -41,7 +42,7 @@ class ArticuloController extends Controller
                     'articulos.nombre_generico',
 
                     'categoria_producto.nombre as nombre_categoria',
-                    
+
                     'medidas.descripcion_medida',
                     //aumente 5 julio
                     'articulos.precio_costo_unid',
@@ -110,14 +111,14 @@ class ArticuloController extends Controller
             $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia','articulos.precio_costo_unid','articulos.precio_costo_paq')
+                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia', 'articulos.precio_costo_unid', 'articulos.precio_costo_paq')
                 ->where('proveedores.id', '=', $idProveedor)
                 ->orderBy('articulos.id', 'desc')->paginate(10);
         } else {
             $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia','articulos.precio_costo_unid','articulos.precio_costo_paq')
+                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia', 'articulos.precio_costo_unid', 'articulos.precio_costo_paq')
                 ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
                 ->orderBy('articulos.id', 'desc')->paginate(10);
         }
@@ -136,12 +137,12 @@ class ArticuloController extends Controller
         if ($criterio == '0') {
             $articulos = Articulo::join('medidas', 'articulos.idmedida', '=', 'medidas.id')
                 ->join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
-                ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre','articulos.fotografia', 'categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 'articulos.descripcion', 'articulos.condicion', 'medidas.descripcion_medida as medida')
+                ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre', 'articulos.fotografia', 'categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 'articulos.descripcion', 'articulos.condicion', 'medidas.descripcion_medida as medida')
                 ->where('articulos.stock', '>', '0')
                 ->orderBy('articulos.id', 'asc')->paginate(10);
         } else {
             $articulos = Articulo::join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
-                ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre', 'articulos.fotografia','categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 'articulos.descripcion', 'articulos.condicion')
+                ->select('articulos.id', 'articulos.idcategoria', 'articulos.codigo', 'articulos.nombre', 'articulos.fotografia', 'categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 'articulos.descripcion', 'articulos.condicion')
                 ->where('articulos.idcategoria', '=', $criterio)
                 ->where('articulos.stock', '>', '0')
                 ->orderBy('articulos.id', 'asc')->paginate(10);
@@ -183,17 +184,26 @@ class ArticuloController extends Controller
         $articulos = Articulo::join('medidas', 'articulos.idmedida', '=', 'medidas.id')
             ->join('categorias', 'articulos.idcategoria', '=', 'categorias.id')
             ->join('inventarios', 'inventarios.idarticulo', '=', 'articulos.id')
-            ->select('articulos.id', 'articulos.nombre','articulos.stock','articulos.precio_costo_unid', 'articulos.precio_costo_paq', 'medidas.descripcion_medida as medida','articulos.precio_venta','categorias.codigoProductoSin', 'articulos.codigo',
-                    'articulos.precio_uno',
-                    'articulos.precio_dos',
-                    'articulos.precio_tres',
-                    'articulos.precio_cuatro',
-                    'articulos.fotografia',
-                    'articulos.condicion',
-                    'categorias.nombre as nombre_categoria',
-                    'unidad_envase',
-                    'inventarios.fecha_vencimiento',
-                    DB::raw('(SELECT SUM(inventarios.saldo_stock) FROM inventarios WHERE inventarios.idarticulo = articulos.id AND inventarios.fecha_vencimiento > NOW()) as saldo_stock')
+            ->select(
+                'articulos.id',
+                'articulos.nombre',
+                'articulos.stock',
+                'articulos.precio_costo_unid',
+                'articulos.precio_costo_paq',
+                'medidas.descripcion_medida as medida',
+                'articulos.precio_venta',
+                'categorias.codigoProductoSin',
+                'articulos.codigo',
+                'articulos.precio_uno',
+                'articulos.precio_dos',
+                'articulos.precio_tres',
+                'articulos.precio_cuatro',
+                'articulos.fotografia',
+                'articulos.condicion',
+                'categorias.nombre as nombre_categoria',
+                'unidad_envase',
+                'inventarios.fecha_vencimiento',
+                DB::raw('(SELECT SUM(inventarios.saldo_stock) FROM inventarios WHERE inventarios.idarticulo = articulos.id AND inventarios.fecha_vencimiento > NOW()) as saldo_stock')
 
             )
             ->where('articulos.codigo', '=', $filtro)
@@ -264,7 +274,6 @@ class ArticuloController extends Controller
 
         ]);
         $articulo->save();
-
     }
     public function update(Request $request)
     {
@@ -337,7 +346,6 @@ class ArticuloController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
         }
-
     }
 
     public function desactivar(Request $request)
@@ -413,3 +421,4 @@ class ArticuloController extends Controller
         ];
     }
 }
+

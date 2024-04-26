@@ -7,10 +7,22 @@
 
 import Vue from 'vue'
 
+import PrimeVue from 'primevue/config';
+import 'primeflex/primeflex.css';
+
+import 'primevue/resources/themes/nova-accent/theme.css';
+import 'primevue/resources/primevue.min.css';
+import 'primeicons/primeicons.css';
+
+Vue.use(PrimeVue);
+
 require('./bootstrap');
 
 window.$ = window.jQuery = require('jquery');
 window.Vue = require('vue');
+
+//import Button from 'primevue/button';
+//Vue.component('Button', Button);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -81,19 +93,19 @@ Vue.component('categoriamenu', require('./components/CategoriaMenu.vue'));
 
 const app = new Vue({
     el: '#app',
-    data :{
-        menu : 0,
+    data: {
+        menu: 0,
         notifications: [],
     },
-    mounted(){
+    mounted() {
         console.log('Vue app mounted');
     },
     created() {
         let me = this;
-        axios.post('notification/get').then(function(response){
+        axios.post('notification/get').then(function(response) {
             //console.log(response.data);
-            me.notifications=response.data;
-        }).catch(function(error){
+            me.notifications = response.data;
+        }).catch(function(error) {
             console.log(error);
         });
 
