@@ -165,6 +165,9 @@
             <template v-if="menu==47">
                 <categoriamenu></categoriamenu>
             </template>
+            <template v-if="menu==48">
+                <qr></qr>
+            </template>
 
             @elseif (Auth::user()->idrol == 2)
             <template v-if="menu==0">
