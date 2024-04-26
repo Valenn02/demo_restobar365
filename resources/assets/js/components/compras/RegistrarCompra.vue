@@ -276,6 +276,7 @@ v-if="this.arrayArticuloSeleccionado.fotografia"      width="50" height="50"  re
 </template>
   
   <script>
+import { post } from 'jquery';
 import vSelect from 'vue-select';
 
 export default {
@@ -540,6 +541,7 @@ export default {
             }).catch(function (error) {
                 console.log(error);
             });
+
         },
         guardarInventarios() {
             this.editarEstado();

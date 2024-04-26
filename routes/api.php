@@ -27,3 +27,7 @@ Route::get('menucate', 'categoriamenuController@index');
 Route::post('menunewCate', 'categoriamenuController@create');
 Route::put('menuactuaCate/{id}', 'categoriamenuController@update');
 Route::delete('menuRemoveCate/{id}', 'categoriamenuController@destroy');
+
+Route::post('/qr/generarqr', 'QrController@generarQr');
+Route::post('/qr/verificarpago', 'QrController@generarToken');
+

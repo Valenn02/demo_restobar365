@@ -76,6 +76,8 @@ Vue.component('devoluciones', require('./components/Devoluciones.vue'));
 Vue.component('reporteventas', require('./components/ReporteVentasDiarias.vue'));
 Vue.component('menulist', require('./components/MenuLista.vue'));
 Vue.component('categoriamenu', require('./components/CategoriaMenu.vue'));
+Vue.component('qr', require('./components/Qrvista.vue'));
+
 
 
 

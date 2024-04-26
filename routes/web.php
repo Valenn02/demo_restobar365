@@ -359,6 +359,13 @@ Route::group(['middleware' => ['auth']], function () {
         //REPORTES
         Route::get('/ventas-diarias', 'VentaController@reporteVentasDiarias');
 
+        Route::post('/qr/generartoken', 'QrController@generarToken');
+        Route::post('/qr/generarqr', 'QrController@generarQr');
+        Route::post('/qr/verificarpago', 'QrController@verificarPago');
+
+
+
+
 
     });
 
