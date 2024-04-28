@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Exception;
 use App\Exports\ProductExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\Facades\Image;
 
 class MenuController extends Controller
 {
@@ -74,38 +75,43 @@ class MenuController extends Controller
 
     public function create(Request $request)
     {
+        // Validar el formulario si es necesario
+        // $request->validate([...]);
 
-        //$request->validate([
-        //'nombre' => 'required|unique:menu|max:100',
-        //'precio_venta' => 'nullable|numeric',
-        //'descripcion' => 'nullable|max:256',
-        //'idcategoria_menu' => 'required|exists:categoria_menu,id',
-        //]);
-
-
-        $menu = new menu();
+        $menu = new Menu();
         $menu->nombre = $request->nombre;
         $menu->precio_venta = $request->precio_venta;
         $menu->descripcion = $request->descripcion;
         $menu->idcategoria_menu = $request->idcategoria_menu;
         $menu->condicion = true;
+
         if ($request->hasFile('fotografia')) {
-            if ($request->hasFile('fotografia')) {
-                $imagen = $request->file("fotografia");
-                $nombreimagen = Str::slug($request->nombre) . "." . $imagen->guessExtension();
-                $ruta = public_path("img/menu/");
+            $imagen = $request->file('fotografia');
+            $nombreimagen = Str::slug($request->nombre) . '.' . $imagen->getClientOriginalExtension();
+            $ruta = public_path('img/menu/');
 
-                // Crear el directorio si no existe
-                if (!File::isDirectory($ruta)) {
-                    File::makeDirectory($ruta, 0755, true);
-                }
+            // Crear instancia de la imagen
+            $image = Image::make($imagen);
 
-                // Copiar la imagen al directorio
-                copy($imagen->getRealPath(), $ruta . $nombreimagen);
+            // Obtener dimensiones originales de la imagen
+            $width = $image->width();
+            $height = $image->height();
 
-                $menu->fotografia = $nombreimagen;
+            // Si la imagen es vertical
+            if ($height > $width) {
+                // Recortar la imagen a 500 píxeles de ancho y altura
+                $image->fit(500, 500);
+            } else {
+                // Si la imagen es horizontal o cuadrada, recortarla a 500x500 píxeles manteniendo su centro
+                $image->fit(500, 500);
             }
+
+            // Guardar la imagen
+            $image->save($ruta . $nombreimagen);
+
+            $menu->fotografia = $nombreimagen;
         }
+
         $menu->save();
 
         return response()->json($menu);
