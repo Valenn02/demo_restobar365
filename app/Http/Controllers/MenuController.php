@@ -40,7 +40,7 @@ class MenuController extends Controller
                     'categoria_menu.nombre as nombre_categoria',
 
                 )
-                ->orderBy('menu.id', 'desc')->paginate(5);
+                ->orderBy('menu.id', 'desc')->paginate(8);
         } else {
             $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
 
@@ -56,7 +56,7 @@ class MenuController extends Controller
 
                 )
                 ->where('menu.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('menu.id', 'desc')->paginate(5);
+                ->orderBy('menu.id', 'desc')->paginate(8);
         }
 
 
