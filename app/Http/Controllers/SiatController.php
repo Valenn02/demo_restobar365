@@ -50,7 +50,7 @@ class SiatController extends Controller
             $facturas = Factura::join('personas', 'facturas.idcliente', '=', 'personas.id')
             ->select('facturas.*','personas.nombre as razonSocial', 'personas.email as email', 'personas.num_documento as documentoid', 'personas.complemento_id as complementoid')
             ->where('facturas.id', '=', $id)
-            ->orderBy('facturas.id', 'desc')->paginate(3);
+            ->orderBy('facturas.id', 'desc')->paginate(6);
 
         return [    
             'facturas' => $facturas
@@ -62,7 +62,7 @@ class SiatController extends Controller
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
         $options = array(
             'http' => array(
-                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ",
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -98,10 +98,11 @@ class SiatController extends Controller
             'codigoSucursal' => $codigoSucursal,
             'nit' => $nit
         ));
+        //dd($params);
 
         $options = array(
             'http' => array(
-                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ",
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -141,7 +142,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -180,7 +181,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -219,7 +220,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -258,7 +259,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -297,7 +298,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -336,7 +337,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -375,7 +376,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -406,7 +407,7 @@ class SiatController extends Controller
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
             'codigoPuntoVenta' => $codigoPuntoVenta,
-            'codigoSistema' => $codigoSistema,
+            'codigoSistema' => $codigoSistema,  
             'codigoSucursal' => $codigoSucursal,
             'cuis' => $cuis, 
             'nit' => $nit
@@ -414,7 +415,7 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -431,6 +432,98 @@ class SiatController extends Controller
             $result = "TOKEN NO VÁLIDO";
         }
         return $result;
+    }
+
+    public function verificarNit($codSucursal, $numeroDocumento){
+        $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
+        $codigoAmbiente = 2;
+        $codigoModalidad = 2;
+        $codigoSistema = "77535546B712DD409D7A387";
+        $codigoSucursal = $codSucursal;
+        $cuis = $_SESSION['scuis'];
+        $nit = "5153610012";
+        $nitParaVerificacion = $numeroDocumento;
+
+        $params = array('SolicitudVerificarNit' => array(
+            'codigoAmbiente' => $codigoAmbiente,
+            'codigoModalidad' => $codigoModalidad,
+            'codigoSistema' => $codigoSistema,  
+            'codigoSucursal' => $codigoSucursal,
+            'cuis' => $cuis, 
+            'nit' => $nit,
+            'nitParaVerificacion' => $nitParaVerificacion
+        ));
+
+        $options = array(
+            'http' => array(
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
+                'timeout' => 5
+            )
+        );
+
+        $context = stream_context_create($options);
+        try {
+            $client = new \SoapClient($wsdl, [
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+            $result = $client->verificarNit($params);
+        }catch (SoapFault $fault){
+            $result = "TOKEN NO VÁLIDO";
+        }
+        return $result;
+    }
+
+    public function verificacionEstadoFactura($cuf, $puntoVenta, $codSucursal){
+        $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
+        $codigoAmbiente = 2;
+        $codigoDocumentoSector = 1;
+        $codigoEmision = 1;
+        $codigoModalidad = 2;
+        $codigoPuntoVenta = $puntoVenta;
+        $codigoSistema = "77535546B712DD409D7A387";
+        $codigoSucursal = $codSucursal;
+        $cufd = $_SESSION['scufd'];
+        $cuis = $_SESSION['scuis'];
+        $nit = "5153610012";
+        $tipoFacturaDocumento = 1;
+        $cuf = $cuf;
+
+        $params = array('SolicitudServicioVerificacionEstadoFactura' => array(
+            'codigoAmbiente' => $codigoAmbiente,
+            'codigoDocumentoSector' => $codigoDocumentoSector,
+            'codigoEmision' => $codigoEmision,
+            'codigoModalidad' => $codigoModalidad,
+            'codigoPuntoVenta' => $codigoPuntoVenta,
+            'codigoSistema' => $codigoSistema,
+            'codigoSucursal' => $codigoSucursal,
+            'cufd' => $cufd,
+            'cuis' => $cuis, 
+            'nit' => $nit,
+            'tipoFacturaDocumento' => $tipoFacturaDocumento,
+            'cuf' => $cuf
+        ));
+
+        $options = array(
+            'http' => array(
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
+                'timeout' => 5
+            )
+        );
+
+        $context = stream_context_create($options);
+        try {
+            $client = new \SoapClient($wsdl, [
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+            $result = $client->verificacionEstadoFactura($params);
+        }catch (SoapFault $fault){
+            $result = "TOKEN NO VÁLIDO";
+        }
+        return $result;        
     }
 
     public function recepcionFactura($archivo, $fechaEnvio, $hashArchivo, $puntoVenta, $codSucursal){
@@ -469,12 +562,11 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
 
-        //dd($params);
         $context = stream_context_create($options);
         try {
             $client = new \SoapClient($wsdl, [
@@ -523,12 +615,10 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
-
-        //dd($params);
 
         $context = stream_context_create($options);
         try {
@@ -590,12 +680,10 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
-
-        //dd($params);
 
         $context = stream_context_create($options);
         try {
@@ -640,10 +728,9 @@ class SiatController extends Controller
             'fechaHoraInicioEvento' => $fechaHoraInicioEvento,
             'nit' => $nit
         ));
-
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
@@ -695,12 +782,10 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
-
-        //dd($params);
 
         $context = stream_context_create($options);
         try {
@@ -743,12 +828,10 @@ class SiatController extends Controller
 
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
-
-        //dd($params);
 
         $context = stream_context_create($options);
         try {
@@ -772,7 +855,6 @@ class SiatController extends Controller
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
         $nit = $nit;
-        
 
         $params = array('SolicitudCierrePuntoVenta' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -782,15 +864,12 @@ class SiatController extends Controller
             'cuis' => $cuis,
             'nit' => $nit
         ));
-
         $options = array(
             'http' => array(
-                'header' => 'apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzAzOTgwODAwLCJpYXQiOjE2OTE2MDMxMzIsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.Y61q9_pZiOG49HYRQ5OfXRHvDCh1V8hoviWuA472DgV5f3CdV-MOxz9y4u07AVB-bMByebK_wskxUWXf6cliQQ',
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
                 'timeout' => 5
             )
         );
-
-        //dd($params);
 
         $context = stream_context_create($options);
         try {

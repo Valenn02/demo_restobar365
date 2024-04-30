@@ -28,6 +28,8 @@ use SimpleXMLElement;
 use SoapClient;
 use TheSeer\Tokenizer\Exception;
 use App\Helpers\CustomHelpers;
+use App\MotivoAnulacion;
+use App\PuntoVenta;
 use App\Rol;
 use Illuminate\Support\Facades\File;
 use Phar;
@@ -57,6 +59,14 @@ class VentaController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
+
+        $codigoPuntoVenta = '';
+            if (!empty($usuario->idpuntoventa)) {
+                $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
+                if ($puntoVenta) {
+                    $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+                }
+            }
 
         if ($buscar == '') {
             $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
@@ -104,9 +114,86 @@ class VentaController extends Controller
                 'to' => $ventas->lastItem(),
             ],
             'ventas' => $ventas,
-            'usuario' => $usuario
+            'usuario' => $usuario,
+            'codigoPuntoVenta' => $codigoPuntoVenta
         ];
     }
+
+    public function ventaOffline(Request $request)
+    {
+        if (!$request->ajax())
+            return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        $usuario = \Auth::user();
+        $codigoPuntoVenta = '';
+        if (!empty($usuario->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+
+        if ($buscar == '') {
+            $facturasOffline = FacturaFueraLinea::join('ventas', 'factura_fuera_lineas.idventa', '=', 'ventas.id')
+                ->join('personas', 'factura_fuera_lineas.idcliente', '=', 'personas.id')
+                ->join('users', 'ventas.idusuario', '=', 'users.id')
+                ->select(
+                    'factura_fuera_lineas.*',
+                    'factura_fuera_lineas.correo as correo',
+                    'ventas.tipo_comprobante as tipo_comprobante',
+                    'ventas.serie_comprobante',
+                    'ventas.num_comprobante as num_comprobante',
+                    'ventas.fecha_hora as fecha_hora',
+                    'ventas.impuesto as impuesto',
+                    'ventas.total as total',
+                    'ventas.estado as estado',
+                    'personas.nombre as razonSocial',
+                    'personas.email as email',
+                    'personas.num_documento as documentoid',
+                    'personas.complemento_id as complementoid',
+                    'users.usuario as usuario'
+                )
+                ->orderBy('factura_fuera_lineas.id', 'desc')->paginate(3);
+        } else {
+            $facturasOffline = FacturaFueraLinea::join('ventas', 'factura_fuera_lineas.idventa', '=', 'ventas.id')
+                ->join('personas', 'factura_fuera_lineas.idcliente', '=', 'personas.id')
+                ->join('users', 'ventas.idusuario', '=', 'users.id')
+                ->select(
+                    'factura_fuera_lineas.*',
+                    'ventas.tipo_comprobante as tipo_comprobante',
+                    'ventas.serie_comprobante',
+                    'ventas.num_comprobante as num_comprobante',
+                    'ventas.fecha_hora as fecha_hora',
+                    'ventas.impuesto as impuesto',
+                    'ventas.total as total',
+                    'ventas.estado as estado',
+                    'personas.nombre as razonSocial',
+                    'personas.email as email',
+                    'personas.num_documento as documentoid',
+                    'personas.complemento_id as complementoid',
+                    'users.usuario as usuario'
+                )
+                ->where('factura_fuera_lineas.' . $criterio, 'like', '%' . $buscar . '%')
+                ->orderBy('factura_fuera_lineas.id', 'desc')->paginate(3);
+        }
+
+        return [
+            'pagination' => [
+                'total' => $facturasOffline->total(),
+                'current_page' => $facturasOffline->currentPage(),
+                'per_page' => $facturasOffline->perPage(),
+                'last_page' => $facturasOffline->lastPage(),
+                'from' => $facturasOffline->firstItem(),
+                'to' => $facturasOffline->lastItem(),
+            ],
+            'facturasOffline' => $facturasOffline,
+            'usuario' => $usuario,
+            'codigoPuntoVenta' => $codigoPuntoVenta
+        ];
+    }
+    
     public function indexBuscar(Request $request)
     {
         if (!$request->ajax()) {
@@ -486,21 +573,31 @@ class VentaController extends Controller
         $venta->save();
     }
 
-    public function verificarComunicacion(){
+    public function verificarComunicacion()
+    {
         require "SiatController.php";
-            $siat = new SiatController();
-            $res = $siat->verificarComunicacion();
-            if($res->RespuestaComunicacion->transaccion==true){
-                echo json_encode($res, JSON_UNESCAPED_UNICODE);
-            }else{
-                $msg="Falló la comunicación";
-                echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-            }
+        $siat = new SiatController();
+        $res = $siat->verificarComunicacion();
+        if ($res->RespuestaComunicacion->transaccion == true) {
+            echo json_encode($res, JSON_UNESCAPED_UNICODE);
+        } else {
+            $msg = "Falló la comunicación";
+            echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        }
     }
 
-    public function cuis(){
+    public function cuis()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -513,17 +610,62 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function cufd(){
+    public function nuevoCufd()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
-        if(!isset($_SESSION['scufd'])){
+        require "SiatController.php";
+        $siat = new SiatController();
+        $res = $siat->cufd($puntoVenta, $codSucursal);
+        
+        if ($res->RespuestaCufd->transaccion == true) {
+            $cufd = $res->RespuestaCufd->codigo;
+            $codigoControl = $res->RespuestaCufd->codigoControl;
+            $direccion = $res->RespuestaCufd->direccion;
+            $fechaVigencia = $res->RespuestaCufd->fechaVigencia;
+            
+            $_SESSION['scufd'] = $cufd;
+            $_SESSION['scodigoControl'] = $codigoControl;
+            $_SESSION['sdireccion'] = $direccion;
+            $_SESSION['sfechaVigenciaCufd'] = $fechaVigencia;
+        } else {
+            $res = false;
+        }
+
+        echo json_encode($res, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function cufd()
+    {
+        $user = Auth::user();
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
+        $sucursal = $user->sucursal;
+        $codSucursal = $sucursal->codigoSucursal;
+
+        if (!isset ($_SESSION['scufd'])) {
             require "SiatController.php";
             $siat = new SiatController();
             $res = $siat->cufd($puntoVenta, $codSucursal);
-            if($res->RespuestaCufd->transaccion==true){
+            if ($res->RespuestaCufd->transaccion == true) {
                 $cufd = $res->RespuestaCufd->codigo;
                 $codigoControl = $res->RespuestaCufd->codigoControl;
                 $direccion = $res->RespuestaCufd->direccion;
@@ -532,17 +674,17 @@ class VentaController extends Controller
                 $_SESSION['scodigoControl'] = $codigoControl;
                 $_SESSION['sdireccion'] = $direccion;
                 $_SESSION['sfechaVigenciaCufd'] = $fechaVigencia;
-            }else{
-                $res=false;
+            } else {
+                $res = false;
             }
-        }else{
-            $fechaVigencia = substr($_SESSION['sfechaVigenciaCufd'],0,16);
+        } else {
+            $fechaVigencia = substr($_SESSION['sfechaVigenciaCufd'], 0, 16);
             $fechaVigencia = str_replace("T", " ", $fechaVigencia);
-            if($fechaVigencia<date('Y-m-d H:i')){
+            if ($fechaVigencia < date('Y-m-d H:i')) {
                 require "SiatController.php";
                 $siat = new SiatController();
                 $res = $siat->cufd($puntoVenta, $codSucursal);
-                if($res->RespuestaCufd->transaccion==true){
+                if ($res->RespuestaCufd->transaccion == true) {
                     $cufd = $res->RespuestaCufd->codigo;
                     $codigoControl = $res->RespuestaCufd->codigoControl;
                     $direccion = $res->RespuestaCufd->direccion;
@@ -551,22 +693,32 @@ class VentaController extends Controller
                     $_SESSION['scodigoControl'] = $codigoControl;
                     $_SESSION['sdireccion'] = $direccion;
                     $_SESSION['sfechaVigenciaCufd'] = $fechaVigencia;
-                }else{
-                    $res=false;
+                } else {
+                    $res = false;
                 }
-                }else{
-                    $res['transaccion'] = true;
-                    $res['codigo'] = $_SESSION['scufd'];
-                    $res['fechaVigencia'] = $_SESSION['sfechaVigenciaCufd'];
-                    $res['direccion'] = $_SESSION['sdireccion'];
-                }
-                }
-            echo json_encode($res, JSON_UNESCAPED_UNICODE);
+            } else {
+                $res['transaccion'] = true;
+                $res['codigo'] = $_SESSION['scufd'];
+                $res['fechaVigencia'] = $_SESSION['sfechaVigenciaCufd'];
+                $res['direccion'] = $_SESSION['sdireccion'];
+                $res['codigoControl'] = $_SESSION['scodigoControl'];
+            }
+        }
+        echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarActividades(){
+    public function sincronizarActividades()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -577,21 +729,39 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarParametricaTiposFactura(){
+    public function sincronizarParametricaTiposFactura()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
         $res = $siat->sincronizarParametricaTiposFactura($puntoVenta, $codSucursal);
-        echo json_encode($res, JSON_UNESCAPED_UNICODE);   
+        echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarListaProductosServicios(){
+    public function sincronizarListaProductosServicios()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -601,9 +771,18 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarParametricaMotivoAnulacion(){
+    public function sincronizarParametricaMotivoAnulacion()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -613,9 +792,18 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarParametricaEventosSignificativos(){
+    public function sincronizarParametricaEventosSignificativos()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -625,9 +813,18 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarListaLeyendasFactura(){
+    public function sincronizarListaLeyendasFactura()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -637,9 +834,18 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
-    public function sincronizarParametricaUnidadMedida(){
+    public function sincronizarParametricaUnidadMedida()
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -649,10 +855,61 @@ class VentaController extends Controller
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
+    public function verificarNit($numeroDocumento)
+    {
+        $user = Auth::user();
+        $sucursal = $user->sucursal;
+        $codSucursal = $sucursal->codigoSucursal;
+
+        require "SiatController.php";
+        $siat = new SiatController();
+        $res = $siat->verificarNit($codSucursal, $numeroDocumento);
+        if ($res->RespuestaVerificarNit->transaccion === true) {
+            $mensaje = $res->RespuestaVerificarNit->mensajesList->descripcion;
+        } else if ($res->RespuestaVerificarNit->transaccion === false) {
+            $mensaje = $res->RespuestaVerificarNit->transaccion;
+        }
+
+        echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function verificacionEstadoFactura($cuf)
+    {
+        $user = Auth::user();
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
+        $sucursal = $user->sucursal;
+        $codSucursal = $sucursal->codigoSucursal;
+
+        require "SiatController.php";
+        $siat = new SiatController();
+        $res = $siat->verificacionEstadoFactura($cuf, $puntoVenta, $codSucursal);
+        $mensaje = $res->RespuestaServicioFacturacion->codigoDescripcion;
+
+        echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
+        //var_dump($res);
+    }
+
     public function emitirFactura(Request $request){    
 
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -729,7 +986,15 @@ class VentaController extends Controller
     public function paqueteFactura(Request $request)
     {
             $user = Auth::user();
-            $puntoVenta = $user->idpuntoventa;
+            $codigoPuntoVenta = '';
+            if (!empty($user->idpuntoventa)) {
+                $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+                if ($puntoVenta) {
+                    $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+                }
+            }
+            //$puntoVenta = $user->idpuntoventa;
+            $puntoVenta = $codigoPuntoVenta;
             $sucursal = $user->sucursal;
             $codSucursal = $sucursal->codigoSucursal;
 
@@ -804,7 +1069,15 @@ class VentaController extends Controller
     public function enviarPaquete(Request $request)
     {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
         // Ruta al directorio que deseas comprimir en el archivo TAR
@@ -884,7 +1157,15 @@ class VentaController extends Controller
 
     public function validacionRecepcionPaqueteFactura(){
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -908,16 +1189,17 @@ class VentaController extends Controller
     }
 
 
-    public function eliminarDirectorio($directorio) {
+    public function eliminarDirectorio($directorio)
+    {
         if (!is_dir($directorio)) {
             return;
         }
-    
+
         $archivos = glob($directorio . '/*');
         foreach ($archivos as $archivo) {
             is_dir($archivo) ? $this->eliminarDirectorio($archivo) : unlink($archivo);
         }
-    
+
         rmdir($directorio);
     }
 
@@ -943,30 +1225,42 @@ class VentaController extends Controller
         return $success;
     }
 
-    public function formato_xml($temporal, $xml_temporal){
-        $ns_xsi="http://www.w3.org/2001/XMLSchema-instance";
-            foreach($temporal as $key => $value){
-                if(is_array($value)){
-                    if(!is_numeric($key)){
-                        $subnodo = $xml_temporal->addChild("$key");
-                        $this->formato_xml($value, $subnodo);
-                    }else{
-                        $this->formato_xml($value, $xml_temporal);
-                    }
-                }else{
-                    if($value == null && $value <> '0'){
-                        $hijo = $xml_temporal->addChild("$key", "$value");
-                        $hijo->addAttribute('xsi:nil', 'true', $ns_xsi);
-                    }else{
-                        $xml_temporal->addChild("$key", "$value");
-                    }
+    public function formato_xml($temporal, $xml_temporal)
+    {
+        $ns_xsi = "http://www.w3.org/2001/XMLSchema-instance";
+        foreach ($temporal as $key => $value) {
+            if (is_array($value)) {
+                if (!is_numeric($key)) {
+                    $subnodo = $xml_temporal->addChild("$key");
+                    $this->formato_xml($value, $subnodo);
+                } else {
+                    $this->formato_xml($value, $xml_temporal);
+                }
+            } else {
+                // Escapar el valor antes de agregarlo al XML
+                $escapedValue = htmlspecialchars($value, ENT_XML1);
+                if ($escapedValue == null && $escapedValue <> '0') {
+                    $hijo = $xml_temporal->addChild("$key", "$escapedValue");
+                    $hijo->addAttribute('xsi:nil', 'true', $ns_xsi);
+                } else {
+                    $xml_temporal->addChild("$key", "$escapedValue");
                 }
             }
+        }
     }
 
     public function anulacionFactura($cuf, $motivoSeleccionado){
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -980,11 +1274,29 @@ class VentaController extends Controller
         }
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
         //var_dump($res);
+
+        if ($res->RespuestaServicioFacturacion->transaccion === true){
+            $pdfPath = public_path('docs/facturaCarta.pdf');
+            $descripcionMotivo = MotivoAnulacion::where('codigo', $motivoSeleccionado)->value('descripcion');
+            $numeroFactura = Factura::where('cuf', $cuf)->value('numeroFactura');
+            $correo = Factura::where('cuf', $cuf)->value('correo');
+            $numFactura = str_pad($numeroFactura, 5, "0", STR_PAD_LEFT);
+            //\Mail::to($correo)->send(new \App\Mail\MailAnulacion($pdfPath, $descripcionMotivo, $numFactura));
+        }
     }
 
-    public function registroEventoSignificativo(Request $request){
+    public function registroEventoSignificativo(Request $request)
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -997,7 +1309,6 @@ class VentaController extends Controller
         require "SiatController.php";
         $siat = new SiatController();
         $res = $siat->registroEventoSignificativo($descripcion, $cufdEvento, $codigoMotivoEvento, $inicioEvento, $finEvento, $puntoVenta, $codSucursal);
-         // Verificar el valor de transacción y asignar el mensaje correspondiente
         if ($res->RespuestaListaEventos->transaccion === true) {
             $mensaje = $res->RespuestaListaEventos->codigoRecepcionEventoSignificativo;
             $_SESSION['scodigoevento'] = $res->RespuestaListaEventos->codigoRecepcionEventoSignificativo;
@@ -1005,14 +1316,21 @@ class VentaController extends Controller
             $mensaje = $res->RespuestaListaEventos->mensajesList->descripcion;
         }
 
-        // Imprimir o retornar el mensaje, o realizar otras acciones según tu necesidad
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
-        //var_dump($res);
     }
 
-    public function registroPuntoVenta(Request $request){
+    public function registroPuntoVenta(Request $request)
+    {
         $user = Auth::user();
-        $puntoVenta = $user->idpuntoventa;
+        $codigoPuntoVenta = '';
+        if (!empty($user->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($user->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
+            }
+        }
+        //$puntoVenta = $user->idpuntoventa;
+        $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
 
@@ -1025,19 +1343,17 @@ class VentaController extends Controller
         require "SiatController.php";
         $siat = new SiatController();
         $res = $siat->registroPuntoVenta($nombre, $descripcion, $nit, $idtipopuntoventa, $idsucursal, $puntoVenta, $codSucursal);
-         // Verificar el valor de transacción y asignar el mensaje correspondiente
         if ($res->RespuestaRegistroPuntoVenta->transaccion === true) {
             $mensaje = $res->RespuestaRegistroPuntoVenta->codigoPuntoVenta;
         } else {
             $mensaje = $res->RespuestaRegistroPuntoVenta->mensajesList->descripcion;
         }
 
-        // Imprimir o retornar el mensaje, o realizar otras acciones según tu necesidad
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
-        //var_dump($res);
     }
 
-    public function cierrePuntoVenta(Request $request){
+    public function cierrePuntoVenta(Request $request)
+    {
         $user = Auth::user();
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
@@ -1048,16 +1364,13 @@ class VentaController extends Controller
         require "SiatController.php";
         $siat = new SiatController();
         $res = $siat->cierrePuntoVenta($codigoPuntoVenta, $nit, $codSucursal);
-         // Verificar el valor de transacción y asignar el mensaje correspondiente
         if ($res->RespuestaCierrePuntoVenta->transaccion === true) {
             $mensaje = $res->RespuestaCierrePuntoVenta->codigoPuntoVenta;
         } else {
             $mensaje = $res->RespuestaCierrePuntoVenta->mensajesList->descripcion;
         }
 
-        // Imprimir o retornar el mensaje, o realizar otras acciones según tu necesidad
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
-        //var_dump($res);
     }
 
     public function imprimirTicket($id)

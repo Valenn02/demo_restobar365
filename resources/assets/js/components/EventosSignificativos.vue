@@ -2,7 +2,7 @@
     <main class="main">
     <!-- Breadcrumb -->
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
+        <li class="breadcrumb-item"><a class="text-decoration-none" href="/">Escritorio</a></li>
     </ol>
     <div class="container-fluid">
         <!-- Ejemplo de tabla Listado -->
@@ -16,6 +16,17 @@
                 <span class="badge bg-secondary" id="cuis">CUIS: Inexistente</span>
                 <span class="badge bg-primary" id="cufdValor" v-show="mostrarCUFD">No hay CUFD</span>
             </div>
+            <div class="card-body"></div>
+            <div class="form-group row">
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-info" @click="obtenerNuevoCUFD">
+                                        <i class="icon-reload"></i>
+                                    </button>
+                                    <input type="text" class="form-control" placeholder="Obtener Nuevo CUFD" readonly>
+                                </div>
+                            </div>
+                        </div> 
             <div class="table-responsive">
                         
                         <table class="table table-bordered table-striped table-sm">
@@ -50,6 +61,7 @@
                                 </tr>                                                              
                             </tbody>
                         </table>
+                    </div>
                         <nav>
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
@@ -63,12 +75,11 @@
                                 </li>
                             </ul>
                         </nav>
-                    </div>
                 </div>
         </div>
         <!-- Fin ejemplo de tabla Listado -->
         <!-- Inicio del modal agregar/actualizar -->
-        <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-primary modal-lg" role="document">
             <div class="modal-content">
             <div class="modal-header">
@@ -93,9 +104,9 @@
                     </div>
                     </div>
                     <div class="col-md-6">
-                    <div class="form-group">
+                        <div class="form-group">
                         <label for="text-input"><strong>Inicio del Evento</strong></label>
-                        <input type="text" id="inicioEvento" v-model="inicioEvento" class="form-control" readonly>
+                        <input type="datetime-local" id="inicioEvento" v-model="inicioEvento" class="form-control" :readonly="codigoEvento !== 5 && codigoEvento !== 6 && codigoEvento !== 7">
                     </div>
                     <div class="form-group">
                         <input type="hidden" id="codigoEvento" v-model="codigoEvento" class="form-control" placeholder="Paramétrica que identifica el tipo de evento" readonly>
@@ -261,6 +272,23 @@
                     });
             },
 
+            obtenerNuevoCUFD() {
+            axios.post('/venta/nuevoCufd')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.RespuestaCufd.transaccion != false) {
+                        document.getElementById("cufdValor").innerHTML = response.data.RespuestaCufd.codigo;
+                        this.cufdEvento = response.data.RespuestaCufd.codigo;
+                    } else {
+                        document.getElementById("cufd").innerHTML = "No existe CUFD vigente";
+                        document.getElementById("cufd").className = "badge bg-secondary";
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
             obtenerDatosMotivo (){
                 let me = this;
                 var url = '/eventos/obtenerDatosMotivoEvento';
@@ -286,12 +314,26 @@
                 }
             },
 
-            registrarEvento(){
+            async registrarEvento(){
                 if(this.validarEvento()){
                     return;
                 }
 
                 let me = this;
+                
+                if (this.codigoEvento === 5 || this.codigoEvento === 6 || this.codigoEvento === 7){
+                    try {
+                        const response = await axios.get('/api/facturas/ultimo');
+                        const data = response.data;
+                        
+                        this.cufdEvento = data.cufd;
+                        console.log("El cufdEvento es: " + this.cufdEvento);
+                    } catch (error) {
+                        console.error('Error al obtener el último registro de facturas:', error);
+                    }
+                }
+
+                console.log("El codigo cufdEvento es: " + this.cufdEvento);
                 
                 axios.post('/eventos/registrar', {
                     'descripcion' : this.descripcion,
