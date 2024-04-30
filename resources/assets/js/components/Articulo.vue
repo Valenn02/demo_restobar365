@@ -42,7 +42,8 @@
                                     <!-- <th>Presio1</th> -->
                                     <th>Precio</th>
             
-
+                                    <th>Precio Costo Unidad</th>
+                                    <th>Precio Costo Paquete</th>
                                     <th>Categorìa</th>
                                     <th>Descripción</th>
                                     <th>Foto</th>
@@ -68,8 +69,10 @@
                                         </template>
                                     <td v-text="articulo.id"></td>
                                     <td v-text="articulo.nombre"></td>
-                                    <td v-text="articulo.precio_venta">
-                                    </td>
+                                    <td v-text="articulo.precio_venta"></td>
+                                    <td v-text="articulo.precio_costo_unid"></td>
+                                    <td v-text="articulo.precio_costo_paq"></td>
+
 
                                     <!-- <td v-if="rolUsuario === 1" v-text="articulo.precio_venta"></td> -->
                                     <td v-if="rolUsuario === 1 && mostrarCostos === 1" v-text="articulo.precio_venta"></td>
@@ -163,7 +166,7 @@
                                         @input="unidad_envaseVacio = false"
                                         placeholder="Unid X Envase">
                                     </div>
-                                    <div style="display: none;" class="form-group">
+                                    <div class="form-group">
                                         <label class="form-control-label" for="email-input">Precio Costo(Unid*.)</label>
                                         <div class="input-group">
                                             <input type="text" 
@@ -178,21 +181,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(paq*.)</label>
-                                        <div class="input-group">
-                                            <input type="text" 
-                                            v-model="precio_costo_paq" 
-                                            class="form-control"
-                                            :class="{ 'border-red': precio_costo_paqVacio }"
-                                            @input="precio_costo_paqVacio = false"
-                                            placeholder="paquete">
-                                            <div class="input-group-append">
-                                                <button type="button" class="btn btn-primary"
-                                                    @click="calcularPrecioCostoPaq">Calcular</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     
                                 </div>
                                 <!---DERECHA-->
@@ -232,6 +221,21 @@
                                             :class="{ 'border-red': stockVacio }" 
                                             @input="stockVacio = false"
                                             placeholder="Ingrese estock minimo">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="email-input">Precio Costo(paq*.)</label>
+                                        <div class="input-group">
+                                            <input type="text" 
+                                            v-model="precio_costo_paq" 
+                                            class="form-control"
+                                            :class="{ 'border-red': precio_costo_paqVacio }"
+                                            @input="precio_costo_paqVacio = false"
+                                            placeholder="paquete">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-primary"
+                                                    @click="calcularPrecioCostoPaq">Calcular</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1600,8 +1604,8 @@ export default {
             formData.append('idproveedor', this.proveedorseleccionada.id);
             //formData.append('idgrupo', this.gruposeleccionada.id);//AUMENtE 5 julio
 
-            //formData.append('precio_costo_unid', this.precio_costo_unid);
-            //formData.append('precio_costo_paq', this.precio_costo_paq);
+            formData.append('precio_costo_unid', this.precio_costo_unid);
+            formData.append('precio_costo_paq', this.precio_costo_paq);
 
             //formData.append('codigo', this.codigo);
             formData.append('nombre', this.nombre_producto);
@@ -1676,6 +1680,8 @@ export default {
             formData.append('costo_compra', this.costo_compra);
             formData.append('idmedida', this.medidaseleccionada.id);
             formData.append('unidad_paquete', this.unidad_envase);
+            formData.append('precio_costo_unid', this.precio_costo_unid);
+            formData.append('precio_costo_paq', this.precio_costo_paq);
             //formData.append('id', this.articulo_id);
 
             /*for (let [key, value] of formData.entries()) 

@@ -80,7 +80,9 @@
                             <li @click="menu=47" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Categoria Menu</a>
                             </li>
-                           
+                            <li @click="menu=48" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> qr</a>
+                            </li>
                         </ul>
                     </li>
 

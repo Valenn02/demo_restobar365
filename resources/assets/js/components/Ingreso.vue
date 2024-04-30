@@ -485,13 +485,13 @@ export default {
                 console.log(data);
                 console.log("==========");
                 me.arrayArticuloSeleccionado={
-                    codigo:data['codigo'],
+                    codigo:data['id'],
                     descripcion:data['descripcion'],
                     fotografia:data['fotografia'],
                     id:data['id'],
                     nombre:data['nombre'],
                     precio_costo_unid:data['precio_costo_unid'],
-                    unidad_envase:data['unidad_envase']
+                    unidad_paquete:data['unidad_paquete']
 
                 }
                 me.codigo=me.arrayArticuloSeleccionado.codigo;

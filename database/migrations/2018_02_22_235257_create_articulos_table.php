@@ -23,6 +23,8 @@ class CreateArticulosTable extends Migration
             $table->string('nombre_generico', 100); //aumente 5_julio
             $table->integer('unidad_paquete')->nullable(); //aumente
 
+            $table->decimal('precio_costo_unid', 11, 2); //aumente
+            $table->decimal('precio_costo_paq', 11, 2);
             $table->decimal('precio_venta', 11, 2)->nullable(); //precio presio2
 
             $table->integer('stockmin')->nullable(); //stock minimo

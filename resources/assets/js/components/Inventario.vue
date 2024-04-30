@@ -64,7 +64,7 @@
                                         </button> &nbsp;
                                     </td> -->
                                     <td v-text="inventario.nombre_producto"></td>
-                                    <td v-text="inventario.unidad_envase"></td>
+                                    <td v-text="inventario.unidad_paquete"></td>
                                     <td v-text="inventario.saldo_stock_total"></td>
                                     <td v-text="inventario.nombre_almacen"></td>
                                 </tr>                                
@@ -88,7 +88,7 @@
                             <tbody>
                                 <tr v-for="inventario in arrayInventario" :key="inventario.id">
                                     <td v-text="inventario.nombre_producto"></td>
-                                    <td v-text="inventario.unidad_envase"></td>
+                                    <td v-text="inventario.unidad_paquete"></td>
                                     <td v-text="inventario.precio_costo_unid"></td>
                                     <td v-text="inventario.saldo_stock"></td>
                                     <td v-text="inventario.fecha_ingreso"></td>
