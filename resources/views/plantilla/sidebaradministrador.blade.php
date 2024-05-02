@@ -20,13 +20,16 @@
                             <li @click="menu=14" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Sucursales</a>
                             </li>
+                            <li @click="menu=41" class="nav-item">
+                            <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Puntos de Venta</a>
+                    </li>
                         </ul>
                     </li>
 
                     <!--Menu Ventas-->
 
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-list-alt"></i> Ventas</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-shopping-cart"></i> Ventas</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=16" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Apertura/Cierre Caja</a>
@@ -43,7 +46,7 @@
                      <!--Menu Compras-->
 
                      <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-list-alt"></i> Compras</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-shopping-bag"></i> Compras</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=3" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Compras Productos</a>
@@ -55,7 +58,7 @@
                     <!--Menu Inventario-->
 
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-tags"></i> Inventario</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-file-text"></i> Inventario</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=24" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Almacenes</a>
@@ -84,7 +87,7 @@
                     </li>
 
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-tags"></i> Productos</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-cutlery"></i> Productos</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=2" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Productos</a>
@@ -123,6 +126,25 @@
                             </li>
                         </ul>
                     </li>
+
+                    <!--Menu SIAT-->
+                    <li class="nav-item nav-dropdown">
+                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-info"></i>SIAT</a>
+                    <ul class="nav-dropdown-items">
+                        <li @click="menu=38" class="nav-item">
+                            <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Eventos Significativos</a>
+                        </li>
+                        <li @click="menu=31" class="nav-item">
+                            <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Sinc. Actividades</a>
+                        </li>
+                        <li @click="menu=34" class="nav-item">
+                            <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Sinc. Servicios</a>
+                        </li>
+                        <li @click="menu=37" class="nav-item">
+                            <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Sinc. Unidad Medida</a>
+                        </li>
+                    </ul>
+                </li>
                 </ul>
             </nav>
         </div>

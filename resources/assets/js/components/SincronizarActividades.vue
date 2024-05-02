@@ -2,7 +2,7 @@
   <main class="main">
   <!-- Breadcrumb -->
   <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
+      <li class="breadcrumb-item"><a class="text-decoration-none" href="/">Escritorio</a></li>
   </ol>
   <div class="container-fluid">
       <!-- Ejemplo de tabla Listado -->
@@ -12,7 +12,8 @@
           </div>
           <div class="card-body">
             <div>
-                <pre>{{ result }}</pre>
+              <p><strong>Última sincronización: {{ result.lastSync }}</strong></p>
+              <pre>{{ result.data }}</pre>
             </div>            
            </div>
           </div>
@@ -24,14 +25,19 @@
   export default {
       data (){
           return {
-            result: '', // Variable para almacenar el contenido del XML
+            result: {
+                data: [],
+                lastSync: null 
+              }
           }
       },
       methods : {
         async obtenerActividades() {
           try {
-            const response = await axios.get('/factura/sincronizarActividades'); // Cambia la ruta
-            this.result = response.data; // Almacenar el contenido del XML
+            const response = await axios.get('/factura/sincronizarActividades');
+            this.result.data = response.data;
+              
+            this.result.lastSync = new Date().toLocaleString();
           } catch (error) {
             console.error('Error al obtener actividades', error);
           }

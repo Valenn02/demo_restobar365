@@ -17,6 +17,7 @@ class CreatePuntoVentas extends Migration
             $table->increments('id');
             $table->integer('idtipopuntoventa')->unsigned();
             $table->integer('idsucursal')->unsigned();
+            $table->integer('codigoPuntoVenta')->unsigned();
             $table->string('nombre', 80);
             $table->string('descripcion', 250);
             $table->string('nit', 50);
@@ -28,7 +29,7 @@ class CreatePuntoVentas extends Migration
         });
 
         DB::table('punto_ventas')->insert(array('idtipopuntoventa' => '1', 'idsucursal' => '1', 
-            'nombre' => 'Punto_A', 'descripcion' => 'prueba', 'nit' => '00458', 'estado' => '1'));
+        'codigoPuntoVenta' => '0','nombre' => 'Punto_A', 'descripcion' => 'prueba', 'nit' => '00458', 'estado' => '1'));
 
     }
 
