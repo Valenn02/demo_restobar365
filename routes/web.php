@@ -152,6 +152,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/cliente/actualizar', 'ClienteController@update');
         Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
         Route::get('/cliente/listarReporteClienteExcel', 'ClienteController@listarReporteClienteExcel');
+        Route::put('/cliente/desactivarCli', 'ClienteController@desactivarCli');
+        Route::put('/cliente/activarCli', 'ClienteController@activarCli');
 
         Route::get('/venta', 'VentaController@index');
         Route::post('/venta/registrar', 'VentaController@store');

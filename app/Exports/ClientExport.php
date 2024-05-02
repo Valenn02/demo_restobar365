@@ -18,7 +18,7 @@ class ClientExport implements FromCollection, WithHeadings, WithColumnWidths, Wi
     */
     public function collection()
     {
-        return Persona::select('id','nombre','tipo_documento','num_documento','direccion','telefono','email')->get();
+        return Persona::select('id','nombre','telefono')->get();
     }
 
     public function headings(): array
@@ -26,11 +26,7 @@ class ClientExport implements FromCollection, WithHeadings, WithColumnWidths, Wi
         return [
             'ID',
             'Nombre',
-            'Tipo Documento',
-            'Numero Documento',
-            'Direccion',
             'Telefono',
-            'Email',
         ];
     }
 
