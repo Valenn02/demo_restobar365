@@ -31,3 +31,6 @@ Route::delete('menuRemoveCate/{id}', 'categoriamenuController@destroy');
 Route::post('/qr/generarqr', 'QrController@generarQr');
 Route::post('/qr/verificarpago', 'QrController@generarToken');
 
+Route::post('/qr/confirmaPago', 'QrController@confirmaPago');
+
+

@@ -361,7 +361,8 @@ Route::group(['middleware' => ['auth']], function () {
         //REPORTES
         Route::get('/ventas-diarias', 'VentaController@reporteVentasDiarias');
         Route::post('/qr/generarqr', 'QrController@generarQr');
-        Route::post('/qr/verificarpago', 'QrController@generarToken');
+        Route::post('/qr/verificarestado', 'QrController@verificarEstado');
+        
     });
 
     //RUTA PARA RECUPERAR LA SESSION CON EL ID DE LA PERSONA LOGUEADA

@@ -100,4 +100,51 @@ class QrController extends Controller
             }
         }
     }
+
+    public function verificarEstado(Request $request)
+    {
+        // Obtener el token
+        $token = $this->generarToken();
+    
+        $url = 'https://sip.mc4.com.bo:8443/api/v1/estadoTransaccion';
+    
+        // Encabezados
+        $headers = [
+            'apikeyServicio' => '939aa1fcf73a32a737d495a059104a9a60a707074bceef68',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $token, // Agregar el token como parte del encabezado de autorización
+        ];
+    
+        // Cuerpo de la solicitud
+        $body = json_encode([
+            'alias' => '15896',
+        ]);
+    
+        try {
+            // Inicializar cliente GuzzleHttp
+            $client = new Client();
+    
+            // Realizar la solicitud POST
+            $response = $client->post($url, [
+                'headers' => $headers,
+                'body' => $body
+            ]);
+    
+            // Decodificar y mostrar la respuesta
+            $responseData = json_decode($response->getBody(), true);
+            return response()->json($responseData, $response->getStatusCode());
+        } catch (RequestException $e) {
+            // Manejar errores de solicitud
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+                $statusCode = $response->getStatusCode();
+                $errorData = json_decode($response->getBody(), true);
+                return response()->json($errorData, $statusCode);
+            } else {
+                // Error de conexión
+                return response()->json(['error' => 'Error de conexión'], 500);
+            }
+        }
+    }
+    
 }

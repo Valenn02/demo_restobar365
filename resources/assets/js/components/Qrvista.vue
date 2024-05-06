@@ -12,20 +12,49 @@
     <div v-if="qrImage">
       <img :src="qrImage" alt="Código QR">
     </div>
+
+    <!-- Botón para verificar estado -->
+    <button @click="verificarEstado" v-if="qrImage">Verificar Estado de Pago</button>
+
+    <!-- Mostrar estado de transacción -->
+    <div v-if="estadoTransaccion">
+      <p>Estado Actual: {{ estadoTransaccion.objeto.estadoActual }}</p>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       alias: '',
       monto: 0,
       qrImage: '', // Variable para almacenar la URL de la imagen QR
-      aliasverificacion: '' 
+      aliasverificacion: '',
+      estadoTransaccion: null // Variable para almacenar el estado de la transacción
     };
   },
   methods: {
+    verificarEstado() {
+      console.log(this.aliasverificacion);
+
+      // Realizar una solicitud POST al endpoint en tu backend Laravel
+      axios.post('/qr/verificarestado', {
+        alias: this.aliasverificacion,
+      })
+      .then(response => {
+        // Manejar la respuesta aquí
+        this.estadoTransaccion = response.data; // Asignar el estado de la transacción a la variable
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Manejar cualquier error de solicitud aquí
+        console.error(error);
+      });
+    },
+
     generarQr() {
       this.aliasverificacion = this.alias;
       // Realizar una solicitud POST al endpoint para generar el código QR
@@ -42,6 +71,8 @@ export default {
 
         // Manejar la respuesta aquí, por ejemplo, mostrar el resultado en la consola
         console.log(response.data);
+        console.log(this.aliasverificacion);
+
       })
       .catch(error => {
         // Manejar cualquier error de solicitud aquí
