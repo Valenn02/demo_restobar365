@@ -120,6 +120,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::post('/menu/registrar', 'MenuController@create');
         Route::get('/menu', 'MenuController@index');
+        Route::get('/menu/getAllMenu', 'MenuController@getAllMenu');
         Route::post('/menu/actualizar', 'MenuController@update');
         Route::put('/menu/actualizar', 'MenuController@update');
         Route::put('/menu/desactivar', 'MenuController@desactivar');
