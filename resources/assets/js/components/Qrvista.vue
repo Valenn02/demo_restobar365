@@ -3,8 +3,8 @@
     <label for="alias">Alias:</label>
     <InputText v-model="alias" />
     <br>
-    <label for="monto">Monto:</label>
-    <InputNumber v-model="monto" mode="currency" :currency="currency" />
+    <label for="montoQR">Monto:</label>
+    <InputNumber v-model="montoQR" mode="currency" :currency="currency" />
     <br>      
     <Button @click="generarQr" label="Generar QR" />
     
@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       alias: '',
-      monto: 0,
+      montoQR: 0,
       qrImage: '',
       aliasverificacion: '',
       estadoTransaccion: null,
@@ -68,7 +68,7 @@ export default {
       this.aliasverificacion = this.alias;
       axios.post('/qr/generarqr', {
         alias: this.alias,
-        monto: this.monto
+        monto: this.montoQR
       })
       .then(response => {
         const imagenBase64 = response.data.objeto.imagenQr;
@@ -79,7 +79,7 @@ export default {
       });
 
       this.alias = '';
-      this.monto = 0;
+      this.montoQR = 0;
     }
   }
 }
