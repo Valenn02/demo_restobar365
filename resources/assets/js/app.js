@@ -10,7 +10,7 @@ import Vue from 'vue'
 import PrimeVue from 'primevue/config';
 import 'primeflex/primeflex.css';
 
-import 'primevue/resources/themes/nova-accent/theme.css';
+import 'primevue/resources/themes/lara-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
@@ -50,11 +50,8 @@ Vue.component('consultaventa', require('./components/ConsultaVenta.vue'));
 Vue.component('notification', require('./components/Notification.vue'));
 
 Vue.component('editarperfil', require('./components/EditarPerfil.vue'));
-// compras
 Vue.component('registrarcompra', require('./components/compras/RegistrarCompra.vue'));
-// productos
 Vue.component('modalagregarproductos', require('./components/productos/ModalAgregarProductos.vue'));
-// Pedidos a proveedor
 Vue.component('detallepedidosproveedor', require('./components/PedidosProveedor/DetallePedidoProveedor.vue'));
 
 Vue.component('marca', require('./components/Marca.vue'));
@@ -89,8 +86,6 @@ Vue.component('reporteventas', require('./components/ReporteVentasDiarias.vue'))
 Vue.component('menulist', require('./components/MenuLista.vue'));
 Vue.component('categoriamenu', require('./components/CategoriaMenu.vue'));
 Vue.component('qr', require('./components/Qrvista.vue'));
-
-
 
 
 const app = new Vue({

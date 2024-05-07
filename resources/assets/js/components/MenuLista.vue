@@ -46,7 +46,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+                                <tr v-for="articulo in listaArticulosConImagenSrc" :key="articulo.id">
                                     <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)"
                                             class="btn btn-warning btn-sm">
                                             <i class="icon-pencil"></i>
@@ -68,10 +68,8 @@
                                     <td v-text="articulo.precio_venta"></td>
                                     <td v-text="articulo.descripcion"></td>
                                     <td class="text-center">
-                                        <img :src="'img/menu/' + articulo.fotografia + '?t=' + new Date().getTime()"
-                                            width="50" height="50" v-if="articulo.fotografia" ref="imagen">
-                                        <img :src="'img/menu/' + 'defecto.jpg'" width="50" height="50" v-else
-                                            ref="imagen">
+                                        <img :src="articulo.imagenSrc"
+                                            width="50" height="50" ref="imagen">
                                     </td>
 
                                     <td>
@@ -985,8 +983,19 @@ export default {
             //console.log(this.fotoMuestra);
             return this.fotoMuestra;
         },
+        listaArticulosConImagenSrc() {
+            return this.arrayArticulo.map(articulo => ({
+                ...articulo,
+                imagenSrc: articulo.fotografia
+                    ? `img/menu/${articulo.fotografia}?id=${articulo.id}_${this.uniqueId()}`
+                    : 'img/articulo/defecto.jpg'
+            }));
+        }
     },
     methods: {
+        uniqueId() {
+            return new Date().getTime();
+        },
         calculatePages: function(paginationObject, offset) {
             if (!paginationObject.to) {
             return [];

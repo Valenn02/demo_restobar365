@@ -40,7 +40,8 @@ class MenuController extends Controller
                     'categoria_menu.nombre as nombre_categoria',
 
                 )
-                ->orderBy('menu.id', 'desc')->paginate(8);
+                ->orderBy('menu.id', 'desc')
+                ->paginate(8);
         } else {
             $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
 
@@ -56,7 +57,8 @@ class MenuController extends Controller
 
                 )
                 ->where('menu.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('menu.id', 'desc')->paginate(8);
+                ->orderBy('menu.id', 'desc')
+                ->paginate(8);
         }
 
 
@@ -71,6 +73,50 @@ class MenuController extends Controller
             ],
             'articulos' => $menu
         ];
+    }
+
+    public function getAllMenu(Request $request)
+    {
+        if (!$request->ajax())
+            return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+
+        if ($buscar == '') {
+            $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+
+                ->select(
+                    'menu.id',
+                    'menu.idcategoria_menu',
+                    'menu.nombre',
+                    'menu.precio_venta',
+                    'menu.descripcion',
+                    'menu.condicion',
+                    'menu.fotografia',
+                    'categoria_menu.nombre as nombre_categoria',
+
+                )
+                ->orderBy('menu.id', 'desc')->get();
+        } else {
+            $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+
+                ->select(
+                    'menu.id',
+                    'menu.idcategoria_menu',
+                    'menu.nombre',
+                    'menu.precio_venta',
+                    'menu.descripcion',
+                    'menu.condicion',
+                    'menu.fotografia',
+                    'categoria_menu.nombre as nombre_categoria',
+
+                )
+                ->where('menu.' . $criterio, 'like', '%' . $buscar . '%')
+                ->orderBy('menu.id', 'desc')->get();
+        }
+
+        return ['articulos' => $menu];
     }
 
     public function create(Request $request)

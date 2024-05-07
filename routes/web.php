@@ -120,6 +120,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::post('/menu/registrar', 'MenuController@create');
         Route::get('/menu', 'MenuController@index');
+        Route::get('/menu/getAllMenu', 'MenuController@getAllMenu');
         Route::post('/menu/actualizar', 'MenuController@update');
         Route::put('/menu/actualizar', 'MenuController@update');
         Route::put('/menu/desactivar', 'MenuController@desactivar');
@@ -152,6 +153,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/cliente/actualizar', 'ClienteController@update');
         Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
         Route::get('/cliente/listarReporteClienteExcel', 'ClienteController@listarReporteClienteExcel');
+        Route::put('/cliente/desactivarCli', 'ClienteController@desactivarCli');
+        Route::put('/cliente/activarCli', 'ClienteController@activarCli');
 
         Route::get('/venta', 'VentaController@index');
         Route::post('/venta/registrar', 'VentaController@store');
@@ -359,7 +362,8 @@ Route::group(['middleware' => ['auth']], function () {
         //REPORTES
         Route::get('/ventas-diarias', 'VentaController@reporteVentasDiarias');
         Route::post('/qr/generarqr', 'QrController@generarQr');
-        Route::post('/qr/verificarpago', 'QrController@generarToken');
+        Route::post('/qr/verificarestado', 'QrController@verificarEstado');
+        
     });
 
     //RUTA PARA RECUPERAR LA SESSION CON EL ID DE LA PERSONA LOGUEADA

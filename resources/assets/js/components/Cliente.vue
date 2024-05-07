@@ -22,8 +22,6 @@
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
                                       <option value="nombre">Nombre</option>
-                                      <option value="num_documento">Documento</option>
-                                      <option value="email">Email</option>
                                       <option value="telefono">Teléfono</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
@@ -38,11 +36,8 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>Tipo Documento</th>
-                                    <th>Número</th>
-                                    <th>Dirección</th>
                                     <th>Teléfono</th>
-                                    <th>Email</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,14 +45,30 @@
                                     <td>
                                         <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
+                                        </button>&nbsp;
+                                        <template v-if="persona.estadoCli">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            @click="desactivarUsuario(persona.id)">
+                                            <i class="icon-trash"></i>
                                         </button>
+                                        </template>
+                                        <template v-else>
+                                            <button type="button" class="btn btn-info btn-sm"
+                                                @click="activarUsuario(persona.id)">
+                                                <i class="icon-check"></i>
+                                            </button>
+                                        </template>
                                     </td>
                                     <td v-text="persona.nombre"></td>
-                                    <td v-text="persona.tipo_documento"></td>
-                                    <td v-text="persona.num_documento"></td>
-                                    <td v-text="persona.direccion"></td>
                                     <td v-text="persona.telefono"></td>
-                                    <td v-text="persona.email"></td>
+                                    <td>
+                                        <div v-if="persona.estadoCli">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="badge badge-danger">Desactivado</span>
+                                        </div>
+                                    </td>
                                 </tr>                                
                             </tbody>
                         </table>
@@ -99,40 +110,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Tipo Documento</label>
-                                    <div class="col-md-9">
-                                        <select v-model="tipo_documento" class="form-control">
-                                            <option value="" disabled>Selecciona una tipo de documento</option>
-                                            <option value="1">CI - CEDULA DE IDENTIDAD</option>
-                                            <option value="2">CEX - CEDULA DE IDENTIDAD DE EXTRANJERO</option>
-                                            <option value="5">NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA</option>
-                                            <option value="3">PAS - PASAPORTE</option>
-                                            <option value="4">PAS - PASAPORTE</option>     
-                                        </select>                                    
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Número</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="num_documento" class="form-control" placeholder="Número de documento">                                        
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Dirección</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="direccion" class="form-control" placeholder="Dirección">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="telefono" class="form-control" placeholder="Teléfono">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Email</label>
-                                    <div class="col-md-9">
-                                        <input type="email" v-model="email" class="form-control" placeholder="Email">
                                     </div>
                                 </div>
                                 <div v-show="errorPersona" class="form-group row div-error">
@@ -247,11 +227,7 @@
 
                 axios.post('/cliente/registrar',{
                     'nombre': this.nombre,
-                    'tipo_documento': this.tipo_documento,
-                    'num_documento' : this.num_documento,
-                    'direccion' : this.direccion,
-                    'telefono' : this.telefono,
-                    'email' : this.email
+                    'telefono' : this.telefono
                 }).then(function (response) {
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
@@ -268,11 +244,7 @@
 
                 axios.put('/cliente/actualizar',{
                     'nombre': this.nombre,
-                    'tipo_documento': this.tipo_documento,
-                    'num_documento' : this.num_documento,
-                    'direccion' : this.direccion,
                     'telefono' : this.telefono,
-                    'email' : this.email,
                     'id': this.persona_id
                 }).then(function (response) {
                     me.cerrarModal();
@@ -329,11 +301,7 @@
                                 this.tipoAccion=2;
                                 this.persona_id=data['id'];
                                 this.nombre = data['nombre'];
-                                this.tipo_documento = data['tipo_documento'];
-                                this.num_documento = data['num_documento'];
-                                this.direccion = data['direccion'];
                                 this.telefono = data['telefono'];
-                                this.email = data['email'];
                                 break;
                             }
                         }
@@ -343,7 +311,85 @@
             cargarReporteExcel()
             {
                 window.open('/cliente/listarReporteClienteExcel', '_blank');
-            }
+            },
+            desactivarUsuario(id) {
+            swal({
+                title: 'Esta seguro de desactivar este usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/cliente/desactivarCli', {
+                        'id': id
+                    }).then(function (response) {
+                        me.listarPersona(1, '', 'nombre');
+                        swal(
+                            'Desactivado!',
+                            'El registro ha sido desactivado con éxito.',
+                            'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+
+                }
+            })
+        },
+        activarUsuario(id) {
+            swal({
+                title: 'Esta seguro de activar este usuario?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    let me = this;
+
+                    axios.put('/cliente/activarCli', {
+                        'id': id
+                    }).then(function (response) {
+                        me.listarPersona(1, '', 'nombre');
+                        swal(
+                            'Activado!',
+                            'El registro ha sido activado con éxito.',
+                            'success'
+                        )
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                ) {
+
+                }
+            })
+        },
         },
         mounted() {
             this.listarPersona(1,this.buscar,this.criterio);
