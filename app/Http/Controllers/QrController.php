@@ -117,7 +117,7 @@ class QrController extends Controller
     
         // Cuerpo de la solicitud
         $body = json_encode([
-            'alias' => '15896',
+            'alias' => $request->alias,
         ]);
     
         try {
