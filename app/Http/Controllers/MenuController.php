@@ -93,7 +93,7 @@ class MenuController extends Controller
                     'menu.idcategoria_menu',
                     'menu.codigo',
                     'menu.nombre',
-                    'menu.precio_venta as precio',
+                    'menu.precio_venta',
                     'menu.descripcion',
                     'menu.condicion',
                     'menu.fotografia',
