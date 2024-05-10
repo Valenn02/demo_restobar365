@@ -34,8 +34,30 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             //$table->timestamps();
         });
-        DB::table('users')->insert(array('id' => '1', 'usuario' => 'admin', 'password' => '$2y$12$fQVExSFUFZCNs.9xClllau9VAWQGMJZq7KNTQ14DgpO2djOIiEeVi', 'idrol' => '1', 'idsucursal' => '1', 'idpuntoventa' => '1', 'remember_token' => 'vEHmcelujGXofHcFYAFCumGPd25mQ6Uw1ma5VHlO1dWbx8tHQMndvnaQZnjI'));
+        DB::table('users')->insert(array('id' => '1',
+            'usuario' => 'admin',
+            'password' => '$2y$12$fQVExSFUFZCNs.9xClllau9VAWQGMJZq7KNTQ14DgpO2djOIiEeVi',
+            'idrol' => '1',
+            'idsucursal' => '1',
+            'idpuntoventa' => '1',
+            'remember_token' => 'vEHmcelujGXofHcFYAFCumGPd25mQ6Uw1ma5VHlO1dWbx8tHQMndvnaQZnjI'));
 
+        DB::table('users')->insert(array('id' => '2',
+            'usuario' => 'almacenero',
+            'password' => '$2y$12$fQVExSFUFZCNs.9xClllau9VAWQGMJZq7KNTQ14DgpO2djOIiEeVi',
+            'idrol' => '3',
+            'idsucursal' => '1',
+            'idpuntoventa' => '1',
+            'remember_token' => 'vEHmcelujGXofHcFYAFCumGPd25mQ6Uw1ma5VHlO1dWbx8tHQMndvnaQZnjI')
+        );
+
+        DB::table('users')->insert(array('id' => '3',
+            'usuario' => 'vendedor',
+            'password' => '$2y$12$fQVExSFUFZCNs.9xClllau9VAWQGMJZq7KNTQ14DgpO2djOIiEeVi',
+            'idrol' => '2',
+            'idsucursal' => '1',
+            'idpuntoventa' => '1',
+            'remember_token' => 'vEHmcelujGXofHcFYAFCumGPd25mQ6Uw1ma5VHlO1dWbx8tHQMndvnaQZnjI'));
     }
 
 

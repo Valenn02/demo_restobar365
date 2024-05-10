@@ -356,7 +356,7 @@ class VentaController extends Controller
             return redirect('/');
 
         $id = $request->id;
-        $detalles = DetalleVenta::join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+        $detalles = DetalleVenta::join('articulos', 'detalle_ventas.codigoComida', '=', 'articulos.id')
             ->select(
                 'detalle_ventas.cantidad',
                 'detalle_ventas.precio',
@@ -518,12 +518,12 @@ class VentaController extends Controller
 
                         foreach ($detalles as $ep => $det) {
 
-                            $disminuirStock = Menu::where('id', $det['idarticulo'])
+                            $disminuirStock = Menu::where('codigo', $det['codigoComida'])
                                                         ->firstOrFail();
 
                             $detalle = new DetalleVenta();
                             $detalle->idventa = $venta->id;
-                            $detalle->idarticulo = $det['idarticulo'];
+                            $detalle->codigoComida = $det['codigoComida'];
                             $detalle->cantidad = $det['cantidad'];
                             $detalle->precio = $det['precio'];
                             $detalle->descuento = $det['descuento'];
