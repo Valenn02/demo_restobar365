@@ -37,6 +37,7 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
+                                    <th>Codigo</th>
                                     <th>Nombre</th>
                                     <th>Categorìa</th>
                                     <th>Precio</th>
@@ -63,6 +64,7 @@
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
+                                    <td v-text="articulo.codigo"></td>
                                     <td v-text="articulo.nombre"></td>
                                     <td v-text="articulo.nombre_categoria"></td>
                                     <td v-text="articulo.precio_venta"></td>

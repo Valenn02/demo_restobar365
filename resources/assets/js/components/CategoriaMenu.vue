@@ -30,6 +30,7 @@
                     <thead>
                         <tr>
                             <th>Opciones</th>
+                            <th>Codigo</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
                             <th>Estado</th>
@@ -52,6 +53,7 @@
                                     </button>
                                 </template>
                             </td>
+                            <td v-text="categoria.codigo"></td>
                             <td v-text="categoria.nombre"></td>
                             <td v-text="categoria.descripcion"></td>
                             <td>

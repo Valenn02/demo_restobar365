@@ -32,6 +32,7 @@ class MenuController extends Controller
                 ->select(
                     'menu.id',
                     'menu.idcategoria_menu',
+                    'menu.codigo',
                     'menu.nombre',
                     'menu.precio_venta',
                     'menu.descripcion',
@@ -48,6 +49,7 @@ class MenuController extends Controller
                 ->select(
                     'menu.id',
                     'menu.idcategoria_menu',
+                    'menu.codigo',
                     'menu.nombre',
                     'menu.precio_venta',
                     'menu.descripcion',
