@@ -16,6 +16,7 @@ use App\CuotasCredito;
 use App\Empresa;
 use App\Caja;
 use App\Factura;
+use App\Menu;
 use App\Http\Controllers\CifrasEnLetrasController;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\NotifyAdmin;
@@ -515,13 +516,10 @@ class VentaController extends Controller
                             'idalmacen' => $idAlmacen,
                         ]);
 
-                        /*foreach ($detalles as $ep => $det) {
+                        foreach ($detalles as $ep => $det) {
 
-                            $disminuirStock = Inventario::where('idalmacen', $idAlmacen)
-                                                        ->where('idarticulo', $det['idarticulo'])
+                            $disminuirStock = Menu::where('id', $det['idarticulo'])
                                                         ->firstOrFail();
-                            $disminuirStock->saldo_stock -= $det['cantidad'];
-                            $disminuirStock->save();
 
                             $detalle = new DetalleVenta();
                             $detalle->idventa = $venta->id;
@@ -530,7 +528,8 @@ class VentaController extends Controller
                             $detalle->precio = $det['precio'];
                             $detalle->descuento = $det['descuento'];
                             $detalle->save();
-                        }*/
+                        }
+
                         $fechaActual = date('Y-m-d');
                         $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count();
                         $numIngresos = DB::table('ingresos')->whereDate('created_at', $fechaActual)->count();

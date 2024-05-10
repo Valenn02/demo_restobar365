@@ -151,12 +151,10 @@
                                         :class="{ 'border-red': nombreProductoVacio }"
                                         @input="nombreProductoVacio = false"
                                         placeholder="Nombre de artículo">
-                                    </div>
-                                                     
+                                    </div>              
                                 </div>
                                 <!---DERECHA-->
                                 <div class="col-md-6">
-
                                     <div class="form-group">
                                         <label class="form-control-label" for="text-input"><strong>Precio(*)</strong></label>
                                         <input type="number" 
@@ -212,7 +210,6 @@
                         </form>
                         <div  class="row">
                             <div class="col-md-4">
-                               
                                 <div class="form-group">
                                     <label class="form-control-label" for="text-input">Categoria(*)</label>
                                     <div class="input-group">
@@ -223,7 +220,19 @@
                                         </div>
                                     </div>
                                 </div>     
-                            </div>                
+                            </div> 
+
+                             <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="text-input">Codigo(*)</label>
+                                        <input type="text"
+                                        v-model="codigo_producto"
+                                        class="form-control"
+                                        :class="{ 'border-red': codigoVacio }"
+                                        @input="codigoVacio = false"
+                                        placeholder="Codigo del plato">
+                                    </div>              
+                                </div>             
                         </div>
                     </div>
 
@@ -818,7 +827,7 @@ export default {
             idindustria: 0,
             idproveedor: 0,
             idgrupo: 0,
-            codigoProductoSin: 0,
+            codigo_producto: 0,
             idmedida: 0,
             nombreLinea:'',
             nombre_categoria: '',
@@ -1435,7 +1444,7 @@ export default {
         registrarArticulo() {
 
             this.nombreProductoVacio = !this.nombre_producto;
-            this.codigoVacio = !this.codigo;
+            this.codigoVacio = !this.codigo_producto;
             this.unidad_envaseVacio = !this.unidad_envase;
             this.nombre_genericoVacio = !this.nombre_generico;
             this.precio_costo_unidVacio = !this.precio_costo_unid;
@@ -1460,7 +1469,8 @@ export default {
             let formData = new FormData();
 
             formData.append('idcategoria_menu', this.lineaseleccionada.id);
-            formData.append('nombre', this.nombre_producto);   
+            formData.append('nombre', this.nombre_producto);
+            formData.append('codigo', this.codigo_producto);      
             formData.append('precio_venta', this.precio_venta);
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);
@@ -1481,7 +1491,8 @@ export default {
         },
         //---actuslizar articulo
         actualizarArticulo() {
-            this.nombreProductoVacio = !this.nombre_producto;         
+            this.nombreProductoVacio = !this.nombre_producto;
+            this.codigoVacio = !this.codigo_producto;         
             this.precio_ventaVacio = !this.precio_venta;
             this.descripcionVacio = !this.descripcion;
             this.fotografiaVacio = !this.fotografia;
@@ -1493,6 +1504,7 @@ export default {
             formData.append('id', this.articulo_id);
             formData.append('idcategoria_menu', this.lineaseleccionada.id);
             formData.append('nombre', this.nombre_producto);   
+            formData.append('codigo', this.codigo_producto);      
             formData.append('precio_venta', this.precio_venta);
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);

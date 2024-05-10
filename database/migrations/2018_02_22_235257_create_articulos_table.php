@@ -15,6 +15,8 @@ class CreateArticulosTable extends Migration
     {
         Schema::create('articulos', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('codigo')->unique(); //codigo para factura
+
             $table->integer('idcategoria_producto')->unsigned(); //Linea
             $table->integer('idproveedor')->unsigned(); //aumente 5 juio
             $table->integer('idmedida')->unsigned(); //new

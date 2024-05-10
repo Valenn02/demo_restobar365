@@ -224,6 +224,8 @@ class ArticuloController extends Controller
         $articulo->idcategoria_producto = $request->idcategoria;
         $articulo->idmedida = $request->idmedida; //new
         $articulo->nombre = $request->nombre;
+        $articulo->codigo = $request->codigo;
+
         $articulo->nombre_generico = $articulo->nombre; //aumete 12julio
 
         $articulo->unidad_paquete = $request->unidad_paquete;

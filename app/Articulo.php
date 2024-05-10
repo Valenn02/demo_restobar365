@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Articulo extends Model
 {
     protected $fillable =[
-        'idcategoria','idmarca','idgrupo','idmedida','codigo','nombre','costo_compra','nombre_generico',
+        'idcategoria','idmarca','idgrupo','idmedida','codigo','nombre','codigo', 'costo_compra','nombre_generico',
         'unidad_envase','precio_list_unid','precio_costo_unid','precio_costo_paq',
         'precio_venta',
         'precio_uno','precio_dos', 'precio_tres', 'precio_cuatro',
