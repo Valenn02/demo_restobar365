@@ -30,6 +30,7 @@
         "pusher-js": "^4.3.1",
         "vue-barcode": "^1.1.0",
         "vue-select": "^2.5.0",
+        "vue-spinners": "^1.0.2",
         "vue-template-compiler": "^2.7.16",
         "vue-toasted": "^1.1.28",
         "xlsx": "^0.18.5",
