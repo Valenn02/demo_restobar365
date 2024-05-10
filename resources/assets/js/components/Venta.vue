@@ -1322,101 +1322,7 @@ export default {
                     console.error(error);
                 });
         },
-        registrar() {
-            this.registrarVenta();
-            //this.emitirFactura();
-            //this.num_comprob;
-        },
-        //-------------REGISTRARAR VENTA ------
-        registrarVenta() {
-            if (this.validarVenta()) {
-                return;
-            }
-
-            let me = this;
-            let idclien = 7;
-
-            for (let i = 0; i < me.cuotas.length; i++) {
-                // console.log('INvENtARIO',me.cuotas[i].idinventario);
-                // console.log('ARtICULOID',me.cuotas[i].idarticulo);
-                // console.log(me.cuotas[i].cantidad_traspaso);                 
-                console.log('LLEGA ARRAYDATA!',me.cuotas[i]);
-            }
-
-            axios.post('/venta/registrar', {
-                'idcliente': idclien,
-                'tipo_comprobante': this.tipo_comprobante,
-                'serie_comprobante': this.serie_comprobante,
-                'num_comprobante': this.num_comprob,
-                'impuesto': this.impuesto,
-                'total': this.total,
-                'idAlmacen': this.idAlmacen,
-                'idtipo_pago': this.idtipo_pago,
-                //----creditos Ventas----
-                'idpersona' : this.idcliente,
-                'numero_cuotas': this.numero_cuotas,
-                'tiempo_dias_cuota': this.tiempo_diaz,
-                'estadocrevent': this.estadocrevent,
-                 //-----hasta aqui-------
-                //----Cuotas Credito----
-                'cuotaspago': this.cuotas,
-                //-----hasta aqui-------
-                'data': this.arrayDetalle
-
-            }).then(function (response) {
-                //console.log(response.data.id);
-                if (response.data.id > 0) {
-                    me.listado = 1;
-                    me.listarVenta(1, '', 'num_comprob');
-                    me.cerrarModal2();
-                    me.cerrarModal3();
-                    me.idproveedor = 0;
-                    me.tipo_comprobante = 'BOLETA';
-                    me.serie_comprobante = '';
-                    me.num_comprob = '';
-                    me.impuesto = 0.18;
-                    me.total = 0.0;
-                    me.idarticulo = 0;
-                    me.articulo = '';
-                    me.cantidad = 0;
-                    me.precio = 0;
-                    me.stock = 0;
-                    me.codigo = '';
-                    me.descuento = 0;
-                    me.arrayDetalle = [];
-                    //window.open('/factura/imprimir/' + response.data.id);
-                    swal(
-                            'VENTA REGISTRADA',
-                            'Correctamente',
-                            'success'
-                        )
-                        me.arrayProductos = [];
-                        me.listarVenta(1, '', 'id');
-                } else {
-                    if (response.data.valorMaximo) {
-                        //alert('El valor de descuento no puede exceder el '+ response.data.valorMaximo);
-                        swal(
-                            'Aviso',
-                            'El valor de descuento no puede exceder el ' + response.data.valorMaximo,
-                            'warning'
-                        )
-                        return;
-                    } else {
-                        //alert(response.data.caja_validado); 
-                        swal(
-                            'Aviso',
-                            response.data.caja_validado,
-                            'warning'
-                        )
-                        return;
-                    }
-                    //console.log(response.data.valorMaximo)
-                }
-
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
+        
         //--------HASTA AQUI--------------------
         selectAlmacen() {
             let me = this;
@@ -1459,101 +1365,299 @@ export default {
             return me.errorVenta;
         },
 
-        emitirFactura() {
+        aplicarDescuento() {
+            const descuentoGiftCard = this.descuentoGiftCard;
+            const numeroTarjeta = this.numeroTarjeta;
+            let idtipo_pago;
+
+            if (numeroTarjeta && descuentoGiftCard) {
+                idtipo_pago = 86;
+            } else if (numeroTarjeta && !descuentoGiftCard) {
+                idtipo_pago = 10;
+            } else {
+                idtipo_pago = descuentoGiftCard ? 35 : 1;
+            }
+
+            this.registrarVenta(idtipo_pago);
+        },
+
+        aplicarCombinacion() {
+            const descuentoGiftCard = this.descuentoGiftCard
+            const idtipo_pago = descuentoGiftCard ? 40 : 2; 
+
+            this.registrarVenta(idtipo_pago);
+        },
+
+        otroMetodo(metodoPago){
+            const idtipo_pago = metodoPago;
+            this.registrarVenta(idtipo_pago);
+        },
+        //-------------REGISTRARAR VENTA ------
+        registrarVenta(idtipo_pago) {
+            if (this.validarVenta()) {
+                return;
+            }
+
             let me = this;
+            this.mostrarSpinner = true;
+            this.idtipo_pago = idtipo_pago;
 
-            let numeroFactura = document.getElementById("num_comprobante").value;
-            let cuf = "464646464";
-            let cufdValor = document.getElementById("cufdValor");
-            let cufd = cufdValor.textContent;
-            let direccionValor = document.getElementById("direccion");
-            let direccion = direccionValor.textContent;
-            var tzoffset = (new Date()).getTimezoneOffset() * 60000;
-            let fechaEmision = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
-            let id_cliente = document.getElementById("idcliente").value;
-            let nombreRazonSocial = document.getElementById("nombreCliente").value;
-            let tipoDocumentoIdentidad = document.getElementById("tipo_documento").value;
-            let numeroDocumento = document.getElementById("documento").value;
-            let complemento = document.getElementById("complemento_id").value;
-            let montoTotalValor = document.getElementById("montoTotal");
-            let montoTotal = montoTotalValor.textContent;
-            let descuentoAdicional = document.getElementById("descuentoAdicional").value;
-            let leyenda = "Ley N° 453: El proveedor de servicios debe habilitar medios e instrumentos para efectuar consultas y reclamaciones.";
-            let usuario = document.getElementById("usuarioAutenticado").value;
-            let codigoPuntoVenta = this.puntoVentaAutenticado;
-            //let codigoPuntoVenta = 0;
+            for (let i = 0; i < me.cuotas.length; i++) {                
+                console.log('LLEGA ARRAYDATA!', me.cuotas[i]);
+            }
 
-            console.log("El tipo de documento es: " + tipoDocumentoIdentidad);
+            console.log("hola");
+            console.log(this.primer_precio_cuota);
+            axios.post('/venta/registrar', {
+                'idcliente': this.idcliente,
+                'tipo_comprobante': this.tipo_comprobante,
+                'serie_comprobante': this.serie_comprobante,
+                'num_comprobante': this.num_comprob,
+                'impuesto': this.impuesto,
+                'total': this.calcularTotal,
+                'idAlmacen': this.idAlmacen,
+                'idtipo_pago': idtipo_pago,
+                'idtipo_venta': this.idtipo_venta,
+                'primer_precio_cuota': this.primer_precio_cuota,
+                // Datos para el crédito de venta
+                'cliente': this.cliente,
+                'documento': this.documento,
+                'tipoEntrega': this.mesa,
+                'numero_cuotasCredito': this.numero_cuotas, // Cambio de nombre
+                'tiempo_dias_cuotaCredito': this.tiempo_diaz, // Cambio de nombre
+                'totalCredito': this.primera_cuota ? this.calcularTotal - this.cuotas[0].totalCancelado : this.calcularTotal, // Asegúrate de tener esta variable
+                'estadoCredito': "Pendiente", // Asegúrate de tener esta variable
 
-            var factura = [];
-            factura.push({
-                cabecera: {
-                    nitEmisor: "5153610012",
-                    razonSocialEmisor: "365 SOFT",
-                    municipio: "Cochabamba",
-                    telefono: "77490451",
-                    numeroFactura: numeroFactura,
-                    cuf: cuf,
-                    cufd: cufd,
-                    codigoSucursal: 0,
-                    direccion: direccion,
-                    codigoPuntoVenta: codigoPuntoVenta,
-                    fechaEmision: fechaEmision,
-                    nombreRazonSocial: nombreRazonSocial,
-                    codigoTipoDocumentoIdentidad: tipoDocumentoIdentidad,
-                    numeroDocumento: numeroDocumento,
-                    complemento: complemento,
-                    codigoCliente: numeroDocumento,
-                    codigoMetodoPago: 1,
-                    numeroTarjeta: null,
-                    montoTotal: montoTotal,
-                    montoTotalSujetoIva: montoTotal,
-                    codigoMoneda: 1,
-                    tipoCambio: 1,
-                    montoTotalMoneda: montoTotal,
-                    montoGiftCard: null,
-                    descuentoAdicional: descuentoAdicional,
-                    codigoExcepcion: 0,
-                    cafc: null,
-                    leyenda: leyenda,
-                    usuario: usuario,
-                    codigoDocumentoSector: 1
+                // Cuotas del crédito
+                'cuotaspago': this.cuotas,
+                'data': this.arrayDetalle
+
+            }).then((response) => {
+                let idVentaRecienRegistrada = response.data.id;
+                this.emitirFactura(idVentaRecienRegistrada);
+
+                if (response.data.id > 0) {
+                    // Restablecer valores después de una venta exitosa
+                    me.listado = 1;
+                    me.listarVenta(1, '', 'num_comprob');
+                    me.cerrarModal2();
+                    me.cerrarModal3();
+                    me.idproveedor = 0;
+                    me.tipo_comprobante = 'FACTURA';
+                    me.nombreCliente = '';
+                    me.idcliente = 0;
+                    me.tipo_documento = 0;
+                    me.complemento_id = '';
+                    me.documento = '';
+                    me.imagen = '';
+                    me.serie_comprobante = '';
+                    me.num_comprob = '';
+                    me.impuesto = 0.18;
+                    me.total = 0.0;
+                    me.idarticulo = 0;
+                    me.articulo = '';
+                    me.cantidad = 0;
+                    me.precio = 0;
+                    me.stock = 0;
+                    me.codigo = '';
+                    me.descuento = 0;
+                    me.arrayDetalle = [];
+                    me.primer_precio_cuota = 0;
+
+                    //window.open('/factura/imprimir/' + response.data.id);
+                } else {
+                    console.log(response)
+                    if (response.data.valorMaximo) {
+                        //alert('El valor de descuento no puede exceder el '+ response.data.valorMaximo);
+                        swal(
+                            'Aviso',
+                            'El valor de descuento no puede exceder el ' + response.data.valorMaximo,
+                            'warning'
+                        )
+                        return;
+                    } else {
+
+                        //alert(response.data.caja_validado); 
+                        swal(
+                            'Aviso',
+                            response.data.caja_validado,
+                            'warning'
+                        )
+                        return;
+                    }
+                    //console.log(response.data.valorMaximo)
+                }
+
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        async emitirFactura(idVentaRecienRegistrada) {
+
+        let me = this;
+
+        let idventa = idVentaRecienRegistrada;
+        let numeroFactura = document.getElementById("num_comprobante").value;
+        let cuf = "464646464";
+        let cufdValor = document.getElementById("cufdValor");
+        let cufd = cufdValor.textContent;
+        let direccionValor = document.getElementById("direccion");
+        let direccion = direccionValor.textContent;
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+        let fechaEmision = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+        let id_cliente = document.getElementById("idcliente").value;
+        let nombreRazonSocial = document.getElementById("nombreCliente").value;
+        let numeroDocumento = document.getElementById("documento").value;
+        let complemento = document.getElementById("complemento_id").value;
+        let tipoDocumentoIdentidad = document.getElementById("tipo_documento").value;
+        let montoTotal = (this.calcularTotal * parseFloat(this.monedaVenta[0])).toFixed(2);
+        let descuentoAdicional = document.getElementById("descuentoAdicional").value;
+        let usuario = document.getElementById("usuarioAutenticado").value;
+        let codigoPuntoVenta = document.getElementById("puntoVentaAutenticado").value;
+        //let codigoPuntoVenta = this.puntoVentaAutenticado;
+        let montoGiftCard = document.getElementById("descuentoGiftCard").value;
+        let codigoMetodoPago = this.idtipo_pago;
+        let montoTotalSujetoIva = montoTotal - this.descuentoGiftCard;
+        let correo = document.getElementById("email").value;
+
+        console.log("El monto de Descuento de Gift Card es: " + this.descuentoGiftCard);
+        console.log("El tipo de documento es: " + tipoDocumentoIdentidad);
+        console.log("El complemento de documento es: " + complemento);
+
+        try {
+            const response = await axios.get('/factura/obtenerLeyendaAleatoria');
+            this.leyendaAl = response.data.descripcionLeyenda;
+            console.log("El dato de leyenda llegado es: " + this.leyendaAl);
+        } catch (error) {
+            console.error(error);
+            return '"Ley N° 453: Los servicios deben suministrarse en condiciones de inocuidad, calidad y seguridad."';
+        }
+
+        try {
+                if (tipoDocumentoIdentidad === '5') {
+                    const response = await axios.post('/factura/verificarNit/' + numeroDocumento);
+                    if (response.data === 'NIT ACTIVO') {
+                        me.codigoExcepcion = 0;
+                        alert("NIT VÁLIDO.");
+                    } else {
+                        me.codigoExcepcion = 1;
+                        alert("NIT INVÁLIDO.");
+                    }
+                }else{
+                    me.codigoExcepcion = 0;
+                }
+            } catch (error) {
+                console.error(error);
+                return 'No se pudo verificar el NIT';
+            }
+
+        var factura = [];
+        factura.push({
+            cabecera: {
+                nitEmisor: "5153610012",
+                razonSocialEmisor: "365 SOFT",
+                municipio: "Cochabamba",
+                telefono: "77490451",
+                numeroFactura: numeroFactura,
+                cuf: cuf,
+                cufd: cufd,
+                codigoSucursal: 0,
+                direccion: direccion,
+                codigoPuntoVenta: 6,
+                fechaEmision: fechaEmision,
+                nombreRazonSocial: nombreRazonSocial,
+                codigoTipoDocumentoIdentidad: tipoDocumentoIdentidad,
+                numeroDocumento: numeroDocumento,
+                complemento: complemento,
+                codigoCliente: numeroDocumento,
+                codigoMetodoPago: codigoMetodoPago,
+                numeroTarjeta: this.numeroTarjeta,
+                montoTotal: montoTotal,
+                montoTotalSujetoIva: montoTotalSujetoIva,
+                codigoMoneda: 1,
+                tipoCambio: 1,
+                montoTotalMoneda: montoTotal,
+                montoGiftCard: this.descuentoGiftCard,
+                descuentoAdicional: descuentoAdicional,
+                codigoExcepcion: this.codigoExcepcion,
+                cafc: null,
+                leyenda: this.leyendaAl,
+                usuario: usuario,
+                codigoDocumentoSector: 1
+            }
+        })
+        me.arrayProductos.forEach(function (prod) {
+            factura.push({ detalle: prod })
+        })
+
+        var datos = { factura };
+
+        axios.post('/venta/emitirFactura', {
+            factura: datos,
+            id_cliente: id_cliente,
+            idventa: idventa,
+            correo: correo,
+            cufd: cufd
+        })
+            .then(function (response) {
+                var data = response.data;
+                console.log(response);
+
+                if (data === "VALIDADA") {
+                    swal(
+                        'FACTURA VALIDADA',
+                        'Correctamente',
+                        'success'
+                    )
+                    me.arrayProductos = [];
+                    me.codigoExcepcion = 0;
+                    me.idtipo_pago = '';
+                    me.email = '';
+                    me.descuentoGiftCard = '';
+                    me.numeroTarjeta =  null;
+                    me.recibido = '';
+                    me.metodoPago = '';
+                    me.cerrarModal2();
+                    me.cerrarModal3();
+                    me.listarVenta(1, '', 'id');
+                    me.mostrarSpinner = false;
+                } else{
+                    me.arrayProductos = [];
+                    me.codigoExcepcion = 0;
+                    me.idtipo_pago = '';
+                    me.descuentoGiftCard = '';
+                    me.numeroTarjeta =  null;
+                    me.recibido = '';
+                    me.metodoPago = '';
+                    me.last_comprobante = '';
+                    me.cerrarModal2();
+                    me.cerrarModal3();
+                    me.listarVenta(1, '', 'id');
+                    me.mostrarSpinner = false;
+                    swal(
+                        'FACTURA RECHAZADA',
+                        data,
+                        'warning'
+                    );
+                    me.eliminarVenta(idVentaRecienRegistrada);
                 }
             })
-            me.arrayProductos.forEach(function (prod) {
-                factura.push({ detalle: prod })
-            })
-
-            var datos = { factura };
-
-            axios.post('/venta/emitirFactura', {
-                factura: datos,
-                id_cliente: id_cliente
-            })
-                .then(function (response) {
-                    var data = response.data;
-                    if (data === "VALIDADA") {
-                        swal(
-                            'FACTURA ' + data,
-                            'Correctamente',
-                            'success'
-                        )
-                        me.arrayProductos = [];
-                        me.listarVenta(1, '', 'id');
-                    }else{
-                            swal(
-                                'FACTURA RECHAZADA',
-                                data,
-                                'warning'
-                            );
-                    }
-                })
-                .catch(function (error) {
-                    swal(
-                        'INTENTE DE NUEVO',
-                        'Comunicacion con SIAT fallida',
-                        'error');
-                });
+            .catch(function (error) {
+                console.error(error);
+                me.arrayProductos = [];
+                me.codigoExcepcion = 0;
+                swal(
+                    'INTENTE DE NUEVO',
+                    'Comunicacion con SIAT fallida',
+                    'error');
+                me.mostrarSpinner = false;
+                me.idtipo_pago = '';
+                me.numeroTarjeta =  null;
+                me.descuentoGiftCard = '';
+                me.recibido = '';
+                me.metodoPago = '';
+            });
         },
 
         mostrarDetalle() {

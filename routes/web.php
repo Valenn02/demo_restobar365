@@ -261,8 +261,12 @@ Route::group(['middleware' => ['auth']], function () {
         //FACTURAS
         Route::get('/factura', 'SiatController@index');
         Route::get('/factura/getFactura/{id}', 'SiatController@getFactura');
-        Route::get('/factura/imprimir/{id}', 'VentaController@imprimirFactura');
+        Route::get('/factura/imprimirRollo/{id}/{correo}', 'VentaController@imprimirFacturaRollo');
+        Route::get('/factura/imprimirCarta/{id}/{correo}', 'VentaController@imprimirFactura');
+        Route::get('/factura/imprimirRolloOffline/{id}/{correo}', 'VentaController@imprimirFacturaRolloOffline');
+        Route::get('/factura/imprimirCartaOffline/{id}/{correo}', 'VentaController@imprimirFacturaOffline');
         Route::get('/factura/anular/{cuf}/{motivoSeleccionado}', 'VentaController@anulacionFactura');
+        Route::get('/facturaOffline/anular/{cuf}/{motivoSeleccionado}', 'VentaController@anulacionFacturaOffline');
         Route::get('/factura/sincronizarActividades', 'VentaController@sincronizarActividades');
         Route::get('/factura/sincronizarParametricaTiposFactura', 'VentaController@sincronizarParametricaTiposFactura');
         Route::get('/factura/sincronizarListaLeyendasFactura', 'VentaController@sincronizarListaLeyendasFactura');
@@ -271,6 +275,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/factura/sincronizarParametricaEventosSignificativos', 'VentaController@sincronizarParametricaEventosSignificativos');
         Route::get('/factura/sincronizarParametricaUnidadMedida', 'VentaController@sincronizarParametricaUnidadMedida');
         Route::get('/factura/obtenerDatosMotivoAnulacion', 'FacturaController@obtenerDatosMotivoAnulacion');
+        Route::get('/factura/obtenerLeyendaAleatoria', 'FacturaController@obtenerLeyendaAleatoria');
+        Route::post('/factura/verificarNit/{numeroDocumento}', 'VentaController@verificarNit');
 
 
         //--INDUSTRIA--

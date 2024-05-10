@@ -69,39 +69,44 @@ class VentaController extends Controller
             }
 
         if ($buscar == '') {
-            $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
+            $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
                 ->join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
-                    'ventas.id',
-                    'ventas.tipo_comprobante',
+                    'facturas.*',
+                    'facturas.correo as correo',
+                    'ventas.tipo_comprobante as tipo_comprobante',
                     'ventas.serie_comprobante',
-                    'ventas.num_comprobante',
-                    'ventas.cliente',
-                    'ventas.fecha_hora',
-                    'ventas.impuesto',
-                    'ventas.total',
-                    'ventas.estado',
-                    'personas.nombre',
-                    'users.usuario'
+                    'ventas.num_comprobante as num_comprobante',
+                    'ventas.fecha_hora as fecha_hora',
+                    'ventas.impuesto as impuesto',
+                    'ventas.total as total',
+                    'ventas.idtipo_venta',
+                    'ventas.estado as estado',
+                    'ventas.cliente as razonSocial',
+                    'ventas.documento as documentoid',
+                    'users.usuario as usuario'
                 )
-                ->orderBy('ventas.id', 'desc')->paginate(3);
+                ->orderBy('facturas.id', 'desc')->paginate(3);
         } else {
-            $ventas = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
+            $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
                 ->join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
-                    'ventas.id',
-                    'ventas.tipo_comprobante',
+                    'facturas.*',
+                    'facturas.correo as correo',
+                    'ventas.tipo_comprobante as tipo_comprobante',
                     'ventas.serie_comprobante',
-                    'ventas.num_comprobante',
-                    'ventas.fecha_hora',
-                    'ventas.impuesto',
-                    'ventas.total',
-                    'ventas.estado',
-                    'personas.nombre',
-                    'users.usuario'
+                    'ventas.num_comprobante as num_comprobante',
+                    'ventas.fecha_hora as fecha_hora',
+                    'ventas.impuesto as impuesto',
+                    'ventas.total as total',
+                    'ventas.idtipo_venta',
+                    'ventas.estado as estado',
+                    'ventas.cliente as razonSocial',
+                    'ventas.documento as documentoid',
+                    'users.usuario as usuario'
                 )
                 ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('ventas.id', 'desc')->paginate(3);
+                ->orderBy('facturas.id', 'desc')->paginate(3);
         }
 
         return [
@@ -433,16 +438,20 @@ class VentaController extends Controller
                 if ($ultimaCaja) {
                     if ($ultimaCaja->estado == '1') {
                         $venta = new Venta();
-                        $venta->idcliente = 7;
+                        //$venta->idcliente = $request->idcliente;
+                        $venta->idcliente = NULL;
                         $venta->idusuario = \Auth::user()->id;
-                        //$venta->idtipo_pago = $request->idtipo_pago;
+                        $venta->idtipo_pago = $request->idtipo_pago;
                         $venta->cliente = $request->cliente;
+                        $venta->documento = $request->documento;
                         $venta->tipo_comprobante = $request->tipo_comprobante;
                         $venta->serie_comprobante = $request->serie_comprobante;
                         $venta->num_comprobante = $request->num_comprobante;
                         $venta->fecha_hora = now()->setTimezone('America/La_Paz');
                         $venta->impuesto = $request->impuesto;
                         $venta->total = $request->total;
+                        $venta->tipoEntrega = $request->tipoEntrega;
+                        $venta->observacion = $request->observacion;
                         $venta->estado = 'Registrado';
                         $venta->idcaja = $ultimaCaja->id;
                         //---------registro credito_Ventas---
@@ -506,7 +515,7 @@ class VentaController extends Controller
                             'idalmacen' => $idAlmacen,
                         ]);
 
-                        foreach ($detalles as $ep => $det) {
+                        /*foreach ($detalles as $ep => $det) {
 
                             $disminuirStock = Inventario::where('idalmacen', $idAlmacen)
                                                         ->where('idarticulo', $det['idarticulo'])
@@ -521,7 +530,7 @@ class VentaController extends Controller
                             $detalle->precio = $det['precio'];
                             $detalle->descuento = $det['descuento'];
                             $detalle->save();
-                        }
+                        }*/
                         $fechaActual = date('Y-m-d');
                         $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count();
                         $numIngresos = DB::table('ingresos')->whereDate('created_at', $fechaActual)->count();
@@ -914,7 +923,7 @@ class VentaController extends Controller
         $codSucursal = $sucursal->codigoSucursal;
 
         $datos = $request->input('factura');
-        $id_cliente = $request->input('id_cliente');
+        //$id_cliente = $request->input('id_cliente');
             
         $valores = $datos['factura'][0]['cabecera'];
         $nitEmisor = str_pad($valores['nitEmisor'], 13, "0", STR_PAD_LEFT);
@@ -947,6 +956,7 @@ class VentaController extends Controller
         $datos['factura'][0]['cabecera']['cuf'] = $cuf;
             
         $temporal = $datos['factura'];
+        dd($temporal);
         $xml_temporal = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><facturaComputarizadaCompraVenta xsi:noNamespaceSchemaLocation=\"facturaComputarizadaCompraVenta.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></facturaComputarizadaCompraVenta>");
 
         $this->formato_xml($temporal, $xml_temporal);
@@ -965,7 +975,7 @@ class VentaController extends Controller
         $descuentoAdicional = $valores['descuentoAdicional'];
         $productos = file_get_contents(public_path("docs/facturaxml.xml"));
             
-        $data = $this->insertarFactura($request, $id_cliente, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
+        $data = $this->insertarFactura($request, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
 
         if ($data) {
             // Registro exitoso

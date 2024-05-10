@@ -16,17 +16,21 @@ class CreateVentasTable extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idcliente')->unsigned();
-            $table->foreign('idcliente')->references('id')->on('personas');
+            $table->foreign('idcliente')->references('id')->on('personas')->nullable();
             $table->integer('idusuario')->unsigned();
             $table->foreign('idusuario')->references('id')->on('users');
             $table->integer('idtipo_pago')->unsigned();
             $table->foreign('idtipo_pago')->references('id')->on('tipo_pagos');
+            $table->string('cliente', 250)->nullable();
+            $table->string('documento', 40)->nullable();
             $table->string('tipo_comprobante', 20);
             $table->string('serie_comprobante', 7)->nullable();
             $table->string('num_comprobante', 10);
             $table->dateTime('fecha_hora');
             $table->decimal('impuesto', 4, 2);
             $table->decimal('total', 11, 2);
+            $table->string('tipoEntrega', 30);
+            $table->string('observacion', 350)->nullable();
             $table->string('estado', 20);
             $table->integer('idcaja')->unsigned();
             $table->foreign('idcaja')->references('id')->on('cajas');

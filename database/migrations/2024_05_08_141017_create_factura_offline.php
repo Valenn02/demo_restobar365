@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFacturasTable extends Migration
+class CreateFacturaOffline extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateFacturasTable extends Migration
      */
     public function up()
     {
-        Schema::create('facturas', function (Blueprint $table) {
+        Schema::create('factura_fuera_lineas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idcliente')->unsigned()->nullable();
-            $table->integer('idventa')->unsigned();
+            $table->integer('idcliente')->unsigned();
+            $table->integer('idventa')->unsigned(); 
 
             $table->integer('numeroFactura');
             $table->string('cuf', 255);
@@ -43,6 +43,6 @@ class CreateFacturasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facturas');
+        Schema::dropIfExists('facturas_offline');
     }
 }

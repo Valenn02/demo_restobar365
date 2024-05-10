@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Leyendas;
 use App\MotivoAnulacion;
 use Illuminate\Http\Request;
 use SoapClient;
@@ -91,5 +92,14 @@ class FacturaController extends Controller
         ->get();
 
         return ['motivo_anulaciones' => $motivo_anulaciones];
+    }
+
+    public function obtenerLeyendaAleatoria()
+    {
+        $leyenda = Leyendas::where('codigoActividad', 461021)
+                        ->inRandomOrder()
+                        ->value('descripcionLeyenda');
+
+        return response()->json(['descripcionLeyenda' => $leyenda]);
     }
 }

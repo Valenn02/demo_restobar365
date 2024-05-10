@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Factura extends Model
+class FacturaFueraLinea extends Model
 {
     protected $fillable =[
         'idcliente',
