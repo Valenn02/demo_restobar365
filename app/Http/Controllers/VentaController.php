@@ -924,6 +924,9 @@ class VentaController extends Controller
 
         $datos = $request->input('factura');
         //$id_cliente = $request->input('id_cliente');
+        $idventa = $request->input('idventa');
+        $correo = $request->input('correo');
+        $cufd = $request->input('cufd');
             
         $valores = $datos['factura'][0]['cabecera'];
         $nitEmisor = str_pad($valores['nitEmisor'], 13, "0", STR_PAD_LEFT);
@@ -975,7 +978,7 @@ class VentaController extends Controller
         $descuentoAdicional = $valores['descuentoAdicional'];
         $productos = file_get_contents(public_path("docs/facturaxml.xml"));
             
-        $data = $this->insertarFactura($request, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
+        $data = $this->insertarFactura($request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
 
         if ($data) {
             // Registro exitoso
@@ -1065,7 +1068,7 @@ class VentaController extends Controller
             $descuentoAdicional = $valores['descuentoAdicional'];
             $productos = file_get_contents(public_path("docs/temporal/" . $nombreArchivo));
 
-            $data = $this->insertarFactura($request, $id_cliente, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
+            $data = $this->insertarFactura($request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
             if ($data === true) {
                 // Si la inserción fue exitosa, devolver una respuesta JSON
                 return response()->json(['message' => 'Factura registrada correctamente']);
@@ -1213,15 +1216,19 @@ class VentaController extends Controller
         rmdir($directorio);
     }
 
-    public function insertarFactura(Request $request, $id_cliente, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos){
+    public function insertarFactura(Request $request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos){
         if (!$request->ajax()) {
             return response()->json(['error' => 'Acceso no autorizado'], 401);
         }
 
         $factura = new Factura();
-        $factura->idcliente = $id_cliente;
+        $factura->idventa = $idventa;
+        //$factura->idcliente = $id_cliente;
         $factura->numeroFactura = $numeroFactura;
         $factura->cuf = $cuf;
+        $factura->cufd = $cufd;
+        $factura->codigoControl = $codigoControl;
+        $factura->correo = $correo;
         $factura->fechaEmision = $fechaEmision;
         $factura->codigoMetodoPago = $codigoMetodoPago;
         $factura->montoTotal = $montoTotal;
@@ -1229,9 +1236,9 @@ class VentaController extends Controller
         $factura->descuentoAdicional = $descuentoAdicional;
         $factura->productos = $productos;
         $factura->estado = 1;
-        
+
         $success = $factura->save();
-    
+
         return $success;
     }
 
