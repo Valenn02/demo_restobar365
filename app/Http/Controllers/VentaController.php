@@ -958,7 +958,7 @@ class VentaController extends Controller
         $datos['factura'][0]['cabecera']['cuf'] = $cuf;
             
         $temporal = $datos['factura'];
-        //dd($temporal);
+        dd($temporal);
         $xml_temporal = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><facturaComputarizadaCompraVenta xsi:noNamespaceSchemaLocation=\"facturaComputarizadaCompraVenta.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></facturaComputarizadaCompraVenta>");
 
         $this->formato_xml($temporal, $xml_temporal);
