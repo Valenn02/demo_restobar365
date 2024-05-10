@@ -59,6 +59,7 @@ class CategoriaController extends Controller
         if (!$request->ajax()) return redirect('/');
         $categoria = new Categoria();
         $categoria->nombre = $request->nombre;
+        $categoria->codigo = '99100';
         $categoria->descripcion = $request->descripcion;
         $categoria->condicion = $request->condicion ? '1' : '0';
         //$categoria->condicion = '1';

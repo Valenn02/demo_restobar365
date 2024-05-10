@@ -32,6 +32,7 @@ class MenuController extends Controller
                 ->select(
                     'menu.id',
                     'menu.idcategoria_menu',
+                    'menu.codigo',
                     'menu.nombre',
                     'menu.precio_venta',
                     'menu.descripcion',
@@ -48,6 +49,7 @@ class MenuController extends Controller
                 ->select(
                     'menu.id',
                     'menu.idcategoria_menu',
+                    'menu.codigo',
                     'menu.nombre',
                     'menu.precio_venta',
                     'menu.descripcion',
@@ -89,12 +91,14 @@ class MenuController extends Controller
                 ->select(
                     'menu.id',
                     'menu.idcategoria_menu',
+                    'menu.codigo',
                     'menu.nombre',
-                    'menu.precio_venta',
+                    'menu.precio_venta as precio',
                     'menu.descripcion',
                     'menu.condicion',
                     'menu.fotografia',
                     'categoria_menu.nombre as nombre_categoria',
+                    'categoria_menu.codigo as codigoProductoSin'
 
                 )
                 ->orderBy('menu.id', 'desc')->get();
@@ -126,6 +130,7 @@ class MenuController extends Controller
 
         $menu = new Menu();
         $menu->nombre = $request->nombre;
+        $menu->codigo = $request->codigo;
         $menu->precio_venta = $request->precio_venta;
         $menu->descripcion = $request->descripcion;
         $menu->idcategoria_menu = $request->idcategoria_menu;

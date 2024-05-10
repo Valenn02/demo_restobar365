@@ -16,6 +16,7 @@ use App\CuotasCredito;
 use App\Empresa;
 use App\Caja;
 use App\Factura;
+use App\Menu;
 use App\Http\Controllers\CifrasEnLetrasController;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\NotifyAdmin;
@@ -355,7 +356,7 @@ class VentaController extends Controller
             return redirect('/');
 
         $id = $request->id;
-        $detalles = DetalleVenta::join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+        $detalles = DetalleVenta::join('articulos', 'detalle_ventas.codigoComida', '=', 'articulos.id')
             ->select(
                 'detalle_ventas.cantidad',
                 'detalle_ventas.precio',
@@ -515,22 +516,20 @@ class VentaController extends Controller
                             'idalmacen' => $idAlmacen,
                         ]);
 
-                        /*foreach ($detalles as $ep => $det) {
+                        foreach ($detalles as $ep => $det) {
 
-                            $disminuirStock = Inventario::where('idalmacen', $idAlmacen)
-                                                        ->where('idarticulo', $det['idarticulo'])
+                            $disminuirStock = Menu::where('codigo', $det['codigoComida'])
                                                         ->firstOrFail();
-                            $disminuirStock->saldo_stock -= $det['cantidad'];
-                            $disminuirStock->save();
 
                             $detalle = new DetalleVenta();
                             $detalle->idventa = $venta->id;
-                            $detalle->idarticulo = $det['idarticulo'];
+                            $detalle->codigoComida = $det['codigoComida'];
                             $detalle->cantidad = $det['cantidad'];
                             $detalle->precio = $det['precio'];
                             $detalle->descuento = $det['descuento'];
                             $detalle->save();
-                        }*/
+                        }
+
                         $fechaActual = date('Y-m-d');
                         $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count();
                         $numIngresos = DB::table('ingresos')->whereDate('created_at', $fechaActual)->count();
@@ -924,6 +923,9 @@ class VentaController extends Controller
 
         $datos = $request->input('factura');
         //$id_cliente = $request->input('id_cliente');
+        $idventa = $request->input('idventa');
+        $correo = $request->input('correo');
+        $cufd = $request->input('cufd');
             
         $valores = $datos['factura'][0]['cabecera'];
         $nitEmisor = str_pad($valores['nitEmisor'], 13, "0", STR_PAD_LEFT);
@@ -956,7 +958,7 @@ class VentaController extends Controller
         $datos['factura'][0]['cabecera']['cuf'] = $cuf;
             
         $temporal = $datos['factura'];
-        //dd($temporal);
+        dd($temporal);
         $xml_temporal = new SimpleXMLElement("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><facturaComputarizadaCompraVenta xsi:noNamespaceSchemaLocation=\"facturaComputarizadaCompraVenta.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></facturaComputarizadaCompraVenta>");
 
         $this->formato_xml($temporal, $xml_temporal);
@@ -975,7 +977,7 @@ class VentaController extends Controller
         $descuentoAdicional = $valores['descuentoAdicional'];
         $productos = file_get_contents(public_path("docs/facturaxml.xml"));
             
-        $data = $this->insertarFactura($request, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
+        $data = $this->insertarFactura($request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
 
         if ($data) {
             // Registro exitoso
@@ -1065,7 +1067,7 @@ class VentaController extends Controller
             $descuentoAdicional = $valores['descuentoAdicional'];
             $productos = file_get_contents(public_path("docs/temporal/" . $nombreArchivo));
 
-            $data = $this->insertarFactura($request, $id_cliente, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
+            $data = $this->insertarFactura($request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
             if ($data === true) {
                 // Si la inserción fue exitosa, devolver una respuesta JSON
                 return response()->json(['message' => 'Factura registrada correctamente']);
@@ -1213,15 +1215,19 @@ class VentaController extends Controller
         rmdir($directorio);
     }
 
-    public function insertarFactura(Request $request, $id_cliente, $numeroFactura, $cuf, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos){
+    public function insertarFactura(Request $request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos){
         if (!$request->ajax()) {
             return response()->json(['error' => 'Acceso no autorizado'], 401);
         }
 
         $factura = new Factura();
-        $factura->idcliente = $id_cliente;
+        $factura->idventa = $idventa;
+        //$factura->idcliente = $id_cliente;
         $factura->numeroFactura = $numeroFactura;
         $factura->cuf = $cuf;
+        $factura->cufd = $cufd;
+        $factura->codigoControl = $codigoControl;
+        $factura->correo = $correo;
         $factura->fechaEmision = $fechaEmision;
         $factura->codigoMetodoPago = $codigoMetodoPago;
         $factura->montoTotal = $montoTotal;
@@ -1229,9 +1235,9 @@ class VentaController extends Controller
         $factura->descuentoAdicional = $descuentoAdicional;
         $factura->productos = $productos;
         $factura->estado = 1;
-        
+
         $success = $factura->save();
-    
+
         return $success;
     }
 

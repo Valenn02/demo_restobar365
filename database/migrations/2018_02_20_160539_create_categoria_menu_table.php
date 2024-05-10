@@ -15,6 +15,7 @@ class CreateCategoriaMenuTable extends Migration
     {
         Schema::create('categoria_menu', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('codigo');
             $table->string('nombre', 50);
             $table->string('descripcion', 256)->nullable();
             $table->boolean('condicion')->default(1);
