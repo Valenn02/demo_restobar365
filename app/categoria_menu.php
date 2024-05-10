@@ -10,6 +10,7 @@ class categoria_menu extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'nombre',
+        'codigo',
         'descripcion',
         'condicion',
     ];
