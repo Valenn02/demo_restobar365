@@ -27,6 +27,9 @@ class CreatePersonasTable extends Migration
         });
         DB::table('personas')->insert(array('id' => '1', 'nombre' => 'root', 'tipo_documento' => 'NA', 'num_documento' => '00000000', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'root@gmail.com', 'estadoCli' => false ));
 
+        DB::table('personas')->insert(array('id' => '2', 'nombre' => 'vend', 'tipo_documento' => 'NA', 'num_documento' => '00000001', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'vend@gmail.com', 'estadoCli' => false ));
+
+        DB::table('personas')->insert(array('id' => '3', 'nombre' => 'alma', 'tipo_documento' => 'NA', 'num_documento' => '00000002', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'alma@gmail.com', 'estadoCli' => false ));
     }
 
     /**

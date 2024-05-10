@@ -26,7 +26,18 @@ class CreateAlmacensTable extends Migration
             $table->boolean('condicion')->default(1);
             $table->timestamps();
         });
+
+
+        DB::table('almacens')->insert(array('id' => '1',
+            'nombre_almacen' => 'Almacen principal',
+            'ubicacion' => 'Default Ubication',
+            'encargado' => '3',
+            'sucursal' => '1',
+            'telefono' => '78354613',
+            'observacion' => 'ninguna',
+            ));
     }
+
 
     /**
      * Reverse the migrations.
