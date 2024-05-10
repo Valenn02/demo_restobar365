@@ -39,6 +39,8 @@ class ArticuloController extends Controller
                     //aumente 7 julio
                     'articulos.idmedida',
                     'articulos.nombre',
+                    'articulos.codigo',
+
                     'articulos.nombre_generico',
 
                     'categoria_producto.nombre as nombre_categoria',
