@@ -517,18 +517,37 @@ class VentaController extends Controller
                         ]);
 
                         foreach ($detalles as $ep => $det) {
-
-                            $disminuirStock = Menu::where('codigo', $det['codigoComida'])
-                                                        ->firstOrFail();
-
-                            $detalle = new DetalleVenta();
-                            $detalle->idventa = $venta->id;
-                            $detalle->codigoComida = $det['codigoComida'];
-                            $detalle->cantidad = $det['cantidad'];
-                            $detalle->precio = $det['precio'];
-                            $detalle->descuento = $det['descuento'];
-                            $detalle->save();
+                            // Verificar si el código de comida está en la tabla Menu
+                            $enMenu = Menu::where('codigo', $det['codigoComida'])->exists();
+                            
+                            // Verificar si el código de comida está en la tabla Inventario
+                            $enInventario = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+                                                       ->where('inventarios.idalmacen', $idAlmacen)
+                                                       ->where('articulos.codigo', $det['codigoComida'])
+                                                       ->exists();
+                        
+                            // Si el código de comida está en alguna de las dos tablas, guardar el detalle de venta
+                            if ($enMenu || $enInventario) {
+                                $detalle = new DetalleVenta();
+                                $detalle->idventa = $venta->id;
+                                $detalle->codigoComida = $det['codigoComida'];
+                                $detalle->cantidad = $det['cantidad'];
+                                $detalle->precio = $det['precio'];
+                                $detalle->descuento = $det['descuento'];
+                                $detalle->save();
+                        
+                                // Si el código de comida está en la tabla Inventario, disminuir el stock
+                                if ($enInventario) {
+                                    $disminuirStock = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+                                                                 ->where('inventarios.idalmacen', $idAlmacen)
+                                                                 ->where('articulos.codigo', $det['codigoComida'])
+                                                                 ->firstOrFail();
+                                    $disminuirStock->saldo_stock -= $det['cantidad'];
+                                    $disminuirStock->save();
+                                }
+                            }
                         }
+                        
 
                         $fechaActual = date('Y-m-d');
                         $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count();
