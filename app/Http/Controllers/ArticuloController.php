@@ -44,6 +44,7 @@ class ArticuloController extends Controller
                     'articulos.nombre_generico',
 
                     'categoria_producto.nombre as nombre_categoria',
+                    'categoria_producto.codigo as codigoProductoSin',
 
                     'medidas.descripcion_medida',
                     //aumente 5 julio
@@ -68,6 +69,7 @@ class ArticuloController extends Controller
                     'articulos.idcategoria_producto',
                     'articulos.nombre',
                     'categoria_producto.nombre as nombre_categoria',
+                    'categoria_producto.codigo as codigoProductoSin',
                     'articulos.precio_costo_unid',
                     'articulos.precio_costo_paq',
                     'articulos.precio_venta',
