@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 //use Illuminate\Support\Facades\DB;
-use App\categoria_menu;
+use App\Categoria;
+use App\Articulo;
+
 
 class CategoriaController extends Controller
 {
@@ -21,10 +23,10 @@ class CategoriaController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $categorias = categoria_menu::orderBy('id', 'desc')->paginate(3);
+            $categorias = Categoria::orderBy('id', 'desc')->paginate(3);
         }
         else{
-            $categorias = categoria_menu::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(3);
+            $categorias = Categoria::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(3);
         }
         
 
@@ -61,8 +63,8 @@ class CategoriaController extends Controller
         $categoria->nombre = $request->nombre;
         $categoria->codigo = '99100';
         $categoria->descripcion = $request->descripcion;
-        $categoria->condicion = $request->condicion ? '1' : '0';
-        //$categoria->condicion = '1';
+        //$categoria->condicion = $request->condicion ? '1' : '0';
+        $categoria->condicion = '1';
         $categoria->save();
     }
   
@@ -80,9 +82,8 @@ class CategoriaController extends Controller
         $categoria = Categoria::findOrFail($request->id);
         $categoria->nombre = $request->nombre;
         $categoria->descripcion = $request->descripcion;
-        $categoria->codigoProductoSin = $request->codigoProductoSin;
-        $categoria->condicion = $request->condicion ? '1' : '0';
-        //$categoria->condicion = '1';
+        //$categoria->condicion = $request->condicion ? '1' : '0';
+        $categoria->condicion = '1';
         $categoria->save();
     }
 
@@ -92,6 +93,12 @@ class CategoriaController extends Controller
         $categoria = Categoria::findOrFail($request->id);
         $categoria->condicion = '0';
         $categoria->save();
+
+        $bebida = Articulo::where('idcategoria_producto', $categoria->id)->get();
+        foreach ($bebida as $bebidas) {
+            $bebidas->condicion = '0';
+            $bebidas->save();
+        }
     }
 
     public function activar(Request $request)
@@ -100,6 +107,12 @@ class CategoriaController extends Controller
         $categoria = Categoria::findOrFail($request->id);
         $categoria->condicion = '1';
         $categoria->save();
+
+        $bebida = Articulo::where('idcategoria_producto', $categoria->id)->get();
+        foreach ($bebida as $bebidas) {
+            $bebidas->condicion = '1';
+            $bebidas->save();
+        }
     }
 
     
