@@ -1494,24 +1494,17 @@ class VentaController extends Controller
 
     public function imprimirTicket($id)
     {
-        $venta = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')
-            ->join('users', 'ventas.idusuario', '=', 'users.id')
+        $venta = Venta::join('users', 'ventas.idusuario', '=', 'users.id')
             ->select(
                 'ventas.id',
                 'ventas.tipo_comprobante',
                 'ventas.cliente',
-                'ventas.serie_comprobante',
+                'ventas.documento',
                 'ventas.num_comprobante',
                 'ventas.created_at',
                 'ventas.impuesto',
                 'ventas.total',
                 'ventas.estado',
-                'personas.nombre',
-                'personas.tipo_documento',
-                'personas.num_documento',
-                'personas.direccion',
-                'personas.email',
-                'personas.telefono',
                 'users.usuario'
             )
             ->where('ventas.id', '=', $id)
@@ -1521,17 +1514,21 @@ class VentaController extends Controller
             
         $comprobante = $venta->num_comprobante;
 
-        $detalles = DetalleVenta::join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
-            ->select(
-                'detalle_ventas.cantidad',
-                'detalle_ventas.precio',
-                'detalle_ventas.descuento',
-                'articulos.nombre as articulo',
-                'articulos.unidad_envase'
-            )
-            ->where('detalle_ventas.idventa', '=', $id)
-            ->orderBy('detalle_ventas.id', 'desc')
-            ->get();
+        $detalles = DetalleVenta::leftJoin('articulos', 'detalle_ventas.codigoComida', '=', 'articulos.codigo')
+                    ->leftJoin('menu', 'detalle_ventas.codigoComida', '=', 'menu.codigo')
+                    ->select(
+                        'detalle_ventas.cantidad',
+                        'detalle_ventas.precio',
+                        'detalle_ventas.descuento',
+                        DB::raw('CASE WHEN detalle_ventas.codigoComida IN (SELECT codigo FROM articulos) THEN articulos.nombre 
+                                    WHEN detalle_ventas.codigoComida IN (SELECT codigo FROM menu) THEN menu.nombre 
+                                    ELSE NULL 
+                            END AS comida_nombre')
+                    )
+                    ->where('detalle_ventas.idventa', '=', $id)
+                    ->orderBy('detalle_ventas.id', 'desc')
+                    ->get();
+
         
         $pdf = new FPDF();
 
@@ -1554,8 +1551,7 @@ class VentaController extends Controller
             $cantidad = $detalle->cantidad;
             $precio = $detalle->precio;
             $descuento = $detalle->descuento;
-            $nombreArticulo = $detalle->articulo;
-            $unidadEnvase = $detalle->unidad_envase;
+            $nombreArticulo = $detalle->comida_nombre;
             $total = $precio * $cantidad;
 
             $pdf->SetFontSize($tamañoTexto - 2);
