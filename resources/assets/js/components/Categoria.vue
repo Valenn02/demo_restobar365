@@ -8,7 +8,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Categorías
+                        <i class="fa fa-align-justify"></i> Categorías de Bebidas
                         <button type="button" @click="abrirModal('categoria','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -30,6 +30,7 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
+                                    <th>Codigo</th>
                                     <th>Nombre</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
@@ -52,6 +53,7 @@
                                             </button>
                                         </template>
                                     </td>
+                                    <td v-text="categoria.codigo"></td>
                                     <td v-text="categoria.nombre"></td>
                                     <td v-text="categoria.descripcion"></td>
                                     <td>
@@ -192,10 +194,11 @@
                 let me=this;
                 var url= '/categoria?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
-                    consol.log('Categoria');
+                    console.log('Categoria');
                     var respuesta= response.data;
                     me.arrayCategoria = respuesta.categorias.data;
                     me.pagination= respuesta.pagination;
+                    console.log(me.arrayCategoria);
                 })
                 .catch(function (error) {
                     console.log(error);

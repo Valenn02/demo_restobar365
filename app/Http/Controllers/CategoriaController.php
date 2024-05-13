@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 //use Illuminate\Support\Facades\DB;
-use App\Categoria;
+use App\categoria_menu;
 
 class CategoriaController extends Controller
 {
@@ -21,10 +21,10 @@ class CategoriaController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $categorias = Categoria::orderBy('id', 'desc')->paginate(3);
+            $categorias = categoria_menu::orderBy('id', 'desc')->paginate(3);
         }
         else{
-            $categorias = Categoria::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(3);
+            $categorias = categoria_menu::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(3);
         }
         
 
