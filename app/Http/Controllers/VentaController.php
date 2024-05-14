@@ -30,6 +30,7 @@ use SimpleXMLElement;
 use SoapClient;
 use TheSeer\Tokenizer\Exception;
 use App\Helpers\CustomHelpers;
+use App\Medida;
 use App\MotivoAnulacion;
 use App\PuntoVenta;
 use App\Rol;
@@ -144,7 +145,6 @@ class VentaController extends Controller
 
         if ($buscar == '') {
             $facturasOffline = FacturaFueraLinea::join('ventas', 'factura_fuera_lineas.idventa', '=', 'ventas.id')
-                ->join('personas', 'factura_fuera_lineas.idcliente', '=', 'personas.id')
                 ->join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
                     'factura_fuera_lineas.*',
@@ -155,31 +155,29 @@ class VentaController extends Controller
                     'ventas.fecha_hora as fecha_hora',
                     'ventas.impuesto as impuesto',
                     'ventas.total as total',
+                    'ventas.idtipo_pago',
                     'ventas.estado as estado',
-                    'personas.nombre as razonSocial',
-                    'personas.email as email',
-                    'personas.num_documento as documentoid',
-                    'personas.complemento_id as complementoid',
+                    'ventas.cliente as razonSocial',
+                    'ventas.documento as documentoid',
                     'users.usuario as usuario'
                 )
                 ->orderBy('factura_fuera_lineas.id', 'desc')->paginate(3);
         } else {
             $facturasOffline = FacturaFueraLinea::join('ventas', 'factura_fuera_lineas.idventa', '=', 'ventas.id')
-                ->join('personas', 'factura_fuera_lineas.idcliente', '=', 'personas.id')
                 ->join('users', 'ventas.idusuario', '=', 'users.id')
                 ->select(
                     'factura_fuera_lineas.*',
+                    'factura_fuera_lineas.correo as correo',
                     'ventas.tipo_comprobante as tipo_comprobante',
                     'ventas.serie_comprobante',
                     'ventas.num_comprobante as num_comprobante',
                     'ventas.fecha_hora as fecha_hora',
                     'ventas.impuesto as impuesto',
                     'ventas.total as total',
+                    'ventas.idtipo_pago',
                     'ventas.estado as estado',
-                    'personas.nombre as razonSocial',
-                    'personas.email as email',
-                    'personas.num_documento as documentoid',
-                    'personas.complemento_id as complementoid',
+                    'ventas.cliente as razonSocial',
+                    'ventas.documento as documentoid',
                     'users.usuario as usuario'
                 )
                 ->where('factura_fuera_lineas.' . $criterio, 'like', '%' . $buscar . '%')
@@ -1004,7 +1002,7 @@ class VentaController extends Controller
             require "SiatController.php";
             $siat = new SiatController();
             $resFactura = $siat->recepcionFactura($archivo, $fechaEmision, $hashArchivo, $puntoVenta, $codSucursal);
-            //var_dump($resFactura);
+            //dd($resFactura);
             if ($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "VALIDADA"){
                 $mensaje = $resFactura->RespuestaServicioFacturacion->codigoDescripcion;
             }else if($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "RECHAZADA"){

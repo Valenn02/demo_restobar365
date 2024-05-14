@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\EventosSignificativos;
 use App\MotivoEvento;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EventosSignificativosController extends Controller
@@ -17,12 +18,12 @@ class EventosSignificativosController extends Controller
         if($buscar==''){
             $eventos_significativos = EventosSignificativos::join('motivo_eventos', 'eventos_significativos.idmotivoevento', '=', 'motivo_eventos.id')
             ->select('eventos_significativos.*', 'motivo_eventos.codigo as codigo', 'motivo_eventos.descripcion as descripcionEvento')
-            ->orderBy('eventos_significativos.id', 'desc')->paginate(3);
+            ->orderBy('eventos_significativos.id', 'desc')->paginate(6);
         }
         else{
             $eventos_significativos = EventosSignificativos::join('motivo_eventos', 'eventos_significativos.idmotivoevento', '=', 'motivo_eventos.id')
             ->select('eventos_significativos.*', 'motivo_eventos.codigo', 'motivo_eventos.descripcion')
-            ->orderBy('eventos_significativos.id', 'desc')->paginate(3);
+            ->orderBy('eventos_significativos.id', 'desc')->paginate(6);
         }
 
         return [
@@ -98,5 +99,21 @@ class EventosSignificativosController extends Controller
         $evento_significativo = EventosSignificativos::findOrFail($request->id);
         $evento_significativo->estado = '0';
         $evento_significativo->save();
+    }
+
+    public function ultimoCufd()
+    {
+        $ayer = Carbon::yesterday();
+
+        $ultimaFactura = Factura::whereDate('created_at', $ayer)->latest()->first();
+
+        if ($ultimaFactura) {
+            return response()->json([
+                'cufd' => $ultimaFactura->cufd,
+                'codigoControl' => $ultimaFactura->codigoControl,
+            ]);
+        } else {
+            return response()->json(['error' => 'No se encontró ninguna factura del día anterior'], 404);
+        }
     }
 }

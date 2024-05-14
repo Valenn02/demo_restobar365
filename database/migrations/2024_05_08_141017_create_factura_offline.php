@@ -15,7 +15,7 @@ class CreateFacturaOffline extends Migration
     {
         Schema::create('factura_fuera_lineas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idcliente')->unsigned();
+            $table->integer('idcliente')->unsigned()->nullable();
             $table->integer('idventa')->unsigned(); 
 
             $table->integer('numeroFactura');
