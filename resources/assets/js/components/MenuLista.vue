@@ -146,7 +146,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input">Nombre(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Nombre(*)</strong></label>
                                         <input type="text"
                                         v-model="nombre_producto"
                                         class="form-control"
@@ -213,7 +213,7 @@
                         <div  class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="text-input">Categoria(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Categoria(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="lineaseleccionada.nombre"
                                         :class="{ 'border-red': lineaseleccionadaVacio }">
@@ -226,7 +226,7 @@
 
                              <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input">Codigo(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Codigo(*)</strong></label>
                                         <input type="text"
                                         v-model="codigo_producto"
                                         class="form-control"
@@ -1821,6 +1821,7 @@ export default {
             this.nombre_producto = '';
             this.precio_venta = 0;
             this.descripcion = '';
+            this.codigo_producto = '';
             this.fotografia = ''; //Pasando el valor limpio de la referencia
             this.fotoMuestra = '';
             this.lineaseleccionada.nombre = '';
