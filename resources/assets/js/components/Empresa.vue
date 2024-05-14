@@ -48,6 +48,14 @@
                     </div>
                 </div>
 
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label" for="email-input">&nbsp; NIT</label>
+                    <div class="col-md-6 mx-2">
+                        <input type="email" v-model="nit" class="form-control" placeholder="Ingrese el NIT de la Empresa"
+                            :readonly="this.estadoInputs">                        
+                    </div>
+                </div>
+
                 <div class="form-group row" v-if="mostrarDivs">
                     <label class="col-md-3 form-control-label" for="text-input">&nbsp; Tipo de Moneda Principal</label>
                     <div class="col-md-6 mx-2">
@@ -143,6 +151,7 @@ export default {
             direccion: '',
             telefono: '',
             email: '',
+            nit: 0,
             validEmail: null,
             monedaPrincipal: '',
             valorMaximoDescuento: '',
@@ -178,11 +187,7 @@ export default {
                 me.direccion = respuesta.empresa.direccion;
                 me.telefono = respuesta.empresa.telefono;
                 me.email = respuesta.empresa.email;
-                me.monedaPrincipal = respuesta.empresa.monedaPrincipal;
-                me.valorMaximoDescuento = respuesta.empresa.valorMaximoDescuento;
-                me.tipoCambio1 = respuesta.empresa.tipoCambio1;
-                me.tipoCambio2 = respuesta.empresa.tipoCambio2;
-                me.tipoCambio3 = respuesta.empresa.tipoCambio3;
+                me.nit = respuesta.empresa.nit;
                 me.licencia = respuesta.empresa.licencia;
             })
             .catch(function (error) {
@@ -219,12 +224,7 @@ export default {
                 'direccion': this.direccion,
                 'telefono': this.telefono,
                 'email': this.email,
-                'monedaPrincipal': this.monedaPrincipal,
-                'valorMaximoDescuento': this.valorMaximoDescuento,
-                'tipoCambio1': this.tipoCambio1,
-                'tipoCambio2': this.tipoCambio2,
-                'tipoCambio3': this.tipoCambio3,
-                'licencia': this.licencia,
+                'nit': this.nit,
                 'id': this.empresa_id
             }).then(function (response) {
                 alert('Datos actualizados');
@@ -240,19 +240,12 @@ export default {
             if (!this.nombre) this.errorMostrarMsjEmpresa.push("El nombre de la empresa no puede estar vacío.");
             if (!this.direccion) this.errorMostrarMsjEmpresa.push("La direccion de la empresa no puede estar vacío.");
             if (!this.telefono) this.errorMostrarMsjEmpresa.push("El telefono de la empresa no puede estar vacío.");
-            if (!this.email) {
-                this.errorMostrarMsjEmpresa.push("El email de la empresa no puede estar vacío.");
+            if (!this.email) {this.errorMostrarMsjEmpresa.push("El email de la empresa no puede estar vacío.");
+            if (!this.nit) this.errorMostrarMsjEmpresa.push("El NIT de la empresa no puede estar vacío.");
+
             }else{
                 if (!this.validEmail) this.errorMostrarMsjEmpresa.push("El correo electronico de la empresa no es valido");
-
             }
-            if (!this.monedaPrincipal) this.errorMostrarMsjEmpresa.push("La moneda de la empresa no puede estar vacío.");
-            if (!this.valorMaximoDescuento) this.errorMostrarMsjEmpresa.push("El valor maximo de descuento de la empresa no puede estar vacío.");
-            if (!this.licencia) this.errorMostrarMsjEmpresa.push("La licencia de la empresa no puede estar vacío.");
-
-            if (!this.tipoCambio1) this.errorMostrarMsjEmpresa.push("El tipo de cambio Dolar de la empresa no puede estar vacío.");
-            if (!this.tipoCambio2) this.errorMostrarMsjEmpresa.push("El tipo de cambio Euro de la empresa no puede estar vacío.");
-            if (!this.tipoCambio3) this.errorMostrarMsjEmpresa.push("El tipo de cambio Real de la empresa no puede estar vacío.");
             
             if (this.errorMostrarMsjEmpresa.length) this.errorEmpresa = 1;
 

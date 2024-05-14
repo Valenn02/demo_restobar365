@@ -247,7 +247,7 @@ class ArticuloController extends Controller
             if ($request->hasFile('fotografia')) {
                 $imagen = $request->file("fotografia");
                 $nombreimagen = Str::slug($request->nombre) . "." . $imagen->guessExtension();
-                $ruta = public_path("img/articulo/");
+                $ruta = public_path("img/menu/");
 
                 // Crear el directorio si no existe
                 if (!File::isDirectory($ruta)) {
@@ -308,15 +308,15 @@ class ArticuloController extends Controller
             $nombreimagen = " ";
             if ($request->hasFile('fotografia')) {
                 // Eliminar imagen anterior si existe
-                if ($articulo->fotografia != '' && Storage::exists('public/img/articulo/' . $articulo->fotografia)) {
-                    Storage::delete('public/img/articulo/' . $articulo->fotografia);
+                if ($articulo->fotografia != '' && Storage::exists('public/img/menu/' . $articulo->fotografia)) {
+                    Storage::delete('public/img/menu/' . $articulo->fotografia);
                 }
 
                 $imagen = $request->file("fotografia");
                 $nombreimagen = Str::slug($request->nombre) . "." . $imagen->guessExtension();
-                $imagen->storeAs('public/img/articulo', $nombreimagen);
+                $imagen->storeAs('public/img/menu/', $nombreimagen);
 
-                $ruta = public_path("img/articulo/");
+                $ruta = public_path("img/menu/");
 
                 // Copiar la imagen al directorio
                 copy($imagen->getRealPath(), $ruta . $nombreimagen);
