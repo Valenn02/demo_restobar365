@@ -1150,7 +1150,7 @@ export default {
             return this.arrayArticulo.map(articulo => ({
                 ...articulo,
                 imagenSrc: articulo.fotografia
-                    ? `img/articulo/${articulo.fotografia}?id=${articulo.id}_${this.uniqueId()}`
+                    ? `img/menu/${articulo.fotografia}?id=${articulo.id}_${this.uniqueId()}`
                     : 'img/articulo/defecto.jpg'
             }));
         }

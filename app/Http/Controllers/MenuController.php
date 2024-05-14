@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\menu;
+use App\Menu;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +27,7 @@ class MenuController extends Controller
         $criterio = $request->criterio;
 
         if ($buscar == '') {
-            $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+            $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
 
                 ->select(
                     'menu.id',
@@ -44,7 +44,7 @@ class MenuController extends Controller
                 ->orderBy('menu.id', 'desc')
                 ->paginate(8);
         } else {
-            $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+            $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
 
                 ->select(
                     'menu.id',
@@ -86,7 +86,7 @@ class MenuController extends Controller
         $criterio = $request->criterio;
 
         if ($buscar == '') {
-            $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+            $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
 
                 ->select(
                     'menu.id',
@@ -103,7 +103,7 @@ class MenuController extends Controller
                 )
                 ->orderBy('menu.id', 'desc')->get();
         } else {
-            $menu = menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
+            $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
 
                 ->select(
                     'menu.id',
@@ -174,7 +174,7 @@ class MenuController extends Controller
         if (!$request->ajax())
             return redirect('/');
 
-        $menu = menu::findOrFail($request->id);
+        $menu = Menu::findOrFail($request->id);
         $menu->nombre = $request->nombre;
         $menu->precio_venta = $request->precio_venta;
         $menu->descripcion = $request->descripcion;
@@ -205,7 +205,7 @@ class MenuController extends Controller
     {
         if (!$request->ajax())
             return redirect('/');
-        $menu = menu::findOrFail($request->id);
+        $menu = Menu::findOrFail($request->id);
         $menu->condicion = '0';
         $menu->save();
     }
@@ -214,7 +214,7 @@ class MenuController extends Controller
     {
         if (!$request->ajax())
             return redirect('/');
-        $menu = menu::findOrFail($request->id);
+        $menu = Menu::findOrFail($request->id);
         $menu->condicion = '1';
         $menu->save();
     }
@@ -222,7 +222,7 @@ class MenuController extends Controller
     //eliminar
     public function destroy($id)
     {
-        $menu = menu::findOrFail($id);
+        $menu = Menu::findOrFail($id);
         $menu->delete();
         return response()->json(['message' => '¡menú ha sido eliminado correctamente!']);
     }
