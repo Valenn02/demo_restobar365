@@ -1004,7 +1004,7 @@ class VentaController extends Controller
             require "SiatController.php";
             $siat = new SiatController();
             $resFactura = $siat->recepcionFactura($archivo, $fechaEmision, $hashArchivo, $puntoVenta, $codSucursal);
-            //var_dump($resFactura);
+            //dd($resFactura);
             if ($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "VALIDADA"){
                 $mensaje = $resFactura->RespuestaServicioFacturacion->codigoDescripcion;
             }else if($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "RECHAZADA"){
