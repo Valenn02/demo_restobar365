@@ -157,6 +157,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/cliente/activarCli', 'ClienteController@activarCli');
 
         Route::get('/venta', 'VentaController@index');
+        Route::get('/venta/offline', 'VentaController@ventaOffline');
         Route::post('/venta/registrar', 'VentaController@store');
         Route::put('/venta/desactivar', 'VentaController@desactivar');
         Route::get('/venta/obtenerCabecera', 'VentaController@obtenerCabecera');
@@ -167,11 +168,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/venta/verificarComunicacion', 'VentaController@verificarComunicacion');
         Route::post('/venta/cuis', 'VentaController@cuis');
         Route::post('/venta/cufd', 'VentaController@cufd');
+        Route::post('/venta/nuevoCufd', 'VentaController@nuevoCufd');
         Route::post('/venta/emitirFactura', 'VentaController@emitirFactura');
         Route::post('/venta/insertarFactura', 'VentaController@insertarFactura');
         Route::post('/venta/paqueteFactura', 'VentaController@paqueteFactura');
         Route::post('/venta/enviarPaquete', 'VentaController@enviarPaquete');
         Route::post('/venta/validarPaquete', 'VentaController@validacionRecepcionPaqueteFactura');
+
         //credito_venta
         Route::get('/credito', 'CreditoVentaController@index');
         Route::post('/credito/registrar', 'CreditoVentaController@store');
@@ -355,6 +358,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/eventos/errorEvento', 'EventosSignificativosController@errorEvento');
         Route::put('/eventos/cambioEstadoEvento', 'EventosSignificativosController@cambioEstadoEvento');
         Route::post('/factura/eventosSignificativos', 'VentaController@registroEventoSignificativo');
+        Route::get('/api/facturas/ultimo', 'EventosSignificativosController@ultimoCufd');
 
         //PEDIDO A PROVEEDOR--
         Route::post('/registrar/pedidoprovee', 'PedidoProvController@store')->name('PEDIDO');
