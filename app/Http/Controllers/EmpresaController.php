@@ -92,12 +92,7 @@ class EmpresaController extends Controller
             $empresa->direccion = $request->direccion;
             $empresa->telefono = $request->telefono;
             $empresa->email = $request->email;
-            $empresa->monedaPrincipal = $request->monedaPrincipal;
-            $empresa->valorMaximoDescuento = $request->valorMaximoDescuento;
-            $empresa->tipoCambio1 = $request->tipoCambio1;
-            $empresa->tipoCambio2 = $request->tipoCambio2;
-            $empresa->tipoCambio3 = $request->tipoCambio3;
-            $empresa->licencia = $request->licencia;
+            $empresa->nit = $request->nit;
 
             $empresa->save();
 
