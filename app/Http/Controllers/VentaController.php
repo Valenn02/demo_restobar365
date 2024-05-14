@@ -471,7 +471,7 @@ class VentaController extends Controller
                         $venta->save();
                         //-----hasta aqui----
 
-                        if($request->idtipo_pago == 2){
+                        /*if($request->idtipo_pago == 2){
                             //----REGIStRADO DE CREDITOS_VENTAAS--
                             $creditoventa = new CreditoVenta();
                             $creditoventa->idventa = $venta->id;
@@ -505,7 +505,7 @@ class VentaController extends Controller
                             }
                             //---hastaa qui REGIStRADO DE CUOTAS_CREDITO--
 
-                        }
+                        }*/
 
                         $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
                         $ultimaCaja->save();
@@ -665,6 +665,12 @@ class VentaController extends Controller
             $_SESSION['scodigoControl'] = $codigoControl;
             $_SESSION['sdireccion'] = $direccion;
             $_SESSION['sfechaVigenciaCufd'] = $fechaVigencia;
+
+            $res['transaccion'] = $res->RespuestaCufd->transaccion;
+            $res['codigo'] = $_SESSION['scufd'];
+            $res['fechaVigencia'] = $_SESSION['sfechaVigenciaCufd'];
+            $res['direccion'] = $_SESSION['sdireccion'];
+            $res['codigoControl'] = $_SESSION['scodigoControl'];
         } else {
             $res = false;
         }
@@ -1488,6 +1494,34 @@ class VentaController extends Controller
 
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
         //var_dump($res);
+    }
+
+    public function consultaPuntoVenta(Request $request)
+    {
+        $user = Auth::user();
+        $sucursal = $user->sucursal;
+        $codSucursal = $sucursal->codigoSucursal;
+        $nombreSucursal = $sucursal->nombre;
+        $nit = "5153610012";
+
+        require "SiatController.php";
+        $siat = new SiatController();
+        $res = $siat->consultaPuntoVenta();
+        //dd($res);
+        if ($res->RespuestaConsultaPuntoVenta->transaccion === true) {
+            $mensaje = $res;
+        } else {
+            $mensaje = $res->RespuestaCierrePuntoVenta->mensajesList->descripcion;
+        }
+
+        //echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
+
+        return response()->json([
+            'mensaje' => $mensaje,
+            'codSucursal' => $codSucursal,
+            'nombreSucursal' => $nombreSucursal,
+            'nit2' => $nit
+        ], 200);
     }
 
     public function imprimirTicket($id)

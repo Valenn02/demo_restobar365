@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\EventosSignificativos;
+use App\Factura;
 use App\MotivoEvento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

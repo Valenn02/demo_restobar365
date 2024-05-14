@@ -66,12 +66,18 @@ class PuntoVentaController extends Controller
     public function store(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
+
+        $ultimoCodigo = PuntoVenta::max('codigoPuntoVenta');
+
+        $nuevoCodigo = $ultimoCodigo + 1;
+
         $punto_ventas = new PuntoVenta();
         $punto_ventas->nombre = $request->nombre;
         $punto_ventas->descripcion = $request->descripcion;
         $punto_ventas->nit = $request->nit;
         $punto_ventas->idtipopuntoventa = $request->idtipopuntoventa;
         $punto_ventas->idsucursal = $request->idsucursal;
+        $punto_ventas->codigoPuntoVenta = $nuevoCodigo;
         $punto_ventas->estado = '1';
 
         $punto_ventas->save();

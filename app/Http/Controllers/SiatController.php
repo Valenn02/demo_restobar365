@@ -864,6 +864,7 @@ class SiatController extends Controller
             'cuis' => $cuis,
             'nit' => $nit
         ));
+        //dd($params);
         $options = array(
             'http' => array(
                 'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
@@ -883,6 +884,42 @@ class SiatController extends Controller
             $result = "TOKEN NO VÁLIDO";
         }
         return $result;        
+    }
+
+    public function consultaPuntoVenta(){
+        $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
+        $codigoAmbiente = 2;
+        $codigoSistema = "77535546B712DD409D7A387";
+        $codigoSucursal = 0;
+        $cuis = $_SESSION['scuis'];
+        $nit = "5153610012";
+
+        $params = array('SolicitudConsultaPuntoVenta' => array(
+            'codigoAmbiente' => $codigoAmbiente,
+            'codigoSistema' => $codigoSistema,
+            'codigoSucursal' => $codigoSucursal,
+            'cuis' => $cuis,
+            'nit' => $nit
+        ));
+        $options = array(
+            'http' => array(
+                'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
+                'timeout' => 5
+            )
+        );
+
+        $context = stream_context_create($options);
+        try {
+            $client = new \SoapClient($wsdl, [
+                'stream_context' => $context,
+                'cache_wsdl' => WSDL_CACHE_NONE,
+                'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | SOAP_COMPRESSION_DEFLATE
+            ]);
+            $result = $client->consultaPuntoVenta($params);
+        }catch (SoapFault $fault){
+            $result = "TOKEN NO VÁLIDO";
+        }
+        return $result;  
     }
     
 }

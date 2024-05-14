@@ -16,75 +16,43 @@
                     <span class="badge bg-secondary" id="cuis">CUIS: Inexistente</span>
                 </div>
                 <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select class="form-control col-md-3" v-model="criterio">
-                                    <option value="nombre">Nombre</option>
-                                    <option value="descripcion">Descripción</option>
-                                </select>
-                                <input type="text" v-model="buscar" @keyup.enter="listarPuntoVenta(1, buscar, criterio)"
-                                    class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" @click="listarPuntoVenta(1, buscar, criterio)"
-                                    class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                            </div>
-                        </div>
-                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
                                     <th>Código</th>
                                     <th>Nombre</th>
-                                    <th>Descripción</th>
                                     <th>Tipo Punto de Venta</th>
+                                    <th style="display: none;">Cod. Sucursal</th>
                                     <th>Sucursal</th>
+                                    <th>NIT</th>
                                     <!--<th>Estado</th>-->
                                     <th> </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="puntoVenta in arrayPuntoVenta" :key="puntoVenta.id">
-                                    <td v-text="puntoVenta.codigoPuntoVenta"></td>
-                                    <td v-text="puntoVenta.nombre"></td>
-                                    <td v-text="puntoVenta.descripcion"></td>
-                                    <td v-text="puntoVenta.descripcionTipo"></td>
-                                    <td v-text="puntoVenta.nombreSucursal"></td>
-                                    <!--<td>
-                                        <div v-if="puntoVenta.estado">
-                                            <span class="badge badge-success">DISPONIBLE</span>
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">CERRADA</span>
-                                        </div>
-                                    </td>-->
+                                <tr v-for="puntoVenta in paginatedArrayPuntoVenta" :key="puntoVenta.codigoPuntoVenta">
+                                    <td>{{ puntoVenta.codigoPuntoVenta }}</td>
+                                    <td>{{ puntoVenta.nombrePuntoVenta }}</td>
+                                    <td>{{ puntoVenta.tipoPuntoVenta }}</td>
+                                    <td style="display: none;">{{ codSucursal }}</td>
+                                    <td>{{ nombreSucursal }}</td>
+                                    <td>{{ nit2 }}</td>
                                     <td>
-                                        <button v-if="puntoVenta.estado === 1" class="btn btn-danger" type="button"
-                                            @click="cerrarPuntoVenta(puntoVenta.codigoPuntoVenta, puntoVenta.idsucursal, puntoVenta.nit)"><i
-                                                class="icon-close"></i></button>
+                                        <button class="btn btn-danger" type="button" @click="cerrarPuntoVenta(puntoVenta.codigoPuntoVenta, codSucursal, nit2)">
+                                            <i class="icon-close"> Cerrar Punto Venta</i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item" v-if="pagination.current_page > 1">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
-                            </li>
-                            <li class="page-item" v-for="page in pagesNumber" :key="page"
-                                :class="[page == isActived ? 'active' : '']">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)"
-                                    v-text="page"></a>
-                            </li>
-                            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                <a class="page-link" href="#"
-                                    @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div class="pagination">
+                        <button class="btn btn-primary" :disabled="currentPage === 1" @click="currentPage--">Anterior</button>
+                        <span style="font-weight: bold; margin: 0 5px;">{{ currentPage }}</span>
+                        <button class="btn btn-primary" :disabled="currentPage * itemsPerPage >= arrayPuntoVenta.length" @click="currentPage++">Siguiente</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -197,19 +165,24 @@ export default {
             arrayPuntoVenta: [],
             arrayTipoPuntoVenta: [],
             arraySucursal: [],
+            codSucursal: '',
+            nit2: '',
+            nombreSucursal: '',
             modal: 0,
             tituloModal: '',
             tipoAccion: 0,
             errorPuntoVenta: 0,
             errorMostrarMsjPuntoVenta: [],
-            pagination: {
+            /*pagination: {
                 'total': 0,
                 'current_page': 0,
                 'per_page': 0,
                 'last_page': 0,
                 'from': 0,
                 'to': 0,
-            },
+            },*/
+            currentPage: 1,
+            itemsPerPage: 10,
             offset: 3,
             criterio: 'nombre',
             buscar: '',
@@ -242,6 +215,12 @@ export default {
             }
             return pagesArray;
 
+        },
+
+        paginatedArrayPuntoVenta() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.arrayPuntoVenta.slice(startIndex, endIndex);
         }
     },
     methods: {
@@ -275,13 +254,31 @@ export default {
             var url = '/puntoVenta?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
-                me.arrayPuntoVenta = respuesta.punto_ventas.data;
+                me.arrayPuntoVentas = respuesta.punto_ventas.data;
                 me.pagination = respuesta.pagination;
             })
                 .catch(function (error) {
                     console.log(error);
                 });
         },
+
+        consultaPuntoVenta() {
+            let me = this;
+            var url = '/puntoVenta/consulta';
+            axios.get(url).then(function (response) {
+                var respuesta = response.data;
+                me.arrayPuntoVenta = respuesta.mensaje.RespuestaConsultaPuntoVenta.listaPuntosVentas;
+                me.arrayPuntoVenta.sort((a, b) => b.codigoPuntoVenta - a.codigoPuntoVenta);
+                me.codSucursal = respuesta.codSucursal;
+                me.nombreSucursal = respuesta.nombreSucursal;
+                me.nit2 = respuesta.nit2;
+                console.log(respuesta);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+
+
         cambiarPagina(page) {
             let me = this;
             me.pagination.current_page = page;
@@ -377,7 +374,7 @@ export default {
 
                     axios.post('/puntoVenta/registrar', datos).then(function (response) {
                         me.cerrarModal();
-                        me.listarPuntoVenta(1, '', 'id');
+                        me.consultaPuntoVenta();
                     }).catch(function (error) {
                         console.log(error);
                         swal('ERROR AL REGISTRAR EL PUNTO DE VENTA', 'Revise los errores', 'error');
@@ -395,7 +392,7 @@ export default {
             });
         },
 
-        cerrarPuntoVenta(codigoPuntoVenta, idsucursal, nit) {
+        cerrarPuntoVenta(codigoPuntoVenta, codSucursal, nit2) {
             swal({
                 title: 'Esta seguro de Cerrar este Punto de Venta?',
                 type: 'warning',
@@ -414,8 +411,8 @@ export default {
 
                     axios.post('/puntoVenta/cerrar', {
                         'codigoPuntoVenta': codigoPuntoVenta,
-                        'codigoSucursal': idsucursal,
-                        'nit': nit
+                        'codigoSucursal': codSucursal,
+                        'nit': nit2
                     }).then(function (response) {
                         var data = response.data;
                         if (!isNaN(data)) {
@@ -424,10 +421,11 @@ export default {
                                 'Su código del Punto de Venta es: ' + data,
                                 'success'
                             )
+                            me.consultaPuntoVenta();
                             axios.put('/puntoVenta/cambioEstado', {
                                 'id': id
                             }).then(function (response) {
-                                me.listarPuntoVenta(1, '', 'codigoPuntoVenta');
+                                me.consultaPuntoVenta();
                             }).catch(function (error) {
                                 console.log(error);
                             });
@@ -449,7 +447,7 @@ export default {
                             axios.put('/puntoVenta/cambioEstado', {
                                 'codigoPuntoVenta': codigoPuntoVenta
                             }).then(function (response) {
-                                me.listarPuntoVenta(1, '', 'codigoPuntoVenta');
+                                me.consultaPuntoVenta();
                             }).catch(function (error) {
                                 console.log(error);
                             });
@@ -493,6 +491,7 @@ export default {
         this.cufd();
         this.obtenerDatosTipoPuntoVenta();
         this.obtenerDatosSucursal();
+        this.consultaPuntoVenta();
     }
 }
 </script>
