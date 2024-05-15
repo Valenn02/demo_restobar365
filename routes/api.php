@@ -33,4 +33,5 @@ Route::post('/qr/verificarpago', 'QrController@generarToken');
 
 Route::post('/qr/confirmaPago', 'QrController@confirmaPago');
 
+Route::post('/whatsapp/envia','WhatsappController@envia');
 
