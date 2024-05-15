@@ -167,7 +167,7 @@ class SiatController extends Controller
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
-        $cuis = "D7960634";
+        $cuis = $_SESSION['scuis'];
         $nit = "5153610012";
 
         $params = array('SolicitudSincronizacion' => array(
@@ -178,7 +178,7 @@ class SiatController extends Controller
             'cuis' => $cuis, 
             'nit' => $nit
         ));
-
+        
         $options = array(
             'http' => array(
                 'header' => "apikey: TokenApi eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJHdWljaGkxLiIsImNvZGlnb1Npc3RlbWEiOiI3NzUzNTU0NkI3MTJERDQwOUQ3QTM4NyIsIm5pdCI6Ikg0c0lBQUFBQUFBQUFETTFORFUyTXpRd01EUUNBTWdwRkpRS0FBQUEiLCJpZCI6MzAxNTc4OCwiZXhwIjoxNzM1NjAzMjAwLCJpYXQiOjE3MDQyMTU0MTYsIm5pdERlbGVnYWRvIjo1MTUzNjEwMDEyLCJzdWJzaXN0ZW1hIjoiU0ZFIn0.9J0zThmiihbX0hVNRc2nWdO8G4HJEI33IGCneHl8f55THqJwuigDz2VaT06tAa8bO4XTNKz_LO0EbDgJFYFDsg",
@@ -206,7 +206,7 @@ class SiatController extends Controller
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
-        $cuis = "D7960634";
+        $cuis = $_SESSION['scuis'];
         $nit = "5153610012";
 
         $params = array('SolicitudSincronizacion' => array(

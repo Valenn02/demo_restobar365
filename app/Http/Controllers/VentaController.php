@@ -654,6 +654,7 @@ class VentaController extends Controller
         require "SiatController.php";
         $siat = new SiatController();
         $res = $siat->cufd($puntoVenta, $codSucursal);
+        //dd($res);
         
         if ($res->RespuestaCufd->transaccion == true) {
             $cufd = $res->RespuestaCufd->codigo;
@@ -666,11 +667,13 @@ class VentaController extends Controller
             $_SESSION['sdireccion'] = $direccion;
             $_SESSION['sfechaVigenciaCufd'] = $fechaVigencia;
 
-            $res['transaccion'] = $res->RespuestaCufd->transaccion;
+            $res = $res->RespuestaCufd;
+
+            /*$res['transaccion'] = $res->RespuestaCufd->transaccion;
             $res['codigo'] = $_SESSION['scufd'];
             $res['fechaVigencia'] = $_SESSION['sfechaVigenciaCufd'];
             $res['direccion'] = $_SESSION['sdireccion'];
-            $res['codigoControl'] = $_SESSION['scodigoControl'];
+            $res['codigoControl'] = $_SESSION['scodigoControl'];*/
         } else {
             $res = false;
         }

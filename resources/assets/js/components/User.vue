@@ -42,12 +42,12 @@
                                 <th>Nombre</th>
                                 <th>Tipo Documento</th>
                                 <th>Número</th>
-                                <th>Dirección</th>
                                 <th>Teléfono</th>
                                 <th>Email</th>
                                 <th>Usuario</th>
                                 <th>Rol</th>
                                 <th>Sucursal</th>
+                                <th>Punto de Venta</th>
                                 <th>Opciones</th>
                             </tr>
                         </thead>
@@ -61,14 +61,14 @@
                                     <img :src="'img/usuarios/' + 'defecto.jpg'" width="50" height="50" v-else ref="imagen">
                                 </td>
                                 <td v-text="persona.nombre"></td>
-                                <td v-text="persona.tipo_documento"></td>
+                                <td v-text="getTipoDocumentoText(persona.tipo_documento)"></td>
                                 <td v-text="persona.num_documento"></td>
-                                <td v-text="persona.direccion"></td>
                                 <td v-text="persona.telefono"></td>
                                 <td v-text="persona.email"></td>
                                 <td v-text="persona.usuario"></td>
                                 <td v-text="persona.rol"></td>
                                 <td v-text="persona.sucursal"></td>
+                                <td v-text="persona.puntoventa"></td>
                                 <td>
                                     <button type="button" @click="abrirModal('persona', 'actualizar', persona)"
                                         class="btn btn-warning btn-sm">
@@ -135,9 +135,13 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="text-input">Tipo documento</label>
                                 <select v-model="tipo_documento" class="form-control">
-                                    <option value="CEDULA">CEDULA</option>
-                                    <option value="PASAPORTE">PASAPORTE</option>
-                                </select>
+                                            <option value="" disabled>Selecciona una tipo de documento</option>
+                                            <option value="1">CI - CEDULA DE IDENTIDAD</option>
+                                            <option value="2">CEX - CEDULA DE IDENTIDAD DE EXTRANJERO</option>
+                                            <option value="5">NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA</option>
+                                            <option value="3">PAS - PASAPORTE</option>
+                                            <option value="4">OD - OTRO DOCUMENTO DE IDENTIDAD</option>   
+                                        </select> 
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label" for="email-input">Teléfono</label>
@@ -154,6 +158,10 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="email-input">Usuario</label>
                                 <input type="text" v-model="usuario" class="form-control" placeholder="Nombre del usuario">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label" for="email-input">Clave</label>
+                                <input type="password" v-model="password" class="form-control" placeholder="Clave del usuario">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -178,26 +186,31 @@
                                         v-text="sucursal.nombre"></option>
                                 </select>
                             </div>
+                            <div class="form-group" v-if="idsucursal !== '0'">
+                                <label class="form-control-label" for="branch-input">Punto de Venta</label>
+                                <select v-model="idpuntoventa" class="form-control">
+                                    <option value="0" disabled>Seleccione</option>
+                                    <option v-for="puntoVenta in filteredPuntosVenta" :key="puntoVenta.id" :value="puntoVenta.id" 
+                                    v-text="puntoVenta.nombre"></option>
+                                </select>
+                            </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Clave</label>
-                                <input type="password" v-model="password" class="form-control" placeholder="Clave del usuario">
+                                <label class="form-control-label" for="email-input">Fotografia</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input type="file" @change="obtenerFotografia" class="form-control" placeholder="fotografia usuario" ref="fotografiaInput">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <figure>
+                                            <img :src="imagen" width="50" height="50" alt="Foto usuario">
+                                        </figure>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-control-label" for="email-input">Fotografia</label>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <input type="file" @change="obtenerFotografia" class="form-control" placeholder="fotografia usuario" ref="fotografiaInput">
-                            </div>
-                            <div class="col-md-4">
-                                <figure>
-                                    <img :src="imagen" width="50" height="50" alt="Foto usuario">
-                                </figure>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div v-show="errorPersona" class="form-group div-error">
                         <div class="text-center text-error">
                             <div v-for="error in errorMostrarMsjPersona" :key="error" v-text="error"></div>
@@ -235,9 +248,11 @@ export default {
             fotoMuestra: '',
             idrol: '',
             idsucursal: '',
+            idpuntoventa: '',
             arrayPersona: [],
             arrayRol: [],
             arraySucursal: [],
+            arrayPuntoVenta: [],
             modal: 0,
             tituloModal: '',
             tipoAccion: 0,
@@ -287,6 +302,13 @@ export default {
         imagen() {
             console.log(this.fotoMuestra);
             return this.fotoMuestra;
+        },
+        filteredPuntosVenta(){
+            if (this.idsucursal === 0) {
+                return [];
+            } else {
+                return this.arrayPuntoVenta.filter(puntoventa => puntoventa.idsucursal === this.idsucursal);
+            }
         }
     },
     methods: {
@@ -326,6 +348,20 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+
+        obtenerPuntosDeVenta(){
+            if (this.idsucursal === '0'){
+                return;
+            }
+
+            axios.get(`/api/puntosDeVenta/${this.idsucursal}`)
+            .then(response => {
+                this.arrayPuntoVenta = response.data;
+            })
+            .catch(error => {
+                console.log('Error al obtener los puntos de venta: ', error);
+            })
         },
 
         cambiarPagina(page, buscar, criterio) {
@@ -374,6 +410,7 @@ export default {
             formData.append('email', this.email);
             formData.append('idrol', this.idrol);
             formData.append('idsucursal', this.idsucursal);
+            formData.append('idpuntoventa', this.idpuntoventa);
             formData.append('usuario', this.usuario);
             formData.append('password', this.password);
             formData.append('fotografia', this.fotografia);
@@ -412,6 +449,7 @@ export default {
             formData.append('email', this.email);
             formData.append('idrol', this.idrol);
             formData.append('idsucursal', this.idsucursal);
+            formData.append('idpuntoventa', this.idpuntoventa);
             formData.append('usuario', this.usuario);
             formData.append('password', this.password);
             formData.append('fotografia', this.fotografia);
@@ -460,6 +498,7 @@ export default {
             this.fotoMuestra = 'img/usuarios/defecto.jpg';
             this.idrol = 0;
             this.idsucursal = 0;
+            this.idpuntoventa = '';
             this.errorPersona = 0;
         },
         abrirModal(modelo, accion, data = []) {
@@ -484,6 +523,7 @@ export default {
                                     this.fotografia = '';
                                     this.idrol = 0;
                                     this.idsucursal = 0;
+                                    this.idpuntoventa = '';
                                     this.tipoAccion = 1;
                                     break;
                                 }
@@ -506,6 +546,7 @@ export default {
                                     this.fotoMuestra = data['fotografia'] ? 'img/usuarios/' + data['fotografia'] : 'img/usuarios/defecto.jpg';
                                     this.idrol = data['idrol'];
                                     this.idsucursal = data['idsucursal'];
+                                    this.idpuntoventa = data['idpuntoventa'];
                                     break;
                                 }
                         }
@@ -593,8 +634,31 @@ export default {
         cargarReporteUsuariosExcel()
         {
             window.open('/user/listarReporteUsuariosExcel', '_blank');
+        },
+
+        getTipoDocumentoText(value){
+            switch (value) {
+                case '1':
+                    return 'CI';
+                case '2':
+                    return 'CEX';
+                case '3':
+                    return 'PAS';
+                case '4':
+                    return 'OD';
+                case '5':
+                    return 'NIT';    
+                default:
+                    return '';
+            }
         }
     },
+    watch: {
+        idsucursal(){
+            this.obtenerPuntosDeVenta();
+        }
+    },
+
     mounted() {
         this.listarPersona(1, this.buscar, this.criterio);
     }

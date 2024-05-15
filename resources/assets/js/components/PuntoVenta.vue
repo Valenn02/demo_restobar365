@@ -157,6 +157,7 @@ export default {
                 nit: "5153610012",
                 idtipopuntoventa: "",
                 idsucursal: "",
+                codigoPuntoVenta: ""
             },
             errores: {},
 
@@ -372,6 +373,8 @@ export default {
                         'success'
                     );
 
+                    datos.codigoPuntoVenta = data;
+
                     axios.post('/puntoVenta/registrar', datos).then(function (response) {
                         me.cerrarModal();
                         me.consultaPuntoVenta();
@@ -483,6 +486,7 @@ export default {
                     }
             }
         }
+        
     },
     mounted() {
         this.listarPuntoVenta(1, this.buscar, this.criterio);

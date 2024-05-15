@@ -167,7 +167,7 @@ Route::group(['middleware' => ['auth']], function () {
         //new
         Route::post('/venta/verificarComunicacion', 'VentaController@verificarComunicacion');
         Route::post('/venta/cuis', 'VentaController@cuis');
-        Route::post('/venta/cufd', 'VentaController@cufd');
+        Route::post('/venta/cufd', 'VentaController@nuevoCufd');
         Route::post('/venta/nuevoCufd', 'VentaController@nuevoCufd');
         Route::post('/venta/emitirFactura', 'VentaController@emitirFactura');
         Route::post('/venta/insertarFactura', 'VentaController@insertarFactura');
@@ -238,6 +238,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/puntoVenta/cerrar', 'VentaController@cierrePuntoVenta');
         Route::put('/puntoVenta/cambioEstado', 'PuntoVentaController@cambioEstado');
         Route::get('/puntoVenta/consulta', 'VentaController@consultaPuntoVenta');
+        Route::get('/api/puntosDeVenta/{idSucursal}', 'PuntoVentaController@obtenerPorSucursal');
 
         //Listar Moneda
         Route::get('/moneda', 'MonedaController@index');

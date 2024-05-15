@@ -18,33 +18,36 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax())
+            return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-        
-        if ($buscar==''){
-            $personas = User::join('personas','users.id','=','personas.id')
-            ->join('roles','users.idrol','=','roles.id')
-            ->join('sucursales','users.idsucursal','=','sucursales.id')
-            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.telefono','personas.email','personas.fotografia','users.usuario','users.password','users.condicion','users.idrol','roles.nombre as rol', 'users.idsucursal', 'sucursales.nombre as sucursal')
-            ->orderBy('personas.id', 'desc')->paginate(3);
+
+        if ($buscar == '') {
+            $personas = User::join('personas', 'users.id', '=', 'personas.id')
+                ->join('roles', 'users.idrol', '=', 'roles.id')
+                ->join('sucursales', 'users.idsucursal', '=', 'sucursales.id')
+                ->join('punto_ventas', 'users.idpuntoventa', '=', 'punto_ventas.id')
+                ->select('personas.id', 'personas.nombre', 'personas.tipo_documento', 'personas.num_documento', 'personas.direccion', 'personas.telefono', 'personas.email', 'personas.fotografia', 'users.usuario', 'users.password', 'users.condicion', 'users.idrol', 'roles.nombre as rol', 'users.idsucursal', 'sucursales.nombre as sucursal', 'users.idpuntoventa', 'punto_ventas.nombre as puntoventa')
+                ->orderBy('personas.id', 'desc')->paginate(6);
+        } else {
+            $personas = User::join('personas', 'users.id', '=', 'personas.id')
+                ->join('roles', 'users.idrol', '=', 'roles.id')
+                ->join('sucursales', 'users.idsucursal', '=', 'sucursales.id')
+                ->join('punto_ventas', 'users.idpuntoventa', '=', 'punto_ventas.id')
+                ->select('personas.id', 'personas.nombre', 'personas.tipo_documento', 'personas.num_documento', 'personas.direccion', 'personas.telefono', 'personas.email', 'personas.fotografia', 'users.usuario', 'users.password', 'users.condicion', 'users.idrol', 'roles.nombre as rol', 'users.idsucursal', 'sucursales.nombre as sucursal', 'users.idpuntoventa', 'punto_ventas.nombre as puntoventa')
+                ->where('personas.' . $criterio, 'like', '%' . $buscar . '%')->orderBy('id', 'desc')->paginate(6);
         }
-        else{
-            $personas = User::join('personas','users.id','=','personas.id')
-            ->join('roles','users.idrol','=','roles.id')
-            ->select('personas.id','personas.nombre','personas.tipo_documento','personas.num_documento','personas.direccion','personas.telefono','personas.email','personas.fotografia','users.usuario','users.password','users.condicion','users.idrol','roles.nombre as rol', 'users.idsucursal', 'sucursales.nombre as sucursal')
-            ->where('personas.'.$criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(3);
-        }
-        
+
         return [
             'pagination' => [
-                'total'        => $personas->total(),
+                'total' => $personas->total(),
                 'current_page' => $personas->currentPage(),
-                'per_page'     => $personas->perPage(),
-                'last_page'    => $personas->lastPage(),
-                'from'         => $personas->firstItem(),
-                'to'           => $personas->lastItem(),
+                'per_page' => $personas->perPage(),
+                'last_page' => $personas->lastPage(),
+                'from' => $personas->firstItem(),
+                'to' => $personas->lastItem(),
             ],
             'personas' => $personas
         ];
@@ -93,7 +96,7 @@ class UserController extends Controller
             $user->id = $persona->id;
             $user->idrol = $request->idrol;
             $user->idsucursal = $request->idsucursal;
-            $user->idpuntoventa = 1;
+            $user->idpuntoventa = $request->idpuntoventa;
             $user->usuario = $request->usuario;
             $user->password = bcrypt( $request->password);
             $user->condicion = '1';            
