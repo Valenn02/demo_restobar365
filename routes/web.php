@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/venta/obtenerDetalles', 'VentaController@obtenerDetalles');
         Route::get('/venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
         Route::get('/venta/imprimir/{id}', 'VentaController@imprimirTicket');
+        Route::delete('/venta/eliminarVenta/{id}', 'VentaController@revertirInventario');
     });
 
     Route::group(['middleware' => ['Administrador']], function () {

@@ -534,6 +534,9 @@ class VentaController extends Controller
                                 $detalle->precio = $det['precio'];
                                 $detalle->descuento = $det['descuento'];
                                 $detalle->save();
+
+                                $_SESSION['sidAlmacen'] = $idAlmacen;
+                                $_SESSION['sdetalle'] = $detalles;
                         
                                 // Si el código de comida está en la tabla Inventario, disminuir el stock
                                 if ($enInventario) {
@@ -589,6 +592,65 @@ class VentaController extends Controller
             DB::rollBack();
         }
     }
+
+    public function revertirInventario($id)
+    {
+        $idAlmacen = $_SESSION['sidAlmacen'];
+        $detalles = $_SESSION['sdetalle'];
+    
+        foreach ($detalles as $ep => $det) {
+            // Verificar si el código de comida está en la tabla Menu
+            $enMenu = Menu::where('codigo', $det['codigoComida'])->exists();
+            
+            // Verificar si el código de comida está en la tabla Inventario
+            $enInventario = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+                                       ->where('inventarios.idalmacen', $idAlmacen)
+                                       ->where('articulos.codigo', $det['codigoComida'])
+                                       ->exists();
+        
+            // Si el código de comida está en alguna de las dos tablas, guardar el detalle de venta
+            if ($enMenu || $enInventario) {
+                $detalle = new DetalleVenta();
+                $detalle->idventa = $id;
+                $detalle->codigoComida = $det['codigoComida'];
+                $detalle->cantidad = $det['cantidad'];
+                $detalle->precio = $det['precio'];
+                $detalle->descuento = $det['descuento'];
+                $detalle->save();
+
+        
+                // Si el código de comida está en la tabla Inventario, disminuir el stock
+                if ($enInventario) {
+                    $disminuirStock = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+                                                 ->where('inventarios.idalmacen', $idAlmacen)
+                                                 ->where('articulos.codigo', $det['codigoComida'])
+                                                 ->firstOrFail();
+                    $disminuirStock->saldo_stock += $det['cantidad'];
+                    $disminuirStock->save();
+                }
+            }
+        }
+
+        try {
+            $venta = Venta::findOrFail($id);
+            $venta->delete();
+            return response()->json('Venta eliminada correctamente', 200);
+        } catch (\Exception $e) {
+            return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /*public function eliminarVenta($id)
+    {
+        try {
+            $venta = Venta::findOrFail($id);
+            $venta->delete();
+            $this->revertirInventario($id);
+            return response()->json('Venta eliminada correctamente', 200);
+        } catch (\Exception $e) {
+            return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
+        }
+    }*/
 
     public function desactivar(Request $request)
     {
@@ -1003,23 +1065,20 @@ class VentaController extends Controller
         $montoTotalSujetoIva = $valores['montoTotalSujetoIva'];
         $descuentoAdicional = $valores['descuentoAdicional'];
         $productos = file_get_contents(public_path("docs/facturaxml.xml"));
-            
-        $data = $this->insertarFactura($request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
 
-        if ($data) {
-            // Registro exitoso
-            require "SiatController.php";
-            $siat = new SiatController();
-            $resFactura = $siat->recepcionFactura($archivo, $fechaEmision, $hashArchivo, $puntoVenta, $codSucursal);
-            //dd($resFactura);
-            if ($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "VALIDADA"){
-                $mensaje = $resFactura->RespuestaServicioFacturacion->codigoDescripcion;
-            }else if($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "RECHAZADA"){
-                $mensaje = $resFactura->RespuestaServicioFacturacion->mensajesList->descripcion;
-            }
-            echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
+        require "SiatController.php";
+        $siat = new SiatController();
+        $resFactura = $siat->recepcionFactura($archivo, $fechaEmision, $hashArchivo, $puntoVenta, $codSucursal);
+        //dd($resFactura);
+        if ($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "VALIDADA"){
+            $mensaje = $resFactura->RespuestaServicioFacturacion->codigoDescripcion;
+            $this->insertarFactura($request, $idventa, $numeroFactura, $cuf, $cufd, $codigoControl, $correo, $fechaEmision, $codigoMetodoPago, $montoTotal, $montoTotalSujetoIva, $descuentoAdicional, $productos);
+        }else if($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "RECHAZADA"){
+            $mensaje = $resFactura->RespuestaServicioFacturacion->mensajesList->descripcion;
+        }
+        
+        echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
             
-        } 
     }
 
     public function paqueteFactura(Request $request)
