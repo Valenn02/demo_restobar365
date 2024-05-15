@@ -2212,7 +2212,8 @@ export default {
     }
 }
 </script>
-<style>    .modal-content {
+<style>    
+    .modal-content {
         width: 100% !important;
         position: absolute !important;
     }
