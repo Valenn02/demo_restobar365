@@ -237,6 +237,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/puntoVenta/habilitar', 'VentaController@registroPuntoVenta');
         Route::post('/puntoVenta/cerrar', 'VentaController@cierrePuntoVenta');
         Route::put('/puntoVenta/cambioEstado', 'PuntoVentaController@cambioEstado');
+        Route::get('/puntoVenta/consulta', 'VentaController@consultaPuntoVenta');
 
         //Listar Moneda
         Route::get('/moneda', 'MonedaController@index');
