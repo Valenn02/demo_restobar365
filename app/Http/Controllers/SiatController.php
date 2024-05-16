@@ -81,14 +81,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function cuis($puntoVenta, $codSucursal){
+    public function cuis($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
         $codigoAmbiente = 2;
         $codigoModalidad = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudCuis' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -120,7 +120,7 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function cufd($puntoVenta, $codSucursal){
+    public function cufd($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
         $codigoAmbiente = 2;
         $codigoModalidad = 2;
@@ -128,7 +128,7 @@ class SiatController extends Controller
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudCufd' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -139,6 +139,7 @@ class SiatController extends Controller
             'cuis' => $cuis, 
             'nit' => $nit
         ));
+
 
         $options = array(
             'http' => array(

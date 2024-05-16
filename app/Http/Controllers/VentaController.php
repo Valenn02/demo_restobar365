@@ -62,6 +62,7 @@ class VentaController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
+        
 
         $codigoPuntoVenta = '';
             if (!empty($usuario->idpuntoventa)) {
@@ -615,6 +616,7 @@ class VentaController extends Controller
     public function cuis()
     {
         $user = Auth::user();
+
         $codigoPuntoVenta = '';
         if (!empty($user->idpuntoventa)) {
             $puntoVenta = PuntoVenta::find($user->idpuntoventa);
@@ -625,12 +627,14 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->cuis($puntoVenta, $codSucursal);
+        $res = $siat->cuis($puntoVenta, $codSucursal, $codnit);
         $res->RespuestaCuis->codigo;
         $_SESSION['scuis'] = $res->RespuestaCuis->codigo;
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
@@ -649,11 +653,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->cufd($puntoVenta, $codSucursal);
+        $res = $siat->cufd($puntoVenta, $codSucursal, $codnit);
         //dd($res);
         
         if ($res->RespuestaCufd->transaccion == true) {
