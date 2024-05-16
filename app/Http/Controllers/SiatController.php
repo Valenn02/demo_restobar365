@@ -162,14 +162,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarActividades($puntoVenta, $codSucursal){
+    public function sincronizarActividades($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -201,14 +201,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarParametricaTiposFactura($puntoVenta, $codSucursal){
+    public function sincronizarParametricaTiposFactura($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -240,14 +240,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarListaProductosServicios($puntoVenta, $codSucursal){
+    public function sincronizarListaProductosServicios($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -279,14 +279,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarListaLeyendasFactura($puntoVenta, $codSucursal){
+    public function sincronizarListaLeyendasFactura($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -318,14 +318,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarParametricaMotivoAnulacion($puntoVenta, $codSucursal){
+    public function sincronizarParametricaMotivoAnulacion($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -357,14 +357,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarParametricaEventosSignificativos($puntoVenta, $codSucursal){
+    public function sincronizarParametricaEventosSignificativos($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -396,14 +396,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function sincronizarParametricaUnidadMedida($puntoVenta, $codSucursal){
+    public function sincronizarParametricaUnidadMedida($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl";
         $codigoAmbiente = 2;
         $codigoPuntoVenta = $puntoVenta;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudSincronizacion' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -435,14 +435,14 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function verificarNit($codSucursal, $numeroDocumento){
+    public function verificarNit($codSucursal, $numeroDocumento, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl";
         $codigoAmbiente = 2;
         $codigoModalidad = 2;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = $codSucursal;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
         $nitParaVerificacion = $numeroDocumento;
 
         $params = array('SolicitudVerificarNit' => array(
@@ -476,7 +476,7 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function verificacionEstadoFactura($cuf, $puntoVenta, $codSucursal){
+    public function verificacionEstadoFactura($cuf, $puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente = 2;
         $codigoDocumentoSector = 1;
@@ -487,7 +487,7 @@ class SiatController extends Controller
         $codigoSucursal = $codSucursal;
         $cufd = $_SESSION['scufd'];
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
         $tipoFacturaDocumento = 1;
         $cuf = $cuf;
 
@@ -527,7 +527,7 @@ class SiatController extends Controller
         return $result;        
     }
 
-    public function recepcionFactura($archivo, $fechaEnvio, $hashArchivo, $puntoVenta, $codSucursal){
+    public function recepcionFactura($archivo, $fechaEnvio, $hashArchivo, $puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente = 2;
         $codigoDocumentoSector = 1;
@@ -538,7 +538,7 @@ class SiatController extends Controller
         $codigoSucursal = $codSucursal;
         $cufd = $_SESSION['scufd'];
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
         $tipoFacturaDocumento = 1;
         $archivo = $archivo;
         $fechaEnvio = $fechaEnvio;
@@ -582,7 +582,7 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function anulacionFactura($cuf, $motivoSeleccionado, $puntoVenta, $codSucursal){
+    public function anulacionFactura($cuf, $motivoSeleccionado, $puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente = 2;
         $codigoDocumentoSector = 1;
@@ -593,7 +593,7 @@ class SiatController extends Controller
         $codigoSucursal = $codSucursal;
         $cufd = $_SESSION['scufd'];
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
         $tipoFacturaDocumento = 1;
         $codigoMotivo = $motivoSeleccionado;
         $cuf = $cuf;
@@ -635,7 +635,7 @@ class SiatController extends Controller
         return $result;        
     }
 
-    public function recepcionPaqueteFactura($archivo, $fechaEnvio, $hashArchivo, $numeroFacturas, $puntoVenta, $codSucursal){
+    public function recepcionPaqueteFactura($archivo, $fechaEnvio, $hashArchivo, $numeroFacturas, $puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente = 2;
         $codigoDocumentoSector = 1;
@@ -646,7 +646,7 @@ class SiatController extends Controller
         $codigoSucursal = $codSucursal;
         $cufd = $_SESSION['scufd'];
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
         $tipoFacturaDocumento = 1;
         $archivo = $archivo;
         $fechaEnvio = $fechaEnvio;
@@ -700,7 +700,7 @@ class SiatController extends Controller
         return $result;
     }
 
-    public function registroEventoSignificativo($descripcion, $cufdEvento, $codigoMotivoEvento, $inicioEvento, $finEvento, $puntoVenta, $codSucursal){
+    public function registroEventoSignificativo($descripcion, $cufdEvento, $codigoMotivoEvento, $inicioEvento, $finEvento, $puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
         $codigoAmbiente = 2;
         $codigoMotivoEvento = $codigoMotivoEvento;
@@ -713,7 +713,7 @@ class SiatController extends Controller
         $descripcion = $descripcion;
         $fechaHoraFinEvento = $finEvento;
         $fechaHoraInicioEvento = $inicioEvento;
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudEventoSignificativo' => array(
             'codigoAmbiente' => $codigoAmbiente,
@@ -750,7 +750,7 @@ class SiatController extends Controller
         return $result;        
     }
 
-    public function validacionRecepcionPaqueteFactura($puntoVenta, $codSucursal){
+    public function validacionRecepcionPaqueteFactura($puntoVenta, $codSucursal, $codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
         $codigoAmbiente = 2;
         $codigoDocumentoSector = 1;
@@ -761,7 +761,7 @@ class SiatController extends Controller
         $codigoSucursal = $codSucursal;
         $cufd = $_SESSION['scufd'];
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
         $tipoFacturaDocumento = 1;
         $codigoRecepcion = $_SESSION['scodigorecepcion'];
         
@@ -887,13 +887,13 @@ class SiatController extends Controller
         return $result;        
     }
 
-    public function consultaPuntoVenta(){
+    public function consultaPuntoVenta($codnit){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
         $codigoAmbiente = 2;
         $codigoSistema = "77535546B712DD409D7A387";
         $codigoSucursal = 0;
         $cuis = $_SESSION['scuis'];
-        $nit = "5153610012";
+        $nit = $codnit;
 
         $params = array('SolicitudConsultaPuntoVenta' => array(
             'codigoAmbiente' => $codigoAmbiente,

@@ -762,12 +762,14 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         if (!isset ($_SESSION['scufd'])) {
             require "SiatController.php";
             $siat = new SiatController();
-            $res = $siat->cufd($puntoVenta, $codSucursal);
+            $res = $siat->cufd($puntoVenta, $codSucursal, $codnit);
             if ($res->RespuestaCufd->transaccion == true) {
                 $cufd = $res->RespuestaCufd->codigo;
                 $codigoControl = $res->RespuestaCufd->codigoControl;
@@ -823,11 +825,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarActividades($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarActividades($puntoVenta, $codSucursal, $codnit);
         //$mensaje = $res->RespuestaListaActividades;
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
@@ -845,11 +849,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarParametricaTiposFactura($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarParametricaTiposFactura($puntoVenta, $codSucursal, $codnit);
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
@@ -866,11 +872,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarListaProductosServicios($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarListaProductosServicios($puntoVenta, $codSucursal, $codnit);
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
@@ -887,11 +895,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarParametricaMotivoAnulacion($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarParametricaMotivoAnulacion($puntoVenta, $codSucursal, $codnit);
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
@@ -908,11 +918,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarParametricaEventosSignificativos($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarParametricaEventosSignificativos($puntoVenta, $codSucursal, $codnit);
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
@@ -929,11 +941,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarListaLeyendasFactura($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarListaLeyendasFactura($puntoVenta, $codSucursal, $codnit);
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
@@ -950,11 +964,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->sincronizarParametricaUnidadMedida($puntoVenta, $codSucursal);
+        $res = $siat->sincronizarParametricaUnidadMedida($puntoVenta, $codSucursal, $codnit);
         echo json_encode($res, JSON_UNESCAPED_UNICODE);
     }
 
@@ -962,11 +978,13 @@ class VentaController extends Controller
     {
         $user = Auth::user();
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->verificarNit($codSucursal, $numeroDocumento);
+        $res = $siat->verificarNit($codSucursal, $numeroDocumento, $codnit);
         if ($res->RespuestaVerificarNit->transaccion === true) {
             $mensaje = $res->RespuestaVerificarNit->mensajesList->descripcion;
         } else if ($res->RespuestaVerificarNit->transaccion === false) {
@@ -989,11 +1007,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->verificacionEstadoFactura($cuf, $puntoVenta, $codSucursal);
+        $res = $siat->verificacionEstadoFactura($cuf, $puntoVenta, $codSucursal, $codnit);
         $mensaje = $res->RespuestaServicioFacturacion->codigoDescripcion;
 
         echo json_encode($mensaje, JSON_UNESCAPED_UNICODE);
@@ -1014,6 +1034,8 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         $datos = $request->input('factura');
@@ -1074,7 +1096,7 @@ class VentaController extends Controller
 
         require "SiatController.php";
         $siat = new SiatController();
-        $resFactura = $siat->recepcionFactura($archivo, $fechaEmision, $hashArchivo, $puntoVenta, $codSucursal);
+        $resFactura = $siat->recepcionFactura($archivo, $fechaEmision, $hashArchivo, $puntoVenta, $codSucursal, $codnit);
         //dd($resFactura);
         if ($resFactura->RespuestaServicioFacturacion->codigoDescripcion === "VALIDADA"){
             $mensaje = $resFactura->RespuestaServicioFacturacion->codigoDescripcion;
@@ -1186,6 +1208,8 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
         // Ruta al directorio que deseas comprimir en el archivo TAR
         $carpetaFuente = public_path("docs/temporal");
@@ -1225,7 +1249,7 @@ class VentaController extends Controller
 
             require "SiatController.php";
             $siat = new SiatController();
-            $res = $siat->recepcionPaqueteFactura($archivo, $request->fechaEmision, $hashArchivo, $numeroFacturas, $puntoVenta, $codSucursal);
+            $res = $siat->recepcionPaqueteFactura($archivo, $request->fechaEmision, $hashArchivo, $numeroFacturas, $puntoVenta, $codSucursal, $codnit);
             // Verificar el valor de transacción y asignar el mensaje correspondiente
             //dd($res);
             if ($res->RespuestaServicioFacturacion->codigoDescripcion === "PENDIENTE") {
@@ -1277,10 +1301,12 @@ class VentaController extends Controller
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->validacionRecepcionPaqueteFactura($puntoVenta, $codSucursal);
+        $res = $siat->validacionRecepcionPaqueteFactura($puntoVenta, $codSucursal, $codnit);
         //dd($res);
         if ($res->RespuestaServicioFacturacion->codigoDescripcion === "VALIDADA") {
             $mensaje = $res->RespuestaServicioFacturacion->codigoDescripcion;
@@ -1404,11 +1430,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->anulacionFactura($cuf, $motivoSeleccionado, $puntoVenta, $codSucursal);
+        $res = $siat->anulacionFactura($cuf, $motivoSeleccionado, $puntoVenta, $codSucursal, $codnit);
         if ($res->RespuestaServicioFacturacion->transaccion === true) {
             $mensaje = $res->RespuestaServicioFacturacion->codigoDescripcion;
         } else {
@@ -1442,11 +1470,13 @@ class VentaController extends Controller
         //$puntoVenta = $user->idpuntoventa;
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
         $codSucursal = $sucursal->codigoSucursal;
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->anulacionFactura($cuf, $motivoSeleccionado, $puntoVenta, $codSucursal);
+        $res = $siat->anulacionFactura($cuf, $motivoSeleccionado, $puntoVenta, $codSucursal, $codnit);
         if ($res->RespuestaServicioFacturacion->transaccion === true) {
             $mensaje = $res->RespuestaServicioFacturacion->codigoDescripcion;
         } else {
@@ -1480,6 +1510,8 @@ class VentaController extends Controller
         $puntoVenta = $codigoPuntoVenta;
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
 
         $descripcion = $request->descripcion;
         $cufdEvento = $request->cufdEvento;
@@ -1489,7 +1521,7 @@ class VentaController extends Controller
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->registroEventoSignificativo($descripcion, $cufdEvento, $codigoMotivoEvento, $inicioEvento, $finEvento, $puntoVenta, $codSucursal);
+        $res = $siat->registroEventoSignificativo($descripcion, $cufdEvento, $codigoMotivoEvento, $inicioEvento, $finEvento, $puntoVenta, $codSucursal, $codnit);
         //dd($res);
         // Verificar el valor de transacción y asignar el mensaje correspondiente
         if ($res->RespuestaListaEventos->transaccion === true) {
@@ -1569,12 +1601,15 @@ class VentaController extends Controller
         $user = Auth::user();
         $sucursal = $user->sucursal;
         $codSucursal = $sucursal->codigoSucursal;
+        $empresa = $sucursal->empresas;
+        $codnit = $empresa->nit;
+        //VERIFICAR SI ESTA BIEN
         $nombreSucursal = $sucursal->nombre;
-        $nit = "5153610012";
+        //$nit = "5153610012";
 
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->consultaPuntoVenta();
+        $res = $siat->consultaPuntoVenta($codnit);
         //dd($res);
         if ($res->RespuestaConsultaPuntoVenta->transaccion === true) {
             $mensaje = $res;
