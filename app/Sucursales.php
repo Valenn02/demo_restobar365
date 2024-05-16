@@ -14,6 +14,11 @@ class Sucursales extends Model
         return $this->belongsTo('App\Empresa');
     }
 
+    public function empresas()
+    {
+        return $this->belongsTo(Empresa::class, 'idempresa');
+    }
+
     public function puntosVenta()
 {
     return $this->hasMany('App\PuntoVenta', 'idsucursal', 'id');
