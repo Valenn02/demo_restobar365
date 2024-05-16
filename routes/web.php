@@ -98,6 +98,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/categoria/desactivar', 'CategoriaController@desactivar');
         Route::put('/categoria/activar', 'CategoriaController@activar');
         Route::get('/categoria/selectCategoria', 'CategoriaController@selectCategoria');
+        Route::get('/categoria/consultaProductosServicios', 'VentaController@sincronizarListaProductosServicios');
 
 
         Route::get('/marca', 'MarcaController@index');
