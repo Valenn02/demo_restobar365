@@ -303,6 +303,15 @@
                 this.errorMostrarMsjPersona =[];
 
                 if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la persona no puede estar vacío.");
+                if (!this.tipo_documento) this.errorMostrarMsjPersona.push("El tipo_documento de la persona no puede estar vacío.");
+                if (!this.num_documento) this.errorMostrarMsjPersona.push("El numero de documento de la persona no puede estar vacío.");
+                if (!this.direccion) this.errorMostrarMsjPersona.push("La direccion de la persona no puede estar vacío.");
+                if (!this.telefono) this.errorMostrarMsjPersona.push("El telefono de la persona no puede estar vacío.");
+                if (!this.email) this.errorMostrarMsjPersona.push("El correo de la persona no puede estar vacío.");
+                if (!this.contacto) this.errorMostrarMsjPersona.push("El contacto de la persona no puede estar vacío.");
+                if (!this.telefono_contacto) this.errorMostrarMsjPersona.push("El telefono de contacto de la persona no puede estar vacío.");
+
+
 
                 if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
 
