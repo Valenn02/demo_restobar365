@@ -68,7 +68,7 @@ class CategoriaMenuController extends Controller
 
         $menuCate = new categoria_menu();
         $menuCate->nombre = $request->nombre;
-        $menuCate->codigo = '99100';
+        $menuCate->codigo = $request->codigo;
         $menuCate->descripcion = $request->descripcion;
         $menuCate->condicion = true;
         $menuCate->save();

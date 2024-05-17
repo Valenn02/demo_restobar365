@@ -110,6 +110,16 @@
                                 <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 form-control-label" for="email-input">Código SIAT</label>
+                            <div class="col-md-9">
+                                <select v-model="codigoProductoServicio" class="form-control">
+                                    <option value="0" disabled>Seleccione</option>
+                                    <option v-for="productoServicio in arrayProductoServicio" :value="productoServicio.codigoProducto"
+                                        v-text="productoServicio.descripcionProducto"></option>
+                                </select>
+                            </div>
+                        </div>
                         <div v-show="errorCategoria" class="form-group row div-error">
                             <div class="text-center text-error">
                                 <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error">
@@ -142,6 +152,8 @@ data (){
         nombre : '',
         descripcion : '',
         arrayCategoria : [],
+        arrayProductoServicio: [],
+        codigoProductoServicio: '',
         modal : 0,
         tituloModal : '',
         tipoAccion : 0,
@@ -203,6 +215,19 @@ methods : {
             console.log(error);
         });
     },
+
+    consultaProductosServicios() {
+        let me = this;
+        var url = '/categoria/consultaProductosServicios';
+        axios.get(url).then(function (response) {
+            var respuesta = response.data;
+            me.arrayProductoServicio = respuesta.RespuestaListaProductos.listaCodigos;
+            console.log(respuesta.RespuestaListaProductos.listaCodigos);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    },
+
     cambiarPagina(page,buscar,criterio){
         let me = this;
         //Actualiza la página actual
@@ -219,7 +244,8 @@ methods : {
 
         axios.post('/categoriamenuPrincipal/registrar',{
             'nombre': this.nombre,
-            'descripcion': this.descripcion
+            'descripcion': this.descripcion,
+            'codigo': this.codigoProductoServicio
             
         }).then(function (response) {
             me.cerrarModal();
@@ -239,7 +265,8 @@ methods : {
         axios.put('/categoriamenu/actualizar',{
             'nombre': this.nombre,
             'descripcion': this.descripcion,
-            'id': this.categoria_id
+            'id': this.categoria_id,
+            'codigo': this.codigoProductoServicio
         }).then(function (response) {
             me.cerrarModal();
             me.listarCategoria(1,'','nombre');
@@ -340,6 +367,7 @@ methods : {
         this.tituloModal='';
         this.nombre='';
         this.descripcion='';
+        this.codigoProductoServicio = '';
     },
     abrirModal(modelo, accion, data = []){
         console.log("REGISTRAR");
@@ -353,6 +381,7 @@ methods : {
                         this.tituloModal = 'Registrar Categoría';
                         this.nombre= '';
                         this.descripcion = '';
+                        this.codigoProductoServicio = '';
                         this.tipoAccion = 1;
                         break;
                     }
@@ -365,6 +394,7 @@ methods : {
                         this.categoria_id=data['id'];
                         this.nombre = data['nombre'];
                         this.descripcion= data['descripcion'];
+                        this.codigoProductoServicio = data['codigo'];
                         break;
                     }
                 }
@@ -374,6 +404,7 @@ methods : {
 },
 mounted() {
     this.listarCategoria(1,this.buscar,this.criterio);
+    this.consultaProductosServicios();
 }
 }
 </script>
