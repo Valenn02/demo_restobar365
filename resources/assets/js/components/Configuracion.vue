@@ -31,7 +31,7 @@
                 <div class="card-body" v-show="activeTab === 0">
                     <div class="row">
                         <div class="col">
-                            <label for="yearInput">Gestion:</label>
+                            <label for="yearInput"><strong>Gestion:</strong></label>
                             <div class="input-group">
                                 <input type="number" id="yearInput" class="form-control" v-model="selectedYear" min="1900"
                                     max="2100">
@@ -41,35 +41,32 @@
                             </div>
                         </div>
                         <div class="col">
+                            <label for="opcion3"><strong>Consultas almacenes:</strong></label>
                             <div class="form-group">
-                                <label for="opcion2">Codigo productos:</label>
+                                <label> 
+                                    <input type="checkbox" v-model="consultarAlmacenes"
+                                        true-value="1"
+                                        false-value="0"
+                                        >
+                                    {{ consultarAlmacenes }}
+                                </label>
+                            </div>
+                        </div>
+                        <!--<div class="col">
+                            <div class="form-group">
+                                <label for="opcion2"><strong>Codigo productos:</strong></label>
                                 <select v-model="codigoProducto" class="form-control">
                                     <option value="00000">00000</option>
                                     <option value="55555">55555</option>
                                     <option value="33333">33333</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="opcion3">Consultas almacenes: </label>
-
-                            <div class="form-group">
-
-                                <label> 
-                                    <input type="checkbox" v-model="consultarAlmacenes"
-                                        true-value="1"
-                                        false-value="0"
-                                        >
-                                        
-                                    {{ consultarAlmacenes }}
-                                </label>
-                            </div>
-                        </div>
+                    <!--<div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="opcion2">Limite de descuento:</label>
+                                <label for="opcion2"><strong>Limite de descuento:</strong></label>
                                 <select id="opcion2" class="form-control" v-model="limiteDescuento">
                                     <option value="Precio mayorista">Precio mayorista</option>
                                     <option value="Precio minorista">Precio minorista</option>
@@ -82,12 +79,12 @@
                             <div class="form-group">
                                 <input type="number" class="form-control" id="maximoDescuento" v-model="maximoDescuento" />
                             </div>
-                        </div> -->
-                    </div>
+                        </div> 
+                    </div>-->
                     <div class="row">
-                        <div class="col">
+                        <!--<div class="col">
                             <div class="form-group">
-                                <label for="opcion1">Valuación inventario:</label>
+                                <label for="opcion1"><strong>Valuación inventario:</strong></label>
                                 <select class="form-control" v-model="valuacionInventario">
                                     <option value="Ninguno">Ninguno</option>
                                     <option value="opcion1_valor2">Valor 2</option>
@@ -97,31 +94,35 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="opcion2">Backup automático:</label>
+                                <label for="opcion2"><strong>Backup automático:</strong></label>
                                 <select id="opcion2" class="form-control" v-model="backupAutomatico">
                                     <option value="Nunca">Nunca</option>
                                     <option value="opcion2_valor2">Valor 2</option>
                                     <option value="opcion2_valor3">Valor 3</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col">
-                            <label for="rutaBackup">Ruta de backup:</label>
+                        </div>-->
+                        <div class="col-md-6">
+                            <label for="rutaBackup"><strong>Ruta de backup:</strong></label>
 
                             <div class="form-group">
                                 <input class="form-control" type="text" id="rutaBackup" v-model="rutaBackup" />
                             </div>
 
                             <button type="button" @click="sacarBackupBaseDatos()" class="btn btn-info">
-                                <i class="icon-doc"></i>&nbsp;Backup
+                                <i class="icon-doc"></i>&nbsp;Realizar Backup
                             </button>
+
+                            <div v-if="mensajeBackup" class="alert alert-success mt-2">
+                                {{ mensajeBackup }}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="opcion1">Saldos negativos:</label>
+                                <label for="opcion1"><strong>Saldos negativos:</strong></label>
                                 <select id="opcion1" class="form-control" v-model="saldosNegativos">
                                     <option value="0">No</option>
                                     <option value="1">Si</option>
@@ -130,14 +131,14 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="opcion1">Permitir devolución:</label>
+                                <label for="opcion1"><strong>Permitir devolución:</strong></label>
                                 <select id="opcion1" class="form-control" v-model="devolucion">
                                     <option value="1">Si</option>
                                     <option value="0">No</option>
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="col">
+                        <div class="col">
                             <div class="form-group">
                                 <label for="opcion2">Moneda de trabajo:</label>
                                 <select id="opcion2" class="form-control" v-model="monedaTrabajo">
@@ -145,8 +146,8 @@
                                     <option value="USD">USD</option>
                                 </select>
                             </div>
-                        </div> -->
-                        <!-- <div class="col">
+                        </div> 
+                        <div class="col">
                             <label for="opcion3">Separador de decimales:</label>
 
                             <div class="form-group">
@@ -155,45 +156,13 @@
                                     <option value="Coma">Coma</option>
                                 </select>
                             </div>
-                        </div> -->
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                           <button type="button" @click="abrirModal('precioss', 'registrar')" class="btn btn-secondary">
-                                <i class="icon-plus"></i>&nbsp;Nuevo Precio
-                            </button>
-                        </div>
-                    </div> 
-
-                    <div v-for="precio in precios" :key="precio.id" class="row">
-                        <div class="col-md-4">
-                            <label>Mostrar:</label>
-                            <div class="input-group" style="width: 150px">
-                                <select class="form-control" v-model="precio.condicion">
-                                    <option :value=1>Sí</option>
-                                    <option :value=0>No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Etiqueta Nro de Precio:</label>
-                            <div class="input-group" style="width: 200px">
-                                <input type="text" class="form-control" placeholder="Porcentaje" :value="precio.nombre_precio">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label>% Margen:</label>
-                            <div class="input-group" style="width: 60px">
-                                <input type="number" class="form-control" :value="precio.porcentage">
-                            </div>
-                        </div>
-                    </div>                
+                        </div> 
+                    </div>-->
 
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="opcion1">Mostrar costos:</label>
+                                <label for="opcion1"><strong>Mostrar costos:</strong></label>
                                 <select id="opcion1" class="form-control" v-model="mostrarCostos">
                                     <option value="0">No</option>
                                     <option value="1">Si</option>
@@ -202,7 +171,7 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="opcion2">Mostrar proveedor:</label>
+                                <label for="opcion2"><strong>Mostrar proveedor:</strong></label>
                                 <select id="opcion2" class="form-control" v-model="mostrarProveedor">
                                     <option value="0">No</option>
                                     <option value="1">Si</option>
@@ -210,7 +179,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <label for="opcion3">Mostrar saldos stock:</label>
+                            <label for="opcion3"><strong>Mostrar saldos stock:</strong></label>
 
                             <div class="form-group">
                                 <select id="separadorDecimales" class="form-control" v-model="mostrarSaldosStock">
@@ -220,7 +189,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <label for="opcion3">Actualizar Iva:</label>
+                            <label for="opcion3"><strong>Actualizar Iva:</strong></label>
 
                             <div class="form-group">
                                 <select id="separadorDecimales" class="form-control" v-model="actualizarIVA">
@@ -477,6 +446,8 @@ export default {
             nombre_precio : '',
             porcentage : '',
             condicion : 1,
+            rutaBackup: '',
+            mensajeBackup: ''
         };
     },
     methods: {
@@ -611,6 +582,22 @@ export default {
             let accion = precio.condicion ? 'activar' : 'desactivar';
             axios.put(`/precios/${precio.id}/${accion}`)
         },
+
+        sacarBackupBaseDatos() {
+        axios.get('/backup')
+            .then(response => {
+            if (response.data.success) {
+                this.mensajeBackup = response.data.message;
+            } else {
+                this.mensajeBackup = 'Hubo un problema al realizar el backup.';
+            }
+            })
+            .catch(error => {
+            console.error(error);
+            this.mensajeBackup = 'Error al realizar el backup.';
+            });
+        },
+
         abrirModal(modelo, accion, data = []){
             switch(modelo){
                 case "precioss":

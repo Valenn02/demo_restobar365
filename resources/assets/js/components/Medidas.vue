@@ -8,21 +8,17 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Medida
-          <button type="button" @click="abrirModal('medida', 'registrar')" class="btn btn-secondary">
-            <i class="icon-plus"></i>&nbsp;Nuevo
-          </button>
+          <i class="fa fa-align-justify"></i> Tabla de Medidas
         </div>
         <div class="card-body">
           <div class="form-group row">
             <div class="col-md-6">
               <div class="input-group">
                 <select class="form-control col-md-3" v-model="criterio">
-                  <option value="descripcion_medida">Descripción</option>
-                  <option value="descripcion_corta">Descripción Corta</option>
+                  <option value="descripcion_medida">Nombre</option>
+                  <option value="codigoClasificador">Código</option>
                 </select>
-                <input type="text" v-model="buscar" @keyup.enter="listarMedidas(1, buscar, criterio)" class="form-control" placeholder="Texto a buscar">
-                <button type="submit" @click="listarMedidas(1, buscar, criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                <input type="text" v-model="buscar" @keyup="listarMedidas(1, buscar, criterio)" class="form-control" placeholder="Texto a buscar">
               </div>
             </div>
           </div>
@@ -30,31 +26,15 @@
             <table class="table table-bordered table-striped table-sm">
             <thead>
               <tr>
-                <th>Opciones</th>
-                <th>Descripción</th>
-                <th>Descripción Corta</th>
+                <th>Codigo Clasificador</th>
+                <th>Nombre</th>
                 <th>Estado</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="medida in arrayMedida" :key="medida.id">
-                <td class="sticky-column">
-                  <button type="button" @click="abrirModal('medida', 'actualizar', medida)" class="btn btn-warning btn-sm">
-                    <i class="icon-pencil"></i>
-                  </button> &nbsp;
-                  <template v-if="medida.estado">
-                    <button type="button" class="btn btn-danger btn-sm" @click="desactivarMedida(medida.id)">
-                      <i class="icon-trash"></i>
-                    </button>
-                  </template>
-                  <template v-else>
-                    <button type="button" class="btn btn-info btn-sm" @click="activarMedida(medida.id)">
-                      <i class="icon-check"></i>
-                    </button>
-                  </template>
-                </td>
+                <td v-text="medida.codigoClasificador"></td>
                 <td v-text="medida.descripcion_medida"></td>
-                <td v-text="medida.descripcion_corta"></td>
                 <td>
                   <div v-if="medida.estado">
                     <span class="badge badge-success">Activo</span>

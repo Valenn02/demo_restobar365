@@ -15,7 +15,7 @@
                 </div>
                 <br>
                 <div class="form-group row">
-                    <label class="col-md-3 form-control-label" for="text-input">&nbsp; Nombre del Restaurante</label>
+                    <label class="col-md-3 form-control-label" for="text-input"><strong>&nbsp; Nombre del Restaurante</strong></label>
                     <div class="col-md-6 mx-2">
                         <input type="text" v-model="nombre" class="form-control" placeholder="Ingrese el nombre de la empresa"
                             :readonly="this.estadoInputs">
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-3 form-control-label" for="email-input">&nbsp; Dirección del Restaurante</label>
+                    <label class="col-md-3 form-control-label" for="email-input"><strong>&nbsp; Dirección del Restaurante</strong></label>
                     <div class="col-md-6 mx-2">
                         <input type="text" v-model="direccion" class="form-control" placeholder="Ingrese la direccion"
                             :readonly="this.estadoInputs" >
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-3 form-control-label" for="email-input">&nbsp; Teléfono del Restaurante</label>
+                    <label class="col-md-3 form-control-label" for="email-input"><strong>&nbsp; Teléfono del Restaurante</strong></label>
                     <div class="col-md-6 mx-2">
                         <input type="text" v-model="telefono" class="form-control" placeholder="Ingrese el telefono"
                             :readonly="this.estadoInputs">
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-3 form-control-label" for="email-input">&nbsp; Email del Restaurante</label>
+                    <label class="col-md-3 form-control-label" for="email-input"><strong>&nbsp; Email del Restaurante</strong></label>
                     <div class="col-md-6 mx-2">
                         <input type="email" v-model="email" class="form-control" placeholder="Ingrese el email"
                             :readonly="this.estadoInputs" @blur="validateEmail">
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-3 form-control-label" for="email-input">&nbsp; NIT</label>
+                    <label class="col-md-3 form-control-label" for="email-input"><strong>&nbsp; NIT</strong></label>
                     <div class="col-md-6 mx-2">
                         <input type="email" v-model="nit" class="form-control" placeholder="Ingrese el NIT de la Empresa"
                             :readonly="this.estadoInputs">                        
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="form-group row" v-if="mostrarDivs">
-                    <label class="col-md-3 form-control-label" for="text-input">&nbsp; Tipo de Moneda Principal</label>
+                    <label class="col-md-3 form-control-label" for="text-input"><strong>&nbsp; Tipo de Moneda Principal</strong></label>
                     <div class="col-md-6 mx-2">
                         <input type="radio" value="1" v-model="monedaPrincipal" :checked="monedaPrincipal === '1'" name="moneda" :disabled="this.estadoInputs"> Bolivianos
                         <input type="radio" value="2" v-model="monedaPrincipal" :checked="monedaPrincipal === '2'" name="moneda" :disabled="this.estadoInputs"> Dólar

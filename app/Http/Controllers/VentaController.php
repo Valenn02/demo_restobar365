@@ -1623,7 +1623,7 @@ class VentaController extends Controller
             'mensaje' => $mensaje,
             'codSucursal' => $codSucursal,
             'nombreSucursal' => $nombreSucursal,
-            'nit2' => $nit
+            'nit2' => $codnit
         ], 200);
     }
 

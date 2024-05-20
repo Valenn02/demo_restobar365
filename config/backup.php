@@ -95,6 +95,15 @@ return [
         'temporary_directory' => storage_path('app/backup-temp'),
     ],
 
+    'mysql' => [
+        'dump_command_path' => 'C:\\xampp\\mysql\\bin',
+        'use_single_transaction' => true,
+        'timeout' => 60 * 5,
+        'dump' => [
+            'add_extra_option' => '--protocol=tcp',
+        ],
+    ],
+
     /*
      * You can get notified when specific events occur. Out of the box you can use 'mail' and 'slack'.
      * For Slack you need to install guzzlehttp/guzzle.

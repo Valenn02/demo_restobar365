@@ -179,6 +179,7 @@ class MenuController extends Controller
         $menu->precio_venta = $request->precio_venta;
         $menu->descripcion = $request->descripcion;
         $menu->idcategoria_menu = $request->idcategoria_menu;
+        $menu->codigo = $request->codigo;
 
         $nombreimagen = " ";
         if ($request->hasFile('fotografia')) {

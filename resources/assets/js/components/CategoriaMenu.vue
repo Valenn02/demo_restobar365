@@ -21,8 +21,7 @@
                               <option value="nombre">Nombre</option>
                               <option value="descripcion">Descripción</option>
                             </select>
-                            <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                            <button type="submit" @click="listarCategoria(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                            <input type="text" v-model="buscar" @keyup="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                         </div>
                     </div>
                 </div>
@@ -98,20 +97,20 @@
                 <div class="modal-body">
                     <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                         <div class="form-group row">
-                            <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
+                            <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre</strong></label>
                             <div class="col-md-9">
                                 <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
                                 
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
+                            <label class="col-md-3 form-control-label" for="email-input"><strong>Descripción</strong></label>
                             <div class="col-md-9">
                                 <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 form-control-label" for="email-input">Código SIAT</label>
+                            <label class="col-md-3 form-control-label" for="email-input"><strong>Código SIAT</strong></label>
                             <div class="col-md-9">
                                 <select v-model="codigoProductoServicio" class="form-control">
                                     <option value="0" disabled>Seleccione</option>
@@ -248,10 +247,20 @@ methods : {
             'codigo': this.codigoProductoServicio
             
         }).then(function (response) {
+            swal(
+                'REGISTRO ÉXITOSO',
+                'Categoría Registrada',
+                'success'
+            );
             me.cerrarModal();
             me.listarCategoria(1,'','nombre');
         }).catch(function (error) {
             console.log(error);
+            swal(
+                'REGISTRO FALLIDO',
+                'Intente de Nuevo',
+                'warning'
+            );
         });
     },
 
@@ -268,10 +277,20 @@ methods : {
             'id': this.categoria_id,
             'codigo': this.codigoProductoServicio
         }).then(function (response) {
+            swal(
+                'ACTUALIZACIÓN ÉXITOSA',
+                'Categoría Actualizada',
+                'success'
+            );
             me.cerrarModal();
             me.listarCategoria(1,'','nombre');
         }).catch(function (error) {
             console.log(error);
+            swal(
+                'ACTUALIZACIÓN FALLIDA',
+                'Intente de Nuevo',
+                'warning'
+            );
         }); 
     },
     desactivarCategoria(id){

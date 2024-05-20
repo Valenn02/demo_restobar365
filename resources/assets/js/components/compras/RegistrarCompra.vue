@@ -1,95 +1,81 @@
 <template class="">
     <div class="card card-body p-2" style="padding:5px">
-        <div class="card-header"> Registrar compra</div>
-
-        <div class="form-group row ">
-<div class="col-md-3">
-<div class="form-group">
-<label for="" class="font-weight-bold">Proveedor <span class="text-danger">*</span></label>
-
-
-<v-select 
-                                        :on-search="selectProveedor" 
-                                        label="nombre" 
-                                        :options="arrayProveedor"
-                                        placeholder="Buscar Proveedores..." 
-                                        :onChange="getDatosProveedor"
-                                        v-model="proveedorSeleccionado"
-                                        >
-                                    </v-select>
-<span class="text-danger small" v-show="idproveedor == 0">(!) Seleccione Proveedor</span>
-</div>
-</div>
-
-<div class="col-md-1">
-<label for="" class="font-weight-bold">Impuesto <span class="text-danger">*</span></label>
-<div>
-  <input type="text" class="form-control" v-model="impuesto" ref="impuestoRef" v-if="actualizarIva === 1">
-  <input type="text" class="form-control" v-model="impuesto" ref="impuestoRef" readonly v-else>
-</div>
-<!-- <label class="small" for="impuesto">Shift + Q</label> -->
-</div>
-
-<div class="col-md-2">
-<div class="form-group">
-<label for="" class="font-weight-bold">Tipo comprobante <span class="text-danger">*</span></label>
-
-<select class="form-control" v-model="tipo_comprobante">
-<option value="0">Seleccione</option>
-<option value="BOLETA">Boleta</option>
-<option value="FACTURA">Factura</option>
-<option value="TICKET">Ticket</option>
-</select>
-</div>
-</div>
-
-<div class="col-md-2">
-<div class="form-group">
-<label for="" class="font-weight-bold">Serie comprobante <span class="text-danger">*</span></label>
-
-<input type="text" class="form-control" v-model="serie_comprobante" placeholder="000x" ref="serieComprobanteRef">
-<label class="small" for="serieComprobante">Shift + W</label>
-</div>
-</div>
-
-<div class="col-md-2">
-<div class="form-group">
-<label for="" class="font-weight-bold">N° Comprobante <span class="text-danger">*</span></label>
-
-<input type="text" class="form-control" v-model="num_comprobante" placeholder="000xx" ref="numeroComprobanteRef">
-<label class="small" for="numComprobante">Shift + E</label>
-</div>
-</div>
-
-<div class="col-md-2">
-<div class="form-group">
-<label for="" class="font-weight-bold">Almacen <span class="text-danger">*</span></label>
-
-<select class="form-control" v-model="AlmacenSeleccionado">
-<option value="0" disabled selected>Seleccione</option>
-<option v-for="opcion in arrayAlmacenes" :key="opcion.id" :value="opcion.id">{{ opcion.nombre_almacen }}</option>
-</select>
-</div>
-</div>
-
-
-
-
-<div class="col-md-12">
-<div v-show="errorIngreso" class="form-group row div-error">
-<div class="text-center text-error">
-<div v-for="error in errorMostrarMsjIngreso" :key="error" v-text="error"></div>
-</div>
-</div>
-</div>
-</div>
-        <div class="card">
-
-<div class="row no-gutters">
-<div class="col-md-3">
+        <div class="card-header"><strong>REGISTRAR COMPRA</strong></div>
+            <div class="form-group row ">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <label for="" class="font-weight-bold">Seleccione producto<span class="text-danger">*</span></label>
+                    <label for="" class="font-weight-bold">Proveedor <span class="text-danger">*</span></label>
+                        <v-select 
+                            :on-search="selectProveedor" 
+                            label="nombre" 
+                            :options="arrayProveedor"
+                            placeholder="Buscar Proveedores..." 
+                            :onChange="getDatosProveedor"
+                            v-model="proveedorSeleccionado"
+                        ></v-select>
+                    <span class="text-danger small" v-show="idproveedor == 0">(!) Seleccione Proveedor</span>
+                </div>
+            </div>
 
+            <div class="col-md-1">
+                <label for="" class="font-weight-bold">Impuesto</label>
+            <div>
+                <input type="text" class="form-control" v-model="impuesto" ref="impuestoRef" v-if="actualizarIva === 1">
+                <input type="text" class="form-control" v-model="impuesto" ref="impuestoRef" readonly v-else>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="" class="font-weight-bold">Tipo comprobante <span class="text-danger">*</span></label>
+                <select class="form-control" v-model="tipo_comprobante">
+                    <option value="0">Seleccione</option>
+                    <option value="FACTURA">Factura</option>
+                    <option value="BOLETA">Boleta</option>
+                    <option value="TICKET">Ticket</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="" class="font-weight-bold">Serie comprobante <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" v-model="serie_comprobante" placeholder="000x" ref="serieComprobanteRef">
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="" class="font-weight-bold">N° Comprobante <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" v-model="num_comprobante" placeholder="000xx" ref="numeroComprobanteRef">
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="" class="font-weight-bold">Almacén<span class="text-danger">*</span></label>
+
+                <select class="form-control" v-model="AlmacenSeleccionado">
+                    <option value="0" disabled selected>Seleccione</option>
+                    <option v-for="opcion in arrayAlmacenes" :key="opcion.id" :value="opcion.id">{{ opcion.nombre_almacen }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div v-show="errorIngreso" class="form-group row div-error">
+                <div class="text-center text-error">
+                    <div v-for="error in errorMostrarMsjIngreso" :key="error" v-text="error"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="row no-gutters">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="" class="font-weight-bold">Seleccione Producto<span class="text-danger">*</span></label>
                     <div class="form-inline">
                         <input v-if="idproveedor==0" disabled type="text" class="form-control" v-model="codigo" @keyup="buscarArticulo()"
                             placeholder="Escriba el codigo" ref="articuloRef">
@@ -97,104 +83,64 @@
                             placeholder="Escriba el codigo" ref="articuloRef">
                         <button @click="abrirArticulos()" class="btn btn-primary" v-if="idproveedor==0" disabled>...</button>
                         <button @click="abrirArticulos()" class="btn btn-primary" v-else>...</button>
-                        <label class="small light-gray-text" for="">Shift + R</label>
-
-                        <!-- <input type="text" readonly class="form-control" v-model="articulo"> -->
                     </div>
                 </div>
             </div>
-<!-- Parte Izquierda con Texto -->
+    <!-- Parte Izquierda con Texto -->
     <div class="col-md-7" v-if="arrayArticuloSeleccionado.id">
         <div class="card-body">
-        <h5 class="card-title" >{{this.arrayArticuloSeleccionado.nombre}}</h5>
-        <p class="card-text">
-        {{this.arrayArticuloSeleccionado.descripcion}}
-        <br>
-        <b>Costo unitario</b> {{this.arrayArticuloSeleccionado.precio_costo_unid}}
-        <br>
-        <b>Costo paquete</b> {{this.arrayArticuloSeleccionado.unidad_paquete*this.arrayArticuloSeleccionado.precio_costo_unid}}
-        <br>
-        <b>Unidades por envase</b> {{this.arrayArticuloSeleccionado.unidad_paquete}}
-
-        </p>
+            <h5 class="card-title" >{{this.arrayArticuloSeleccionado.nombre}}</h5>
+            <p class="card-text">
+                    {{this.arrayArticuloSeleccionado.descripcion}}
+                <br>
+                <b>Costo unitario</b> {{this.arrayArticuloSeleccionado.precio_costo_unid}}
+                <br>
+                <b>Costo paquete</b> {{this.arrayArticuloSeleccionado.unidad_paquete*this.arrayArticuloSeleccionado.precio_costo_unid}}
+                <br>
+                <b>Unidades por envase</b> {{this.arrayArticuloSeleccionado.unidad_paquete}}
+            </p>
+        </div>
+    </div>
+        <!-- Parte Derecha con la Imagen -->
+        <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
+            <img :src="'img/articulo/' + this.arrayArticuloSeleccionado.fotografia + '?t=' + new Date().getTime()"
+            v-if="this.arrayArticuloSeleccionado.fotografia"      width="50" height="50"  ref="imagen" class="card-img">
+            <img v-else src="https://www.bicifan.uy/wp-content/uploads/2016/09/producto-sin-imagen.png"  alt="Imagen del Card" class="card-img">
         </div>
     </div>
 
-<!-- Parte Derecha con la Imagen -->
-<div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
-<img :src="'img/articulo/' + this.arrayArticuloSeleccionado.fotografia + '?t=' + new Date().getTime()"
-v-if="this.arrayArticuloSeleccionado.fotografia"      width="50" height="50"  ref="imagen" class="card-img">
-<img v-else src="https://www.bicifan.uy/wp-content/uploads/2016/09/producto-sin-imagen.png"  alt="Imagen del Card" class="card-img">
-
-</div>
-</div>
-
-<div class="row">
-<div class="m-1 p-1"></div>
-
-
-
-<div class="col-md-2">
-<div class="form-group" v-if="arrayArticuloSeleccionado.id">
-<label for="campo1">{{tipoUnidadSeleccionada}}:
-<i class="fa fa-exchange small"  @click="cambiarTipoUnidad()"></i>
-
-
-</label>
-
-
-
-<input type="number" class="form-control" v-model="cantidad">
-</div>
-</div>
-<div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
-<div class="form-group">
-<label for="campo2">Fecha vencimiento</label>
-<input type="date" class="form-control" v-model="fechavencimiento">
-</div>
-</div>
-<div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
-<div class="form-group">
-<label for="campo2">Precio total</label>
-<input disabled type="number" class="form-control" v-model="resultadoMultiplicacion">
-</div>
-</div>
-
-<div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
-                <div class="form-group">
-                    <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i
-                            class="icon-plus"></i> Agregar</button>
-                </div>
-</div>
-</div>
-</div>
-        <!-- <div class="form-group row ">
-       
-            <div class="container mt-4">
-
-</div>
-
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label>Precio </label>
-                    <input type="number" value="0" step="any" class="form-control" v-model="precio" ref="precioRef">
-                    <label for="">Shift + T</label>
-                </div>
+    <div class="row">
+        <div class="m-1 p-1"></div>
+        <div class="col-md-2">
+            <div class="form-group" v-if="arrayArticuloSeleccionado.id">
+                <label for="campo1">{{tipoUnidadSeleccionada}}:
+                    <i class="fa fa-exchange small"  @click="cambiarTipoUnidad()"></i>
+                </label>
+                <input type="number" class="form-control" v-model="cantidad">
             </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label>Cantidad </label>
-                    <input type="number" value="0" class="form-control" v-model="cantidad" ref="cantidadRef">
-                    <label for="">Shift + Y</label>
-                </div>
+        </div>
+        <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
+            <div class="form-group">
+                <label for="campo2">Fecha vencimiento</label>
+                <input type="date" class="form-control" v-model="fechavencimiento">
             </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar"><i
-                            class="icon-plus"></i></button>
-                </div>
+        </div>
+        <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
+            <div class="form-group">
+                <label for="campo2">Precio total</label>
+                <input disabled type="number" class="form-control" v-model="resultadoMultiplicacion">
             </div>
-        </div> -->
+        </div>
+
+        <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
+            <div class="form-group">
+                <button @click="agregarDetalle()" class="btn btn-success form-control btnagregar">
+                    <i class="icon-plus"></i> Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
         <div class="form-group row ">
             <div class="table-responsive col-md-12">
                 <table class="table table-bordered table-striped table-sm">
@@ -242,15 +188,15 @@ v-if="this.arrayArticuloSeleccionado.fotografia"      width="50" height="50"  re
                         </tr>
                         <tr style="background-color: #CEECF5;">
                             <td colspan="8" align="right"><strong>Total Parcial:</strong></td>
-                            <td>$ {{ totalParcial=(total - totalImpuesto).toFixed(2) }}</td>
+                            <td>Bs. {{ totalParcial=(total - totalImpuesto).toFixed(2) }}</td>
                         </tr>
                         <tr style="background-color: #CEECF5;">
                             <td colspan="8" align="right"><strong>Total Impuesto:</strong></td>
-                            <td>$ {{ totalImpuesto=((total * impuesto) / (1 + impuesto)).toFixed(2) }}</td>
+                            <td>Bs. {{ totalImpuesto=((total * impuesto) / (1 + impuesto)).toFixed(2) }}</td>
                         </tr>
                         <tr style="background-color: #CEECF5;">
                             <td colspan="8" align="right"><strong>Total Neto:</strong></td>
-                            <td>$ {{ total=calcularTotal }}</td>
+                            <td>Bs. {{ total=calcularTotal }}</td>
                         </tr>
                     </tbody>
                     <tbody v-else>
@@ -322,7 +268,7 @@ export default {
             idproveedor: 0,
             proveedor: '',
             nombre: '',
-            tipo_comprobante: 'BOLETA',
+            tipo_comprobante: 'FACTURA',
             serie_comprobante: '',
             num_comprobante: '',
             impuesto: 0.18,
@@ -514,6 +460,11 @@ export default {
             }).then(function (response) {
                 if(response.data.id > 0)
                 {
+                    swal(
+                        'REGISTRO ÉXITOSO',
+                        'Compra Registrada',
+                        'success'
+                    )
                     me.guardarInventarios();
                     me.listado = 1;
                     me.listarIngreso(1, '', 'num_comprobante');
@@ -539,6 +490,11 @@ export default {
                 }
 
             }).catch(function (error) {
+                swal(
+                    'REGISTRO FALLIDO',
+                    'Intente de Nuevo',
+                    'warning'
+                )
                 console.log(error);
             });
 
