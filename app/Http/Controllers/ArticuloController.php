@@ -15,6 +15,7 @@ use App\Inventario;
 use App\Articulo;
 use App\menu;
 use App\Precio;
+use Intervention\Image\Facades\Image;
 
 class ArticuloController extends Controller
 {
@@ -58,7 +59,7 @@ class ArticuloController extends Controller
                     'articulos.fotografia',
                     'articulos.unidad_paquete'
                 )
-                ->orderBy('articulos.id', 'desc')->paginate(5);
+                ->orderBy('articulos.id', 'desc')->get();
         } else {
             $articulos = Articulo::join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
@@ -81,31 +82,16 @@ class ArticuloController extends Controller
                     'articulos.unidad_paquete'
                 )
                 ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('articulos.id', 'desc')->paginate(5);
+                ->orderBy('articulos.id', 'desc')->get();
         }
 
 
-        return [
-            'pagination' => [
-                'total' => $articulos->total(),
-                'current_page' => $articulos->currentPage(),
-                'per_page' => $articulos->perPage(),
-                'last_page' => $articulos->lastPage(),
-                'from' => $articulos->firstItem(),
-                'to' => $articulos->lastItem(),
-            ],
-            'articulos' => $articulos
-        ];
+        return ['articulos' => $articulos];
     }
     public function listarArticulo(Request $request)
     {
         if (!$request->ajax())
             return redirect('/');
-
-        Log::info('Data', [
-            'idProveedorController' => $request->idProveedor,
-        ]);
-
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -117,16 +103,15 @@ class ArticuloController extends Controller
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
                 ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia', 'articulos.precio_costo_unid', 'articulos.precio_costo_paq')
                 ->where('proveedores.id', '=', $idProveedor)
-                ->orderBy('articulos.id', 'desc')->paginate(10);
+                ->orderBy('articulos.id', 'desc')->get();
         } else {
             $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
                 ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia', 'articulos.precio_costo_unid', 'articulos.precio_costo_paq')
                 ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('articulos.id', 'desc')->paginate(10);
+                ->orderBy('articulos.id', 'desc')->get();
         }
-
 
         return ['articulos' => $articulos];
     }
@@ -254,31 +239,23 @@ class ArticuloController extends Controller
                     File::makeDirectory($ruta, 0755, true);
                 }
 
-                // Copiar la imagen al directorio
-                copy($imagen->getRealPath(), $ruta . $nombreimagen);
+                $image = Image::make($imagen);
+
+                $width = $image->width();
+                $height = $image->height();
+
+                if ($height > $width) {
+                    $image->fit(500, 500);
+                } else {
+                    $image->fit(500, 500);
+                }
+
+                $image->save($ruta . $nombreimagen);
 
                 $articulo->fotografia = $nombreimagen;
             }
         }
-        Log::info('DATOS REGISTRO ARTICULO:', [
-            'idcategoria' => $request->idcategoria,
-            'idmarca' => $request->idmarca,
-            'idindustria' => $request->idindustria,
-            'idgrupo' => $request->idgrupo,
-            'idproveedor' => $request->idproveedor,
-            'codigo' => $request->codigo,
-            'nombre' => $request->nombre,
-            'nombre_generico' => $request->nombre_generico,
-            'precio_venta' => $request->precio_venta,
-            'stock' => $request->stock,
-            'descripcion' => $request->descripcion,
-            'precio_uno' => $request->precio_uno,
-            'precio_dos' => $request->precio_dos,
-            'precio_tres' => $request->precio_tres,
-            'precio_cuatro' => $request->precio_cuatro,
-            'fotografia' => $nombreimagen,
-
-        ]);
+        
         $articulo->save();
     }
     public function update(Request $request)

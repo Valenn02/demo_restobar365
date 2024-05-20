@@ -35,10 +35,13 @@
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Apertura/Cierre Caja</a>
                             </li>
                             <li @click="menu=39" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Ventas</a>
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Menu</a>
                             </li>
                             <li @click="menu=6" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Clientes</a>
+                            </li>
+                            <li @click="menu=49" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Reporte Ventas</a>
                             </li>
                         </ul>
                     </li>

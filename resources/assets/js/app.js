@@ -8,6 +8,8 @@
 import Vue from 'vue'
 
 import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
+
 import 'primeflex/primeflex.css';
 
 import 'primevue/resources/themes/lara-light-blue/theme.css';
@@ -15,6 +17,7 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
 Vue.use(PrimeVue);
+Vue.use(ToastService);
 
 require('./bootstrap');
 
@@ -86,6 +89,7 @@ Vue.component('reporteventas', require('./components/ReporteVentasDiarias.vue'))
 Vue.component('menulist', require('./components/MenuLista.vue'));
 Vue.component('categoriamenu', require('./components/CategoriaMenu.vue'));
 Vue.component('qr', require('./components/Qrvista.vue'));
+Vue.component('reporteventastabla', require('./components/ReporteVentasTabla.vue'));
 
 
 const app = new Vue({
@@ -100,7 +104,6 @@ const app = new Vue({
     created() {
         let me = this;
         axios.post('notification/get').then(function(response) {
-            //console.log(response.data);
             me.notifications = response.data;
         }).catch(function(error) {
             console.log(error);
@@ -109,7 +112,6 @@ const app = new Vue({
         var userId = $('meta[name="userId"]').attr('content');
 
         Echo.private('App.User.' + userId).notification((notification) => {
-            //console-log(notification);
             me.notifications.unshift(notification);
         });
     }
