@@ -28,39 +28,41 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Nombre_proveedor</th>
-                                    <th>Tipo Documento</th>
-                                    <th>NIT/CI</th>
-                                    <!-- <th>Número</th> -->
-                                    <th>Dirección</th>
-                                    <th>Teléfono</th>
-                                    <th>Email</th>
-                                    <th>Contacto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="persona in arrayPersona" :key="persona.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('persona','actualizar',persona)" class="btn btn-warning btn-sm">
-                                          <i class="icon-pencil"></i>
-                                        </button>
-                                    </td>
-                                    <td v-text="persona.nombre"></td>
-                                    <td v-text="getTipoDocumentoText(persona.tipo_documento)"></td>
-                                    <td v-text="persona.num_documento"></td>
-                                    <td v-text="persona.direccion"></td>
-                                    <td v-text="persona.telefono"></td>
-                                    <td v-text="persona.email"></td>
-                                    <td v-text="persona.contacto"></td>
-                                </tr>                                
-                            </tbody>
-                        </table>
-                    </div>
+    <table class="table table-hover table-bordered table-striped table-sm">
+      <thead class="thead-dark">
+        <tr>
+          <th>Opciones</th>
+          <th>Nombre_proveedor</th>
+          <th>Tipo Documento</th>
+          <th>NIT/CI</th>
+          <th>Dirección</th>
+          <th>Teléfono</th>
+          <th>Email</th>
+          <th>Contacto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="persona in arrayPersona" :key="persona.id">
+          <td>
+            <button
+              type="button"
+              @click="abrirModal('persona', 'actualizar', persona)"
+              class="btn btn-warning btn-sm"
+            >
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+          </td>
+          <td>{{ persona.nombre }}</td>
+          <td>{{ getTipoDocumentoText(persona.tipo_documento) }}</td>
+          <td>{{ persona.num_documento }}</td>
+          <td>{{ persona.direccion }}</td>
+          <td>{{ persona.telefono }}</td>
+          <td>{{ persona.email }}</td>
+          <td>{{ persona.contacto }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
                         <nav>
                             <ul class="pagination">
@@ -305,6 +307,15 @@
                 this.errorMostrarMsjPersona =[];
 
                 if (!this.nombre) this.errorMostrarMsjPersona.push("El nombre de la persona no puede estar vacío.");
+                if (!this.tipo_documento) this.errorMostrarMsjPersona.push("El tipo_documento de la persona no puede estar vacío.");
+                if (!this.num_documento) this.errorMostrarMsjPersona.push("El numero de documento de la persona no puede estar vacío.");
+                if (!this.direccion) this.errorMostrarMsjPersona.push("La direccion de la persona no puede estar vacío.");
+                if (!this.telefono) this.errorMostrarMsjPersona.push("El telefono de la persona no puede estar vacío.");
+                if (!this.email) this.errorMostrarMsjPersona.push("El correo de la persona no puede estar vacío.");
+                if (!this.contacto) this.errorMostrarMsjPersona.push("El contacto de la persona no puede estar vacío.");
+                if (!this.telefono_contacto) this.errorMostrarMsjPersona.push("El telefono de contacto de la persona no puede estar vacío.");
+
+
 
                 if (this.errorMostrarMsjPersona.length) this.errorPersona = 1;
 
@@ -387,7 +398,7 @@
         }
     }
 </script>
-<style>    
+<style scoped>     
     .modal-content{
         width: 100% !important;
         position: absolute !important;
@@ -406,4 +417,30 @@
         color: red !important;
         font-weight: bold;
     }
+
+    .table-responsive {
+  margin: 20px 0;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+}
+
+.thead-dark th {
+  background-color: #343a40;
+  color: white;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid #dee2e6;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
 </style>

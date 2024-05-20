@@ -35,3 +35,4 @@ Route::post('/qr/confirmaPago', 'QrController@confirmaPago');
 
 Route::post('/whatsapp/envia','WhatsappController@envia');
 
+Route::post('/callback', 'QrController@handleCallback')->middleware('basicAuth');
