@@ -151,7 +151,7 @@ export default {
             var url = '/articulo/listarArticulo?buscar=' + buscar + '&criterio=' + criterio + '&idProveedor=' + this.idproveedor;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
-                me.arrayArticulo = respuesta.articulos.data;
+                me.arrayArticulo = respuesta.articulos;
                 console.log(me.arrayArticulo);
             })
                 .catch(function (error) {
