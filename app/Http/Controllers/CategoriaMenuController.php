@@ -49,6 +49,7 @@ class CategoriaMenuController extends Controller
 
         $menuCate = new categoria_menu();
         $menuCate->nombre = $request->nombre;
+        $menuCate->codigo = $request->codigo;
         $menuCate->descripcion = $request->descripcion;
         $menuCate->condicion = $request->condicion;
         $menuCate->save();
@@ -58,7 +59,6 @@ class CategoriaMenuController extends Controller
 
     public function createCategoria(Request $request)
     {
-
         $request->validate([
             'nombre' => 'required|unique:menu|max:100',
             'descripcion' => 'nullable',
@@ -81,6 +81,7 @@ class CategoriaMenuController extends Controller
         if (!$request->ajax()) return redirect('/');
         $menu = categoria_menu::findOrFail($request->id);
         $menu->nombre = $request->nombre;
+        $menu->codigo = $request->codigo;
         $menu->descripcion = $request->descripcion;
         $menu->save();
     }

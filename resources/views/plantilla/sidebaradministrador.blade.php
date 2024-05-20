@@ -37,9 +37,6 @@
                             <li @click="menu=39" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Ventas</a>
                             </li>
-                            <li @click="menu=6" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Clientes</a>
-                            </li>
                         </ul>
                     </li>
 

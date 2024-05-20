@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Artisan;
+
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/', 'Auth\LoginController@showLoginForm');
     Route::post('/', 'Auth\LoginController@login')->name('login');
@@ -377,6 +379,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/ventas-diarias', 'VentaController@reporteVentasDiarias');
         Route::post('/qr/generarqr', 'QrController@generarQr');
         Route::post('/qr/verificarestado', 'QrController@verificarEstado');
+
+        //BACKUP
+        Route::get('/backup', 'BackupController@backupDatabase');
         
     });
 

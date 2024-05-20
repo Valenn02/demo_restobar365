@@ -44,7 +44,7 @@
             
                                     <th>Precio Costo Unidad</th>
                                     <th>Precio Costo Paquete</th>
-                                    <th>Categorìa</th>
+                                    <th>Categoría</th>
                                     <th>Descripción</th>
                                     <th>Foto</th>
                                 </tr>
@@ -147,7 +147,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input">Nombre(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Nombre(*)</strong></label>
                                         <input type="text"
                                         v-model="nombre_producto"
                                         class="form-control"
@@ -157,7 +157,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input">Codigo(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Codigo(*)</strong></label>
                                         <input type="text"
                                         v-model="codigo_producto"
                                         class="form-control"
@@ -167,7 +167,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input">Unid.X Envase(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Unid. X Envase(*)</strong></label>
                                         <input type="text" 
                                         v-model="unidad_envase" 
                                         class="form-control"
@@ -176,7 +176,7 @@
                                         placeholder="Unid X Envase">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(Unid*.)</label>
+                                        <label class="form-control-label" for="email-input"><strong>Precio Costo(Unid*.)</strong></label>
                                         <div class="input-group">
                                             <input type="text" 
                                                 v-model="precio_costo_unid" 
@@ -196,7 +196,7 @@
                                 <!---DERECHA-->
                                 <div class="col-md-6">
                                     <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Nombre Generico(*)</strong></label>
+                                        <label class="form-control-label" for="text-input"><strong><strong>Nombre Generico(*)</strong></strong></label>
                                         <input type="text" 
                                         v-model="nombre_generico" 
                                         class="form-control"
@@ -205,7 +205,7 @@
                                         placeholder="Uidad">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input"><strong>Precio(*)</strong></label>
+                                        <label class="form-control-label" for="text-input"><strong><strong>Precio(*)</strong></strong></label>
                                         <input type="number" 
                                             v-model="precio_venta" 
                                             class="form-control"
@@ -214,7 +214,7 @@
                                             placeholder="">
                                     </div>
                                     <div style="display: none;" class="form-group">
-                                        <label class="form-control-label" for="text-input">Costo Compra(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Costo Compra(*)</strong></label>
                                         <input type="number" 
                                             v-model="costo_compra" 
                                             class="form-control"
@@ -223,7 +223,7 @@
                                             placeholder="">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="text-input">Stock Minimo(*)</label>
+                                        <label class="form-control-label" for="text-input"><strong>Stock Minimo(*)</strong></label>
                                         <input type="number" 
                                             v-model="stock" 
                                             class="form-control"
@@ -232,7 +232,7 @@
                                             placeholder="Ingrese estock minimo">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="email-input">Precio Costo(paq*.)</label>
+                                        <label class="form-control-label" for="email-input"><strong>Precio Costo(paq*.)</strong></label>
                                         <div class="input-group">
                                             <input type="text" 
                                             v-model="precio_costo_paq" 
@@ -314,17 +314,17 @@
                             <div class="col-md-4">
                                
                                 <div class="form-group">
-                                    <label class="form-control-label" for="text-input">Linea(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Categoría(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="lineaseleccionada.nombre"
                                         :class="{ 'border-red': lineaseleccionadaVacio }">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Lineas')">...</button>
+                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Categorías')">...</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Marca(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Marca(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="marcaseleccionada.nombre"
                                         :class="{ 'border-red': marcaseleccionadaVacio }">
@@ -337,7 +337,7 @@
                             <div class="col-md-4">
             
                                 <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Industria(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Industria(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="industriaseleccionada.nombre"
                                         :class="{ 'border-red': industriaseleccionadaVacio }" />
@@ -347,7 +347,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="text-input">Proveedor(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Proveedor(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="proveedorseleccionada.nombre"
                                         :class="{ 'border-red': proveedorseleccionadaVacio }" />
@@ -360,7 +360,7 @@
                             <div class="col-md-4">
                                 
                                 <div style="display: none;" class="form-group">
-                                    <label class="form-control-label" for="text-input">Grupo O Familia(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Grupo O Familia(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="gruposeleccionada.nombre_grupo"
                                         :class="{ 'border-red': gruposeleccionadaVacio }" />
@@ -370,7 +370,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label" for="text-input">Medida(*)</label>
+                                    <label class="form-control-label" for="text-input"><strong>Medida(*)</strong></label>
                                     <div class="input-group">
                                         <input type="text" disabled v-model="medidaseleccionada.descripcion_medida"
                                         :class="{ 'border-red': medidaseleccionadaVacio }" />
@@ -513,7 +513,7 @@
                                     <input v-if="tituloModal2 == 'Industrias'" type="text" v-model="buscarA"
                                         @keyup="listarIndustria(1, buscarA, criterioA)" class="form-control"
                                         placeholder="Texto a buscar">
-                                    <input v-if="tituloModal2 == 'Lineas'" type="text" v-model="buscarA"
+                                    <input v-if="tituloModal2 == 'Categorías'" type="text" v-model="buscarA"
                                         @keyup="listarLinea(1, buscarA, criterioA)" class="form-control"
                                         placeholder="Texto a buscar">
                                     <input v-if="tituloModal2 == 'Proveedors'" type="text" v-model="buscarA"
@@ -531,7 +531,7 @@
                                         @click="abrirModal3('Marca', 'registrarMar')" class="btn btn-secondary">
                                         <i class="icon-plus"></i>&nbsp;Nuevo
                                     </button>
-                                    <button v-show="tituloModal2 == 'Lineas'" type="button"
+                                    <button v-show="tituloModal2 == 'Categorías'" type="button"
                                         @click="abrirModal3('Linea', 'registrarLin')" class="btn btn-secondary">
                                         <i class="icon-plus"></i>&nbsp;Nuevo
                                     </button>
@@ -553,13 +553,13 @@
                                 <thead>
                                     <tr>
                                         <th>Opciones</th>
-                                        <th>Id</th>
+                                        <th>ID</th>
 
                                         <th>Nombre</th>
                                         <!-- <th>Estado</th> -->
                                         <th>
                                             <div v-if="tituloModal2 == 'Proveedors'">
-                                                Nit
+                                                Documento
                                             </div>
                                             <div v-else>
                                                 Estado
@@ -584,7 +584,7 @@
                                                 class="btn btn-warning btn-sm">
                                                 <i class="icon-pencil"></i>
                                             </button> &nbsp;
-                                            <button v-if="tituloModal2 == 'Lineas'" type="button"
+                                            <button v-if="tituloModal2 == 'Categorías'" type="button"
                                                 @click="abrirModal3('Linea', 'actualizarLin', arrayelemento)"
                                                 class="btn btn-warning btn-sm">
                                                 <i class="icon-pencil"></i>
@@ -609,7 +609,7 @@
                                                 <span class="badge badge-danger">Desactivado</span>
                                             </div>
                                         </td>
-                                        <td v-if="tituloModal2 == 'Marcas' || tituloModal2 == 'Lineas'">
+                                        <td v-if="tituloModal2 == 'Marcas' || tituloModal2 == 'Categorías'">
                                             <div v-if="arrayelemento.condicion">
                                                 <span class="badge badge-success">Activo</span>
                                             </div>
@@ -665,7 +665,7 @@
                                 </li>
                             </ul>
                         </nav>
-                        <nav v-else-if="tituloModal2 == 'Lineas'">
+                        <nav v-else-if="tituloModal2 == 'Categorías'">
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
                                     <a class="page-link" href="#" @click.prevent="cambiarPaginaLinea(pagination.current_page - 1,buscar,criterio)">Ant</a>
@@ -740,7 +740,7 @@
                     </div>
                     <div v-if="tituloModal2 !== 'Proveedors'" class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                            <div v-if="tituloModal2 !== 'Grupos' && tituloModal2 !== 'Lineas'" class="form-group row">
+                            <div v-if="tituloModal2 !== 'Grupos' && tituloModal2 !== 'Categorías'" class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombre" class="form-control1"
@@ -754,43 +754,46 @@
                                         :placeholder="placeholderInput()">
                                 </div>
                             </div>
-                            <div v-if="tituloModal2 == 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre Linea</label>
+                            <div v-if="tituloModal2 == 'Categorías'" class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre Categoría</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombreLinea" class="form-control1"
                                         :placeholder="placeholderInput('nombre')">
                                 </div>
-                                <label class="col-md-3 form-control-label" for="text-input">Descripcion</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Descripcion</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="descripcion" class="form-control1"
                                         :placeholder="placeholderInput('descripcion')">
                                 </div>
-                                <label class="col-md-3 form-control-label" for="text-input">Codigo</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Código</strong></label>
                                 <div class="col-md-9">
-                                    <input type="text" v-model="codigoProductoSin" class="form-control1"
-                                        :placeholder="placeholderInput('codigoProductoSin')">
-                                </div>
+                                <select v-model="codigoProductoSin" class="form-control">
+                                    <option value="0" disabled>Seleccione</option>
+                                    <option v-for="productoServicio in arrayProductoServicio" :value="productoServicio.codigoProducto"
+                                        v-text="productoServicio.descripcionProducto"></option>
+                                </select>
+                            </div>
                             </div>
                             <!-- prueba de habilitar  -->
                             <div v-if="tituloModal2 == 'Industrias'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Estado</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Estado</strong></label>
                                 <div class="col-md-9">
                                     <input type="checkbox" v-model="estado" v-bind:value="1" />
-                                    <span>{{ estado ? 'Habilitar' : 'Inhabilitado' }}</span>
+                                    <span>{{ estado ? 'Habilitado' : 'Inhabilitado' }}</span>
                                 </div>
                             </div>
                             <div v-if="tituloModal2 == 'Marcas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Estado</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Estado</strong></label>
                                 <div class="col-md-9">
                                     <input type="checkbox" v-model="condicion" v-bind:value="1" />
-                                    <span>{{ condicion ? 'Habilitar' : 'Inhabilitado' }}</span>
+                                    <span>{{ condicion ? 'Habilitado' : 'Inhabilitado' }}</span>
                                 </div>
                             </div>
-                            <div v-if="tituloModal2 == 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Estado</label>
+                            <div v-if="tituloModal2 == 'Categorías'" class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Estado</strong></label>
                                 <div class="col-md-9">
                                     <input type="checkbox" v-model="condicion" v-bind:value="1" />
-                                    <span>{{ condicion ? 'Habilitar' : 'Inhabilitado' }}</span>
+                                    <span>{{ condicion ? 'Habilitado' : 'Inhabilitado' }}</span>
                                 </div>
                             </div>
 
@@ -805,56 +808,59 @@
                     <div v-else-if="tituloModal2 == 'Proveedors'" class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre (*)</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombre" class="form-control"
                                         placeholder="Nombre de la persona">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Tipo Documento</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Tipo Documento</strong></label>
                                 <div class="col-md-9">
                                     <select v-model="tipo_documento" class="form-control">
-                                        <option value="DNI">DNI</option>
-                                        <option value="RUC">RUC</option>
-                                        <option value="PASS">PASS</option>
-                                    </select>
+                                            <option value="" disabled>Selecciona una tipo de documento</option>
+                                            <option value="1">CI - CEDULA DE IDENTIDAD</option>
+                                            <option value="2">CEX - CEDULA DE IDENTIDAD DE EXTRANJERO</option>
+                                            <option value="5">NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA</option>
+                                            <option value="3">PAS - PASAPORTE</option>
+                                            <option value="4">OD - OTRO DOCUMENTO DE IDENTIDAD</option>   
+                                        </select> 
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Número</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Documento</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="num_documento" class="form-control"
                                         placeholder="Número de documento">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Dirección</label>
+                                <label class="col-md-3 form-control-label" for="email-input"><strong>Dirección</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="direccion" class="form-control" placeholder="Dirección">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
+                                <label class="col-md-3 form-control-label" for="email-input"><strong>Teléfono</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="telefono" class="form-control" placeholder="Teléfono">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Email</label>
+                                <label class="col-md-3 form-control-label" for="email-input"><strong>Email</strong></label>
                                 <div class="col-md-9">
                                     <input type="email" v-model="email" class="form-control" placeholder="Email">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Contacto</label>
+                                <label class="col-md-3 form-control-label" for="email-input"><strong>Contacto</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="contacto" class="form-control"
                                         placeholder="Nombre del contacto">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Teléfono de contacto</label>
+                                <label class="col-md-3 form-control-label" for="email-input"><strong>Teléfono de Contacto</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="telefono_contacto" class="form-control"
                                         placeholder="Teléfono del contacto">
@@ -877,15 +883,15 @@
                         <button type="button" v-if="tipoAccion2 == 7" class="btn btn-primary"
                             @click="registrarLinea()">Guardar</button>
                         <button type="button" v-if="tipoAccion2 == 8" class="btn btn-primary"
-                            @click="actualizarLinea()">Actializar</button>
+                            @click="actualizarLinea()">Actualizar</button>
                         <button type="button" v-if="tipoAccion2 == 9" class="btn btn-primary"
                             @click="registrarProveedor()">Guardar</button>
                         <button type="button" v-if="tipoAccion2 == 10" class="btn btn-primary"
-                            @click="actualizarProveedor()">Actializar</button>
+                            @click="actualizarProveedor()">Actualizar</button>
                         <button type="button" v-if="tipoAccion2 == 11" class="btn btn-primary"
                             @click="registrarGrupo()">Guardar</button>
                         <button type="button" v-if="tipoAccion2 == 12" class="btn btn-primary"
-                            @click="actualizarGrupo()">Actializar</button>
+                            @click="actualizarGrupo()">Actualizar</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -981,7 +987,7 @@ export default {
             idindustria: 0,
             idproveedor: 0,
             idgrupo: 0,
-            codigoProductoSin: 0,
+            codigoProductoSin: '',
             idmedida: 0,
             nombreLinea:'',
             nombre_categoria: '',
@@ -1225,12 +1231,12 @@ export default {
                 } else if (selected.estado == 0) {
                 this.advertenciaInactiva('Industrias');
                 }
-            } else if (this.tituloModal2 == "Lineas") {
+            } else if (this.tituloModal2 == "Categorías") {
                 this.lineaseleccionadaVacio = false;
                 if (selected.condicion == 1) {
                 this.lineaseleccionada = selected;
                 } else if (selected.condicion == 0) {
-                this.advertenciaInactiva('Lineas');
+                this.advertenciaInactiva('Categorías');
                 }
             } else if (this.tituloModal2 == "Proveedors") {
                 this.proveedorseleccionadaVacio = false;
@@ -1263,6 +1269,17 @@ export default {
             this.modal6 = false;
         },
 
+        consultaProductosServicios() {
+            let me = this;
+            var url = '/categoria/consultaProductosServicios';
+            axios.get(url).then(function (response) {
+                var respuesta = response.data;
+                me.arrayProductoServicio = respuesta.RespuestaListaProductos.listaCodigos;
+                console.log(respuesta.RespuestaListaProductos.listaCodigos);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
 
         listarIndustria(page, buscar, criterio) {
             let me = this;
@@ -1318,7 +1335,7 @@ export default {
                 this.industriaseleccionadaVacio = false;
 
             }
-            else if (titulo == "Lineas") {
+            else if (titulo == "Categorías") {
                 this.listarLinea(1, '', 'nombreLinea');
                 this.modal2 = true;
                 this.tituloModal2 = titulo;
@@ -1912,7 +1929,7 @@ export default {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion':this.descripcion,
-                'codigoProductoSin':this.codigoProductoSin
+                'codigo':this.codigoProductoSin
             }).then(function (response) {
                 me.cerrarModal3();
                 //me.modal3=0;
@@ -1933,7 +1950,7 @@ export default {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion': this.descripcion,
-                'codigoProductoSin': this.codigoProductoSin,
+                'codigo': this.codigoProductoSin,
                 'id': this.linea_id
             }).then(function (response) {
                 me.cerrarModal3();
@@ -2232,10 +2249,10 @@ export default {
                 if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Industria no puede estar vacío.");
             } else if (this.tituloModal2 === 'Marcas') {
                 if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Marca no puede estar vacío.");
-            } else if (this.tituloModal2 === 'Lineas') {
-                if (!this.nombreLinea) this.errorMostrarMsjIndustria.push("El nombre de Linea no puede estar vacío.");
-                if (!this.descripcion) this.errorMostrarMsjIndustria.push("La descripcion de Linea no puede estar vacío.");
-                if (!this.codigoProductoSin) this.errorMostrarMsjIndustria.push("El codigo de Linea no puede estar vacío.");
+            } else if (this.tituloModal2 === 'Categorías') {
+                if (!this.nombreLinea) this.errorMostrarMsjIndustria.push("El nombre de la Categoría no puede estar vacío.");
+                if (!this.descripcion) this.errorMostrarMsjIndustria.push("La descripcion no puede estar vacío.");
+                if (!this.codigoProductoSin) this.errorMostrarMsjIndustria.push("El codigo no puede estar vacío.");
             }
 
             //if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Industria no puede estar vacío.");
@@ -2264,14 +2281,14 @@ export default {
                 //     return 'Nombre de Proveedor'
             } else if (this.tituloModal2 === 'Grupos') {
                 return 'Nombre de Grupo'
-            } else if (this.tituloModal2 === 'Lineas') {
+            } else if (this.tituloModal2 === 'Categorías') {
                 if (inputType === 'nombre') {
-                    return 'Nombre de Linea';
+                    return 'Nombre de Categoría';
                 } else if (inputType === 'descripcion') {
-                    return 'Descripcion de Linea';
+                    return 'Descripcion de Categoría';
                 }
                 else if (inputType === 'codigoProductoSin') {
-                    return 'Codigo de Linea';
+                    return 'Codigo de Categoría';
                 }
             } 
         },
@@ -2335,10 +2352,10 @@ export default {
                             case 'registrarLin':
                                 {
                                     this.modal3 = 1;
-                                    this.tituloModal3 = 'Registrar Linea';
+                                    this.tituloModal3 = 'Registrar Categoría';
                                     this.nombreLinea = '';
                                     this.descripcion = '';
-                                    this.codigoProductoSin = 0;
+                                    this.codigoProductoSin = '';
                                     this.condicion = '';
                                     this.tipoAccion2 = 7;
                                     break;
@@ -2352,7 +2369,7 @@ export default {
                                     this.linea_id = data['id'];
                                     this.nombreLinea = data['nombre'];
                                     this.descripcion = data['descripcion'];
-                                    this.codigoProductoSin = data['codigoProductoSin'];
+                                    this.codigoProductoSin = data['codigo'];
                                     this.condicion = data['condicion'];
                                     break;
                                 }
@@ -2390,7 +2407,7 @@ export default {
                                     this.modal3 = 1;
                                     this.tituloModal3 = 'Registrar Proveedor';
                                     this.nombre = '';
-                                    this.tipo_documento = 'RUC';
+                                    this.tipo_documento = '';
                                     this.num_documento = '';
                                     this.direccion = '';
                                     this.telefono = '';
@@ -2402,7 +2419,7 @@ export default {
                                 }
                             case 'actualizarProv':
                                 {
-                                    //console.log('Proveedor',data)
+                                    console.log('Proveedor',data)
                                     this.modal3 = 1;
                                     this.tituloModal3 = 'Actualizar Proveedor';
                                     this.tipoAccion2 = 10;
@@ -2484,6 +2501,7 @@ export default {
         this.recuperarIdRol();
         this.datosConfiguracion();
         this.listarArticulo(1, this.buscar, this.criterio);
+        this.consultaProductosServicios();
         
     }
 }

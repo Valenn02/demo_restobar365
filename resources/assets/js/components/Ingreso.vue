@@ -21,7 +21,7 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterio">
+                                    <select class="form-control col-md-5" v-model="criterio">
                                         <option value="tipo_comprobante">Tipo Comprobante</option>
                                         <option value="num_comprobante">Número Comprobante</option>
                                         <option value="fecha_hora">Fecha-Hora</option>
@@ -97,31 +97,31 @@
                 <template v-else-if="listado == 2">
                     <div class="card-body">
                         <div class="form-group row border">
-                            <div class="col-md-9">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="">Proveedor</label>
+                                    <label for=""><strong>Proveedor</strong></label>
                                     <p v-text="proveedor"></p>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label for="">Impuesto</label>
+                                <label for=""><strong>Impuesto</strong></label>
                                 <p v-text="impuesto"></p>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Tipo Comprobante</label>
+                                    <label><strong>Tipo Comprobante</strong></label>
                                     <p v-text="tipo_comprobante"></p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Serie Comprobante</label>
+                                    <label><strong>Serie Comprobante</strong></label>
                                     <p v-text="serie_comprobante"></p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Número Comprobante</label>
+                                    <label><strong>Número Comprobante</strong></label>
                                     <p v-text="num_comprobante"></p>
                                 </div>
                             </div>
@@ -151,15 +151,15 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>$ {{ totalParcial=(total - totalImpuesto).toFixed(2) }}</td>
+                                            <td>Bs. {{ totalParcial=(total - totalImpuesto).toFixed(2) }}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Impuesto:</strong></td>
-                                            <td>$ {{ totalImpuesto=(total * impuesto).toFixed(2) }}</td>
+                                            <td>Bs. {{ totalImpuesto=(total * impuesto).toFixed(2) }}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="3" align="right"><strong>Total Neto:</strong></td>
-                                            <td>$ {{ total }}</td>
+                                            <td>Bs. {{ total }}</td>
                                         </tr>
                                     </tbody>
                                     <tbody v-else>
@@ -595,7 +595,7 @@ export default {
             me.listado = 0;
 
             me.idproveedor = 0;
-            me.tipo_comprobante = 'BOLETA';
+            me.tipo_comprobante = 'FACTURA';
             me.serie_comprobante = '';
             me.num_comprobante = '';
             me.impuesto = 0.18;

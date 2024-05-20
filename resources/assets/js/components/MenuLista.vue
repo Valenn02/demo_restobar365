@@ -24,11 +24,10 @@
                                 <select class="form-control col-md-3" v-model="criterio">
                                     <option value="nombre">Nombre</option>
                                     <option value="descripcion">Descripción</option>
+                                    <option value="codigo">Código</option>
                                 </select>
-                                <input type="text" v-model="buscar" @keyup.enter="listarArticulo(1, buscar, criterio)"
+                                <input type="text" v-model="buscar" @keyup="listarArticulo(1, buscar, criterio)"
                                     class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" @click="listarArticulo(1, buscar, criterio)"
-                                    class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -39,7 +38,7 @@
                                     <th>Opciones</th>
                                     <th>Codigo</th>
                                     <th>Nombre</th>
-                                    <th>Categorìa</th>
+                                    <th>Categoría</th>
                                     <th>Precio</th>
                                     <th>Descripción</th>
                                     <th>Foto</th>
@@ -218,7 +217,7 @@
                                         <input type="text" disabled v-model="lineaseleccionada.nombre"
                                         :class="{ 'border-red': lineaseleccionadaVacio }">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Lineas')">...</button>
+                                            <button class="btn btn-primary" type="button" @click="abrirModal2('Categorías')">...</button>
                                         </div>
                                     </div>
                                 </div>     
@@ -357,8 +356,9 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3">
+                                    <select class="form-control col-md-4">
                                         <option v-if="tituloModal2 !== 'Grupos'" value="nombre">Nombre</option>
+                                        <option v-if="tituloModal2 == 'Categorías'" value="descripcion">Descripcion</option>
                                         <option v-else-if="tituloModal2 == 'Grupos'" value="nombre_grupo">Grupo</option>
                                         <!-- <option v-if="tituloModal2=='Grupos'" value="nombre_grupo">Nombre_grupo</option> -->
                                     </select>
@@ -368,7 +368,7 @@
                                     <input v-if="tituloModal2 == 'Industrias'" type="text" v-model="buscarA"
                                         @keyup="listarIndustria(1, buscarA, criterioA)" class="form-control"
                                         placeholder="Texto a buscar">
-                                    <input v-if="tituloModal2 == 'Lineas'" type="text" v-model="buscarA"
+                                    <input v-if="tituloModal2 == 'Categorías'" type="text" v-model="buscarA"
                                         @keyup="listarLinea(1, buscarA, criterioA)" class="form-control"
                                         placeholder="Texto a buscar">
                                     <input v-if="tituloModal2 == 'Proveedors'" type="text" v-model="buscarA"
@@ -386,7 +386,7 @@
                                         @click="abrirModal3('Marca', 'registrarMar')" class="btn btn-secondary">
                                         <i class="icon-plus"></i>&nbsp;Nuevo
                                     </button>
-                                    <button v-show="tituloModal2 == 'Lineas'" type="button"
+                                    <button v-show="tituloModal2 == 'Categorías'" type="button"
                                         @click="abrirModal3('Linea', 'registrarLin')" class="btn btn-secondary">
                                         <i class="icon-plus"></i>&nbsp;Nuevo
                                     </button>
@@ -408,8 +408,6 @@
                                 <thead>
                                     <tr>
                                         <th>Opciones</th>
-                                        <th>Id</th>
-
                                         <th>Nombre</th>
                                         <!-- <th>Estado</th> -->
                                         <th>
@@ -439,7 +437,7 @@
                                                 class="btn btn-warning btn-sm">
                                                 <i class="icon-pencil"></i>
                                             </button> &nbsp;
-                                            <button v-if="tituloModal2 == 'Lineas'" type="button"
+                                            <button v-if="tituloModal2 == 'Categorías'" type="button"
                                                 @click="abrirModal3('Linea', 'actualizarLin', arrayelemento)"
                                                 class="btn btn-warning btn-sm">
                                                 <i class="icon-pencil"></i>
@@ -451,7 +449,6 @@
                                             </button> &nbsp;
 
                                         </td>
-                                        <td v-text="arrayelemento.id"></td>
                                         <!-- <div v-if="tituloModal2=='Grupos'">
                                             <td  v-text="arrayelemento.nombre_grupo"></td>
                                         </div> -->
@@ -464,7 +461,7 @@
                                                 <span class="badge badge-danger">Desactivado</span>
                                             </div>
                                         </td>
-                                        <td v-if="tituloModal2 == 'Marcas' || tituloModal2 == 'Lineas'">
+                                        <td v-if="tituloModal2 == 'Marcas' || tituloModal2 == 'Categorías'">
                                             <div v-if="arrayelemento.condicion">
                                                 <span class="badge badge-success">Activo</span>
                                             </div>
@@ -520,7 +517,7 @@
                                 </li>
                             </ul>
                         </nav>
-                        <nav v-else-if="tituloModal2 == 'Lineas'">
+                        <nav v-else-if="tituloModal2 == 'Categorías'">
                             <ul class="pagination">
                                 <li class="page-item" v-if="pagination.current_page > 1">
                                     <a class="page-link" href="#" @click.prevent="cambiarPaginaLinea(pagination.current_page - 1,buscar,criterio)">Ant</a>
@@ -595,52 +592,60 @@
                     </div>
                     <div v-if="tituloModal2 !== 'Proveedors'" class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                            <div v-if="tituloModal2 !== 'Grupos' && tituloModal2 !== 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
+                            <div v-if="tituloModal2 !== 'Grupos' && tituloModal2 !== 'Categorías'" class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombre" class="form-control1"
                                         :placeholder="placeholderInput()">
                                 </div>
                             </div>
                             <div v-else-if="tituloModal2 == 'Grupos'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre Grupo</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre Grupo</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombre_grupo" class="form-control"
                                         :placeholder="placeholderInput()">
                                 </div>
                             </div>
-                            <div v-if="tituloModal2 == 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre Linea</label>
+                            <div v-if="tituloModal2 == 'Categorías'" class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre Categoría</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="nombreLinea" class="form-control1"
                                         :placeholder="placeholderInput('nombre')">
                                 </div>
-                                <label class="col-md-3 form-control-label" for="text-input">Descripcion</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Descripcion</strong></label>
                                 <div class="col-md-9">
                                     <input type="text" v-model="descripcion" class="form-control1"
                                         :placeholder="placeholderInput('descripcion')">
                                 </div>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Código</strong></label>
+                                <div class="col-md-9">
+                                <select v-model="codigoProductoSin" class="form-control">
+                                    <option value="0" disabled>Seleccione</option>
+                                    <option v-for="productoServicio in arrayProductoServicio" :value="productoServicio.codigoProducto"
+                                        v-text="productoServicio.descripcionProducto"></option>
+                                </select>
+                            </div>
                             </div>
                             <!-- prueba de habilitar  -->
                             <div v-if="tituloModal2 == 'Industrias'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Estado</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Estado</strong></label>
                                 <div class="col-md-9">
                                     <input type="checkbox" v-model="estado" v-bind:value="1" />
-                                    <span>{{ estado ? 'Habilitar' : 'Inhabilitado' }}</span>
+                                    <span>{{ estado ? 'Habilitado' : 'Inhabilitado' }}</span>
                                 </div>
                             </div>
                             <div v-if="tituloModal2 == 'Marcas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Estado</label>
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Estado</strong></label>
                                 <div class="col-md-9">
                                     <input type="checkbox" v-model="condicion" v-bind:value="1" />
-                                    <span>{{ condicion ? 'Habilitar' : 'Inhabilitado' }}</span>
+                                    <span>{{ condicion ? 'Habilitado' : 'Inhabilitado' }}</span>
                                 </div>
                             </div>
-                            <div v-if="tituloModal2 == 'Lineas'" class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Estado</label>
+                            <div v-if="tituloModal2 == 'Categorías'" class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input"><strong>Estado</strong></label>
                                 <div class="col-md-9">
                                     <input type="checkbox" v-model="condicion" v-bind:value="1" />
-                                    <span>{{ condicion ? 'Habilitar' : 'Inhabilitado' }}</span>
+                                    <span>{{ condicion ? 'Habilitado' : 'Inhabilitado' }}</span>
                                 </div>
                             </div>
 
@@ -727,15 +732,15 @@
                         <button type="button" v-if="tipoAccion2 == 7" class="btn btn-primary"
                             @click="registrarLinea()">Guardar</button>
                         <button type="button" v-if="tipoAccion2 == 8" class="btn btn-primary"
-                            @click="actualizarLinea()">Actializar</button>
+                            @click="actualizarLinea()">Actualizar</button>
                         <button type="button" v-if="tipoAccion2 == 9" class="btn btn-primary"
                             @click="registrarProveedor()">Guardar</button>
                         <button type="button" v-if="tipoAccion2 == 10" class="btn btn-primary"
-                            @click="actualizarProveedor()">Actializar</button>
+                            @click="actualizarProveedor()">Actualizar</button>
                         <button type="button" v-if="tipoAccion2 == 11" class="btn btn-primary"
                             @click="registrarGrupo()">Guardar</button>
                         <button type="button" v-if="tipoAccion2 == 12" class="btn btn-primary"
-                            @click="actualizarGrupo()">Actializar</button>
+                            @click="actualizarGrupo()">Actualizar</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -829,13 +834,14 @@ export default {
             idindustria: 0,
             idproveedor: 0,
             idgrupo: 0,
-            codigo_producto: 0,
+            codigo_producto: '',
             idmedida: 0,
             nombreLinea:'',
             nombre_categoria: '',
             nombre_proveedor: '',
             //id:'',//aumente 7 julio
             codigo: '',
+            codigoProductoSin: '',
             nombre: '',
             nombre_producto : '',
             nombre_generico: '',
@@ -1073,12 +1079,12 @@ export default {
                 } else if (selected.estado == 0) {
                 this.advertenciaInactiva('Industrias');
                 }
-            } else if (this.tituloModal2 == "Lineas") {
+            } else if (this.tituloModal2 == "Categorías") {
                 this.lineaseleccionadaVacio = false;
                 if (selected.condicion == 1) {
                 this.lineaseleccionada = selected;
                 } else if (selected.condicion == 0) {
-                this.advertenciaInactiva('Lineas');
+                this.advertenciaInactiva('Categorías');
                 }
             } else if (this.tituloModal2 == "Proveedors") {
                 this.proveedorseleccionadaVacio = false;
@@ -1109,6 +1115,18 @@ export default {
             }
             this.arrayBuscador = [];
             this.modal6 = false;
+        },
+
+        consultaProductosServicios() {
+            let me = this;
+            var url = '/categoria/consultaProductosServicios';
+            axios.get(url).then(function (response) {
+                var respuesta = response.data;
+                me.arrayProductoServicio = respuesta.RespuestaListaProductos.listaCodigos;
+                console.log(respuesta.RespuestaListaProductos.listaCodigos);
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
 
 
@@ -1165,7 +1183,7 @@ export default {
                 this.industriaseleccionadaVacio = false;
 
             }
-            else if (titulo == "Lineas") {
+            else if (titulo == "Categorías") {
                 this.listarLinea(1, '', 'nombreLinea');
                 this.modal2 = true;
                 this.tituloModal2 = titulo;
@@ -1713,6 +1731,7 @@ export default {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion':this.descripcion,
+                'codigo': this.codigoProductoSin
             }).then(function (response) {
                 me.cerrarModal3();
                 //me.modal3=0;
@@ -1729,11 +1748,11 @@ export default {
             }
             let me = this;
 
-            axios.put('/categoria/actualizar', {
+            axios.put('/categoriamenu/actualizar', {
                 'nombre': this.nombreLinea,
                 'condicion': this.condicion,
                 'descripcion': this.descripcion,
-                'codigoProductoSin': this.codigoProductoSin,
+                'codigo': this.codigoProductoSin,
                 'id': this.linea_id
             }).then(function (response) {
                 me.cerrarModal3();
@@ -1796,12 +1815,13 @@ export default {
 
             //if (!this.unidad_envase) this.errorMostrarMsjArticulo.push("sin unidad envase");
             //if (!this.codigo) this.errorMostrarMsjArticulo.push("sin codigo");
-            if (!this.nombre_producto) this.errorMostrarMsjArticulo.push("sin nombre producto");
+            if (!this.nombre_producto) this.errorMostrarMsjArticulo.push("Sin nombre producto");
+            if (!this.codigo_producto) this.errorMostrarMsjArticulo.push("Sin codigo de producto");
             //if (!this.nombre_generico) this.errorMostrarMsjArticulo.push("sin nombre generico");
-            if (!this.descripcion) this.errorMostrarMsjArticulo.push("sin descipcion");
-            if (!this.precio_venta) this.errorMostrarMsjArticulo.push("sin precio venta");
+            if (!this.descripcion) this.errorMostrarMsjArticulo.push("Sin descipcion");
+            if (!this.precio_venta) this.errorMostrarMsjArticulo.push("Sin precio venta");
             //if (!this.costo_compra) this.errorMostrarMsjArticulo.push("sin costo compra");
-            if (!this.fotografia) this.errorMostrarMsjArticulo.push("sin fotografia");
+            if (!this.fotografia) this.errorMostrarMsjArticulo.push("Sin fotografia");
 
             if (this.errorMostrarMsjArticulo.length) this.errorArticulo = 1;
 
@@ -1837,10 +1857,11 @@ export default {
                             case 'registrar':
                                 {
                                     this.modal = 1;
-                                    this.tituloModal = 'Registrar Artículo';
+                                    this.tituloModal = 'Registrar Menú';
                                     this.idcategoria = 0;
                                     this.nombre_categoria = '';
                                     this.nombre_proveedor = '';
+                                    this.codigo_producto = '';
                                     this.codigo = '';
                                     this.nombre_producto = '';
                                     this.nombre_generico = '';
@@ -1866,6 +1887,7 @@ export default {
                                     this.nombre_producto = data['nombre'];
                                     this.precio_venta = data['precio_venta'];
                                     this.descripcion = data['descripcion'];
+                                    this.codigo_producto = data['codigo'];
                                     this.fotografia = data['fotografia'];
                                     this.fotoMuestra = data['fotografia'] ? 'img/menu/' + data['fotografia'] : 'img/articulo/defecto.jpg';
                                     //this.lineaseleccionada = {nombre: data['nombre_categoria']};
@@ -1956,10 +1978,10 @@ export default {
                 if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Industria no puede estar vacío.");
             } else if (this.tituloModal2 === 'Marcas') {
                 if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Marca no puede estar vacío.");
-            } else if (this.tituloModal2 === 'Lineas') {
-                if (!this.nombreLinea) this.errorMostrarMsjIndustria.push("El nombre de Linea no puede estar vacío.");
-                if (!this.descripcion) this.errorMostrarMsjIndustria.push("La descripcion de Linea no puede estar vacío.");
-                if (!this.codigoProductoSin) this.errorMostrarMsjIndustria.push("El codigo de Linea no puede estar vacío.");
+            } else if (this.tituloModal2 === 'Categorías') {
+                if (!this.nombreLinea) this.errorMostrarMsjIndustria.push("El nombre no puede estar vacío.");
+                if (!this.descripcion) this.errorMostrarMsjIndustria.push("La descripcion no puede estar vacío.");
+                if (!this.codigoProductoSin) this.errorMostrarMsjIndustria.push("El codigo no puede estar vacío.");
             }
 
             //if (!this.nombre) this.errorMostrarMsjIndustria.push("El nombre de Industria no puede estar vacío.");
@@ -1988,14 +2010,14 @@ export default {
                 //     return 'Nombre de Proveedor'
             } else if (this.tituloModal2 === 'Grupos') {
                 return 'Nombre de Grupo'
-            } else if (this.tituloModal2 === 'Lineas') {
+            } else if (this.tituloModal2 === 'Categorías') {
                 if (inputType === 'nombre') {
-                    return 'Nombre de Linea';
+                    return 'Nombre de Categoría';
                 } else if (inputType === 'descripcion') {
-                    return 'Descripcion de Linea';
+                    return 'Descripcion de Categoría';
                 }
                 else if (inputType === 'codigoProductoSin') {
-                    return 'Codigo de Linea';
+                    return 'Codigo de Categoría';
                 }
             } 
         },
@@ -2059,10 +2081,10 @@ export default {
                             case 'registrarLin':
                                 {
                                     this.modal3 = 1;
-                                    this.tituloModal3 = 'Registrar Linea';
+                                    this.tituloModal3 = 'Registrar Categoría';
                                     this.nombreLinea = '';
                                     this.descripcion = '';
-                                    this.codigoProductoSin = 0;
+                                    this.codigoProductoSin = '';
                                     this.condicion = '';
                                     this.tipoAccion2 = 7;
                                     break;
@@ -2071,12 +2093,12 @@ export default {
                             case 'actualizarLin':
                                 {
                                     this.modal3 = 1;
-                                    this.tituloModal3 = 'Actualizar Linea';
+                                    this.tituloModal3 = 'Actualizar Categoría';
                                     this.tipoAccion2 = 8;
                                     this.linea_id = data['id'];
                                     this.nombreLinea = data['nombre'];
                                     this.descripcion = data['descripcion'];
-                                    this.codigoProductoSin = data['codigoProductoSin'];
+                                    this.codigoProductoSin = data['codigo'];
                                     this.condicion = data['condicion'];
                                     break;
                                 }
@@ -2114,7 +2136,7 @@ export default {
                                     this.modal3 = 1;
                                     this.tituloModal3 = 'Registrar Proveedor';
                                     this.nombre = '';
-                                    this.tipo_documento = 'RUC';
+                                    this.tipo_documento = '';
                                     this.num_documento = '';
                                     this.direccion = '';
                                     this.telefono = '';
@@ -2208,7 +2230,8 @@ export default {
         this.recuperarIdRol();
         this.datosConfiguracion();
         this.listarArticulo(1, this.buscar, this.criterio);
-        this.listarPrecio();//aumenTe 6julio
+        this.listarPrecio();
+        this.consultaProductosServicios();
     }
 }
 </script>

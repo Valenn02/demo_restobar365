@@ -21,10 +21,10 @@ class MedidaController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $medidas = Medida::orderBy('id', 'desc')->paginate(5);
+            $medidas = Medida::orderBy('id', 'asc')->paginate(5);
         }
         else{
-            $medidas = Medida::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(5);
+            $medidas = Medida::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'asc')->paginate(5);
         }
         
 

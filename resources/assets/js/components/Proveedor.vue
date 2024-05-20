@@ -23,8 +23,7 @@
                                       <option value="email">Email</option>
                                       <option value="telefono">Teléfono</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarPersona(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
                                 </div>
                             </div>
                         </div>
@@ -52,7 +51,7 @@
                                         </button>
                                     </td>
                                     <td v-text="persona.nombre"></td>
-                                    <td v-text="persona.tipo_documento"></td>
+                                    <td v-text="getTipoDocumentoText(persona.tipo_documento)"></td>
                                     <td v-text="persona.num_documento"></td>
                                     <td v-text="persona.direccion"></td>
                                     <td v-text="persona.telefono"></td>
@@ -93,53 +92,56 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre (*)</label>
+                                    <label class="col-md-3 form-control-label" for="text-input"><strong>Nombre (*)</strong></label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Tipo Documento</label>
+                                    <label class="col-md-3 form-control-label" for="text-input"><strong>Tipo Documento</strong></label>
                                     <div class="col-md-9">
                                         <select v-model="tipo_documento" class="form-control">
-                                            <option value="DNI">DNI</option>
-                                            <option value="RUC">RUC</option>
-                                            <option value="PASS">PASS</option>
+                                            <option value="" disabled>Selecciona una tipo de documento</option>
+                                            <option value="1">CI - CEDULA DE IDENTIDAD</option>
+                                            <option value="2">CEX - CEDULA DE IDENTIDAD DE EXTRANJERO</option>
+                                            <option value="5">NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA</option>
+                                            <option value="3">PAS - PASAPORTE</option>
+                                            <option value="4">OD - OTRO DOCUMENTO DE IDENTIDAD</option>   
                                         </select>                                    
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Número</label>
+                                    <label class="col-md-3 form-control-label" for="text-input"><strong>Documento</strong></label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="num_documento" class="form-control" placeholder="Número de documento">                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Dirección</label>
+                                    <label class="col-md-3 form-control-label" for="email-input"><strong>Dirección</strong></label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="direccion" class="form-control" placeholder="Dirección">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
+                                    <label class="col-md-3 form-control-label" for="email-input"><strong>Teléfono</strong></label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="telefono" class="form-control" placeholder="Teléfono">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Email</label>
+                                    <label class="col-md-3 form-control-label" for="email-input"><strong>Email</strong></label>
                                     <div class="col-md-9">
                                         <input type="email" v-model="email" class="form-control" placeholder="Email">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Contacto</label>
+                                    <label class="col-md-3 form-control-label" for="email-input"><strong>Contacto</strong></label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="contacto" class="form-control" placeholder="Nombre del contacto">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Teléfono de contacto</label>
+                                    <label class="col-md-3 form-control-label" for="email-input"><strong>Teléfono de contacto</strong></label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="telefono_contacto" class="form-control" placeholder="Teléfono del contacto">
                                     </div>
@@ -362,7 +364,23 @@
                         }
                     }
                 }
+            },
+            getTipoDocumentoText(value){
+            switch (value) {
+                case '1':
+                    return 'CI';
+                case '2':
+                    return 'CEX';
+                case '3':
+                    return 'PAS';
+                case '4':
+                    return 'OD';
+                case '5':
+                    return 'NIT';    
+                default:
+                    return '';
             }
+        }
         },
         mounted() {
             this.listarPersona(1,this.buscar,this.criterio);

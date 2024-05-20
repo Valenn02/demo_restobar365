@@ -129,11 +129,11 @@
                         <div class="col-md-6">
                             <!-- Columna izquierda -->
                             <div class="form-group">
-                                <label class="form-control-label" for="text-input">Nombre(*)</label>
+                                <label class="form-control-label" for="text-input"><strong>Nombre(*)</strong></label>
                                 <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="text-input">Tipo documento</label>
+                                <label class="form-control-label" for="text-input"><strong>Tipo documento</strong></label>
                                 <select v-model="tipo_documento" class="form-control">
                                             <option value="" disabled>Selecciona una tipo de documento</option>
                                             <option value="1">CI - CEDULA DE IDENTIDAD</option>
@@ -144,11 +144,11 @@
                                         </select> 
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Teléfono</label>
+                                <label class="form-control-label" for="email-input"><strong>Teléfono</strong></label>
                                 <input type="email" v-model="telefono" class="form-control" placeholder="Teléfono">
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Rol</label>
+                                <label class="form-control-label" for="email-input"><strong>Rol</strong></label>
                                 <select v-model="idrol" class="form-control">
                                     <option value="0" disabled>Seleccione</option>
                                     <option v-for="role in arrayRol" :key="role.id" :value="role.id"
@@ -156,30 +156,30 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Usuario</label>
+                                <label class="form-control-label" for="email-input"><strong>Usuario</strong></label>
                                 <input type="text" v-model="usuario" class="form-control" placeholder="Nombre del usuario">
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Clave</label>
+                                <label class="form-control-label" for="email-input"><strong>Clave</strong></label>
                                 <input type="password" v-model="password" class="form-control" placeholder="Clave del usuario">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <!-- Columna derecha -->
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Dirección</label>
+                                <label class="form-control-label" for="email-input"><strong>Dirección</strong></label>
                                 <input type="email" v-model="direccion" class="form-control" placeholder="Dirección">
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Número documento</label>
+                                <label class="form-control-label" for="email-input"><strong>Número documento</strong></label>
                                 <input type="email" v-model="num_documento" class="form-control" placeholder="Número de documento">
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Email</label>
+                                <label class="form-control-label" for="email-input"><strong>Email</strong></label>
                                 <input type="email" v-model="email" class="form-control" placeholder="Email">
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Sucursal</label>
+                                <label class="form-control-label" for="email-input"><strong>Sucursal</strong></label>
                                 <select v-model="idsucursal" class="form-control">
                                     <option value="0" disabled>Seleccione</option>
                                     <option v-for="sucursal in arraySucursal" :key="sucursal.id" :value="sucursal.id"
@@ -187,7 +187,7 @@
                                 </select>
                             </div>
                             <div class="form-group" v-if="idsucursal !== '0'">
-                                <label class="form-control-label" for="branch-input">Punto de Venta</label>
+                                <label class="form-control-label" for="branch-input"><strong>Punto de Venta</strong></label>
                                 <select v-model="idpuntoventa" class="form-control">
                                     <option value="0" disabled>Seleccione</option>
                                     <option v-for="puntoVenta in filteredPuntosVenta" :key="puntoVenta.id" :value="puntoVenta.id" 
@@ -195,7 +195,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label" for="email-input">Fotografia</label>
+                                <label class="form-control-label" for="email-input"><strong>Fotografía</strong></label>
                                 <div class="row">
                                     <div class="col-md-8">
                                         <input type="file" @change="obtenerFotografia" class="form-control" placeholder="fotografia usuario" ref="fotografiaInput">
@@ -426,9 +426,19 @@ export default {
                 }
 
             }).then(function (response) {
+                swal(
+                    'REGISTRO ÉXITOSO',
+                    'Usario Añadido',
+                    'success'
+                    );
                 me.cerrarModal();
                 me.listarPersona(1, '', 'nombre');
             }).catch(function (error) {
+                swal(
+                    'REGISTRO FALLIDO',
+                    'Intente de Nuevo',
+                    'warning'
+                );
                 console.log(error);
             });
 
@@ -460,10 +470,19 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(function (response) {
-                alert("Datos actualizados con éxito");
+                swal(
+                    'ACTUALIZACIÓN ÉXITOSA',
+                    'Usario Actualizado',
+                    'success'
+                    );
                 me.cerrarModal();
                 me.listarPersona(1, '', 'nombre');
             }).catch(function (error) {
+                swal(
+                    'ACTUALIZACIÓN FALLIDA',
+                    'Intente de Nuevo',
+                    'warning'
+                );
                 console.log(error);
             });
         },

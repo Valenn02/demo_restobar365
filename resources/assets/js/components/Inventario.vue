@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label> ALMACEN DE TRABAJO </label>
+                                <label><strong>ALMACEN DE TRABAJO</strong></label>
                                 <select class="form-control" v-model="AlmacenSeleccionado" @change="getDatosAlmacen">
                                     <option value="0" disabled>Seleccione</option>
                                     <option v-for="opcion in arrayAlmacenes" :key="opcion.id" :value="opcion.id">{{ opcion.nombre_almacen }}</option>
@@ -19,7 +19,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="d-flex flex-column">
-                                <label class="mb-1"> MODO VISTA </label>
+                                <label class="mb-1"><strong>MODO VISTA</strong></label>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" v-model="tipoSeleccionado" value="item" @change="cambiarTipo">
                                     <label class="form-check-label ms-2">Por Item</label>
@@ -36,7 +36,7 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <div class="input-group">
-                                <select class="form-control col-md-3" v-model="criterio">
+                                <select class="form-control col-md-4" v-model="criterio">
                                 <option value="nombre">Nombre Producto</option>
                                 <!-- <option value="descripcion">Descripción</option> -->
                                 </select>
@@ -50,10 +50,10 @@
                             <thead>
                                 <tr>
                                     <!-- <th>Opciones</th> -->
-                                    <th>Product</th>
-                                    <th>Unidad X Paq.</th>                                   
-                                    <th>Saldo_stock_total</th>
-                                    <th>Almacen</th>
+                                    <th>Producto</th>
+                                    <th>Unidad por Paquete</th>                                   
+                                    <th>Saldo Stock Total</th>
+                                    <th>Almacén</th>
                                 </tr>
                             </thead>
                             <tbody>
