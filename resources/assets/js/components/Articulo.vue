@@ -1353,8 +1353,8 @@ export default {
             var url = '/articulo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
-                me.arrayArticulo = respuesta.articulos.data;
-                me.pagination = respuesta.pagination;
+                me.arrayArticulo = respuesta.articulos;
+                //me.pagination = respuesta.pagination;
             })
                 .catch(function (error) {
                     console.log(error);
