@@ -2666,9 +2666,9 @@ class VentaController extends Controller
 
         // Obtener las ventas para la fecha dada
         $query = DetalleVenta::join('ventas', 'detalle_ventas.idventa', '=', 'ventas.id')
-            ->join('articulos', 'detalle_ventas.idarticulo', '=', 'articulos.id')
+            ->join('menu', 'detalle_ventas.codigoComida', '=', 'menu.codigo')
             ->select(
-                'articulos.nombre as articulo',
+                'menu.nombre as articulo',
                 'ventas.cliente as cliente',
                 'detalle_ventas.cantidad',
                 'detalle_ventas.precio',
@@ -2678,7 +2678,7 @@ class VentaController extends Controller
             ->whereDate('ventas.created_at', $request->input('fecha'));
 
         if ($request->has('idCategoria') && $request->input('idCategoria') !== 'all') {
-            $query->where('articulos.idcategoria', $request->input('idCategoria'));
+            $query->where('menu.idcategoria_menu', $request->input('idCategoria'));
         }
 
         $ventas = $query->get();
