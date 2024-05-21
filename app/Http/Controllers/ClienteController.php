@@ -57,10 +57,26 @@ class ClienteController extends Controller
         if (!$request->ajax()) return redirect('/');
         $persona = new Persona();
         $persona->nombre = $request->nombre;
-        $persona->telefono = $request->telefono;
+        $persona->num_documento = $request->num_documento;
+        $persona->email = $request->email;
+        $persona->tipo_documento = 5;
         $persona->estadoCli = true;
 
+        $persona->save();
+    }
 
+    public function store2(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $persona = new Persona();
+        $persona->nombre = $request->nombre;
+        $persona->direccion = $request->direccion;
+        $persona->tipo_documento = $request->tipo_documento;
+        $persona->num_documento = $request->num_documento;
+        $persona->telefono = $request->telefono;
+        $persona->email = $request->email;
+        $persona->estadoCli = true;
+        
         $persona->save();
     }
 
@@ -69,7 +85,11 @@ class ClienteController extends Controller
         if (!$request->ajax()) return redirect('/');
         $persona = Persona::findOrFail($request->id);
         $persona->nombre = $request->nombre;
+        $persona->direccion = $request->direccion;
+        $persona->tipo_documento = $request->tipo_documento;
+        $persona->num_documento = $request->num_documento;
         $persona->telefono = $request->telefono;
+        $persona->email = $request->email;
         $persona->save();
     }
 
@@ -90,5 +110,27 @@ class ClienteController extends Controller
         $persona = Persona::findOrFail($request->id);
         $persona->estadoCli = '1';
         $persona->save();
+    }
+    public function buscarPorDocumento(Request $request)
+    {
+        $documento = $request->query('documento');
+        $cliente = Persona::where('num_documento', $documento)->first();
+
+        if ($cliente) {
+            return response()->json(['success' => true, 'cliente' => $cliente]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Cliente no encontrado']);
+        }
+    }
+    public function verificarExistencia(Request $request)
+    {
+        $documento = $request->query('documento');
+        $cliente = Persona::where('num_documento', $documento)->first();
+
+        if ($cliente) {
+            return response()->json(['existe' => true, 'cliente' => $cliente]);
+        } else {
+            return response()->json(['existe' => false]);
+        }
     }
 }

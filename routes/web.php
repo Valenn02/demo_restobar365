@@ -154,6 +154,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/cliente', 'ClienteController@index');
         Route::post('/cliente/registrar', 'ClienteController@store');
+        Route::post('/cliente/registrar2', 'ClienteController@store2');
         Route::put('/cliente/actualizar', 'ClienteController@update');
         Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
         Route::get('/cliente/listarReporteClienteExcel', 'ClienteController@listarReporteClienteExcel');
@@ -382,6 +383,10 @@ Route::group(['middleware' => ['auth']], function () {
 
         //BACKUP
         Route::get('/backup', 'BackupController@backupDatabase');
+
+        //API RECUPERAR CLIENTE
+        Route::get('/api/clientes', 'ClienteController@buscarPorDocumento');
+        Route::get('/api/clientes/existe', 'ClienteController@verificarExistencia');
         
     });
 
