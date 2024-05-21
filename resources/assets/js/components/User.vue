@@ -428,7 +428,7 @@ export default {
             }).then(function (response) {
                 swal(
                     'REGISTRO ÉXITOSO',
-                    'Usario Añadido',
+                    'Usuario Añadido',
                     'success'
                     );
                 me.cerrarModal();
@@ -472,7 +472,7 @@ export default {
             }).then(function (response) {
                 swal(
                     'ACTUALIZACIÓN ÉXITOSA',
-                    'Usario Actualizado',
+                    'Usuario Actualizado',
                     'success'
                     );
                 me.cerrarModal();

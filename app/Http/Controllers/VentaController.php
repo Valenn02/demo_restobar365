@@ -439,8 +439,8 @@ class VentaController extends Controller
                 if ($ultimaCaja) {
                     if ($ultimaCaja->estado == '1') {
                         $venta = new Venta();
-                        //$venta->idcliente = $request->idcliente;
-                        $venta->idcliente = NULL;
+                        $venta->idcliente = $request->idcliente;
+                        //$venta->idcliente = NULL;
                         $venta->idusuario = \Auth::user()->id;
                         $venta->idtipo_pago = $request->idtipo_pago;
                         $venta->cliente = $request->cliente;
