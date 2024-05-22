@@ -57,14 +57,16 @@ class BackupController extends Controller
         $backupFile = storage_path('app/backup/' . $backupFileName);
 
         $command = sprintf(
-            'mysqldump -h %s -u %s -p %s %s > %s',
-            escapeshellarg($host),
+            'mysqldump -u %s -p %s %s > %s',
+            //escapeshellarg($host),
             escapeshellarg($username),
             escapeshellarg($password),
             escapeshellarg($databaseName),
             escapeshellarg($backupFile)
         );
-        //dd($command);
+        /*$command = sprintf('mysqldump -u %s -p %s %s > %s', config('database.connections.mysql.username'), 
+        config('database.connections.mysql.password'), $databaseName, $backupFile);*/
+        dd($command);
 
         $output = [];
         $returnVar = null;

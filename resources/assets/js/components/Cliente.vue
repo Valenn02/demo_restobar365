@@ -22,10 +22,9 @@
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
                                       <option value="nombre">Nombre</option>
-                                      <option value="telefono">Teléfono</option>
+                                      <option value="num_documento">Documento</option>
                                     </select>
                                     <input type="text" v-model="buscar" @keyup="listarPersona(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarPersona(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -36,7 +35,9 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>Teléfono</th>
+                                    <th>Tipo Documento</th>
+                                    <th>Documento</th>
+                                    <th>Email</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -60,7 +61,9 @@
                                         </template>
                                     </td>
                                     <td v-text="persona.nombre"></td>
-                                    <td v-text="persona.telefono"></td>
+                                    <td v-text="getTipoDocumentoText(persona.tipo_documento)"></td>
+                                    <td v-text="persona.num_documento"></td>
+                                    <td v-text="persona.email"></td>
                                     <td>
                                         <div v-if="persona.estadoCli">
                                             <span class="badge badge-success">Activo</span>
@@ -104,15 +107,44 @@
                         <div class="modal-body">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre (*)</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">                                        
+                                    <div class="col-md-6">
+                                        <label for="nombre" class="font-weight-bold">Nombre del cliente <span
+                                            class="text-danger">*</span></label>
+                                            <input type="text" v-model="nombre" class="form-control" id="nombre" placeholder="Ej. Juan Pérez">                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="font-weight-bold">Dirección</label>
+                                            <input type="text" v-model="direccion" class="form-control" id="direccion" placeholder="Ej. Calle Principal #123, Ciudad">                                        
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Teléfono</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="telefono" class="form-control" placeholder="Teléfono">
+                                    <div class="col-md-6">
+                                        <label for="tipo_documento" class="font-weight-bold">Tipo de documento <span
+                                            class="text-danger">*</span></label>
+                                            <div>
+                                                <select class="form-control" v-model="tipo_documento">
+                                                    <option value="" disabled>Selecciona una tipo de documento</option>
+                                                    <option value="1">CI - CEDULA DE IDENTIDAD</option>
+                                                    <option value="2">CEX - CEDULA DE IDENTIDAD DE EXTRANJERO</option>
+                                                    <option value="5">NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA</option>
+                                                    <option value="3">PAS - PASAPORTE</option>
+                                                    <option value="4">OD - OTRO DOCUMENTO DE IDENTIDAD</option>   
+                                                </select>                                    
+                                            </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="num_documento" class="font-weight-bold">N° Documento</label>
+                                            <input type="text" v-model="num_documento" class="form-control" id="num_documento" placeholder="Ej. 12345678">                                        
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label for="telefono" class="font-weight-bold">Teléfono</label>
+                                            <input type="text" v-model="telefono" class="form-control" id="telefono" placeholder="Ej. 7XXXXXX">                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="font-weight-bold">Email</label>
+                                            <input type="text" v-model="email" class="form-control" id="email" placeholder="Ej. ejemplo@dominio.com">                                        
                                     </div>
                                 </div>
                                 <div v-show="errorPersona" class="form-group row div-error">
@@ -225,13 +257,27 @@
                 
                 let me = this;
 
-                axios.post('/cliente/registrar',{
+                axios.post('/cliente/registrar2',{
                     'nombre': this.nombre,
-                    'telefono' : this.telefono
+                    'direccion': this.direccion,
+                    'tipo_documento': this.tipo_documento,
+                    'num_documento': this.num_documento,
+                    'telefono' : this.telefono,
+                    'email': this.email
                 }).then(function (response) {
+                    swal(
+                    'REGISTRO ÉXITOSO',
+                    'Cliente Añadido',
+                    'success'
+                    );
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
                 }).catch(function (error) {
+                    swal(
+                    'REGISTRO FALLIDO',
+                    'Intente de Nuevo',
+                    'warning'
+                );
                     console.log(error);
                 });
             },
@@ -244,12 +290,26 @@
 
                 axios.put('/cliente/actualizar',{
                     'nombre': this.nombre,
+                    'direccion': this.direccion,
+                    'tipo_documento': this.tipo_documento,
+                    'num_documento': this.num_documento,
                     'telefono' : this.telefono,
+                    'email': this.email,
                     'id': this.persona_id
                 }).then(function (response) {
+                    swal(
+                    'ACTUALIZACIÓN ÉXITOSA',
+                    'Cliente Actualizado',
+                    'success'
+                    );
                     me.cerrarModal();
                     me.listarPersona(1,'','nombre');
                 }).catch(function (error) {
+                    swal(
+                    'ACTUALIZACIÓN FALLIDA',
+                    'Intente de Nuevo',
+                    'warning'
+                );
                     console.log(error);
                 }); 
             },            
@@ -267,7 +327,7 @@
                 this.modal=0;
                 this.tituloModal='';
                 this.nombre='';
-                this.tipo_documento='DNI';
+                this.tipo_documento='';
                 this.num_documento='';
                 this.direccion='';
                 this.telefono='';
@@ -285,7 +345,7 @@
                                 this.modal = 1;
                                 this.tituloModal = 'Registrar Cliente';
                                 this.nombre= '';
-                                this.tipo_documento='DNI';
+                                this.tipo_documento='';
                                 this.num_documento='';
                                 this.direccion='';
                                 this.telefono='';
@@ -301,7 +361,11 @@
                                 this.tipoAccion=2;
                                 this.persona_id=data['id'];
                                 this.nombre = data['nombre'];
+                                this.direccion = data['direccion'];
+                                this.tipo_documento = data['tipo_documento'];
+                                this.num_documento = data['num_documento'];
                                 this.telefono = data['telefono'];
+                                this.email = data['email'];
                                 break;
                             }
                         }
@@ -350,6 +414,22 @@
 
                 }
             })
+        },
+        getTipoDocumentoText(value){
+            switch (value) {
+                case '1':
+                    return 'CI';
+                case '2':
+                    return 'CEX';
+                case '3':
+                    return 'PAS';
+                case '4':
+                    return 'OD';
+                case '5':
+                    return 'NIT';    
+                default:
+                    return '';
+            }
         },
         activarUsuario(id) {
             swal({
