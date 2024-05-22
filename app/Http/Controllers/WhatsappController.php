@@ -8,133 +8,142 @@ use FPDF;
 class WhatsappController extends Controller
 {
     public function enviaReporte(Request $request)
-{
-    // Obtener los datos para generar el reporte
-    $fecha = $request->input('fecha');
-    $ventas = $request->input('ventas');
-    $totalGanado = $request->input('totalGanado');
+    {
+        $fecha = $request->input('fecha');
+        $ventas = $request->input('ventas');
+        $totalGanado = $request->input('totalGanado');
 
-    // Verificar que $ventas es un array
-    if (!is_array($ventas)) {
-        return response()->json(['error' => 'Invalid ventas format'], 400);
-    }
+        $pdf = new FPDF();
+        $pdf->AddPage();
 
-    // Crear el PDF
-    $pdf = new FPDF();
-    $pdf->AddPage();
-    $pdf->SetFont('Arial', 'B', 16);
+        function convertirCaracteres($texto) {
+            return iconv('UTF-8', 'ISO-8859-1', $texto);
+        }
 
-    // Título centrado
-    $titulo = 'Reporte de Ventas Diarias';
-    $textWidth = $pdf->GetStringWidth($titulo);
-    $pageWidth = $pdf->GetPageWidth();
-    $xPosition = ($pageWidth - $textWidth) / 2;
-    $pdf->Text($xPosition, 10, $titulo);
+        $pdf->SetFont('Arial', 'B', 16);
+        $titulo = 'Reporte de Ventas Diarias';
+        $textWidth = $pdf->GetStringWidth($titulo);
+        $pageWidth = $pdf->GetPageWidth();
+        $xPosition = ($pageWidth - $textWidth) / 2;
+        $pdf->Text($xPosition, 10, convertirCaracteres($titulo));
 
-    // Fecha
-    $pdf->SetFont('Arial', '', 12);
-    $pdf->Text(15, 20, "Fecha: $fecha");
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Text(15, 20, convertirCaracteres("Fecha: $fecha"));
 
-    // Tabla de ventas
-    $pdf->SetY(30);
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(30, 10, 'Cliente', 1);
-    $pdf->Cell(30, 10, 'Producto', 1);
-    $pdf->Cell(20, 10, 'Cantidad', 1);
-    $pdf->Cell(20, 10, 'Precio', 1);
-    $pdf->Cell(30, 10, 'Total', 1);
-    $pdf->Cell(30, 10, 'Número Factura', 1);
-    $pdf->Ln();
+        $columnHeaders = ['Cliente', 'Producto', 'Cantidad', 'Precio', 'Total', 'Número Factura'];
+        $columnsWidths = array_fill(0, count($columnHeaders), 0);
 
-    $pdf->SetFont('Arial', '', 12);
-    foreach ($ventas as $venta) {
-        $cliente = $venta['cliente'];
-        $articulo = $venta['articulo'];
-        $cantidad = $venta['cantidad'];
-        $precio = $venta['precio'];
-        $total = $precio * $cantidad;
-        $num_comprobante = $venta['num_comprobante'];
+        foreach ($columnHeaders as $index => $header) {
+            $columnsWidths[$index] = max($columnsWidths[$index], $pdf->GetStringWidth(convertirCaracteres($header)));
+        }
 
-        $pdf->Cell(30, 10, $cliente, 1);
-        $pdf->Cell(30, 10, $articulo, 1);
-        $pdf->Cell(20, 10, $cantidad, 1);
-        $pdf->Cell(20, 10, $precio, 1);
-        $pdf->Cell(30, 10, $total, 1);
-        $pdf->Cell(30, 10, $num_comprobante, 1);
+        foreach ($ventas as $venta) {
+            $columnsWidths[0] = max($columnsWidths[0], $pdf->GetStringWidth(convertirCaracteres($venta['cliente'])));
+            $columnsWidths[1] = max($columnsWidths[1], $pdf->GetStringWidth(convertirCaracteres($venta['articulo'])));
+            $columnsWidths[2] = max($columnsWidths[2], $pdf->GetStringWidth($venta['cantidad']));
+            $columnsWidths[3] = max($columnsWidths[3], $pdf->GetStringWidth($venta['precio']));
+            $columnsWidths[4] = max($columnsWidths[4], $pdf->GetStringWidth(number_format($venta['precio'] * $venta['cantidad'], 2)));
+            $columnsWidths[5] = max($columnsWidths[5], $pdf->GetStringWidth(convertirCaracteres($venta['num_comprobante'])));
+        }
+
+        $columnsWidths = array_map(function($width) {
+            return $width + 2;
+        }, $columnsWidths);
+
+        $pdf->SetY(30);
+        $pdf->SetFont('Arial', 'B', 12);
+
+        $pdf->SetFillColor(200, 200, 200);
+
+        foreach ($columnHeaders as $index => $header) {
+            $pdf->Cell($columnsWidths[$index], 10, convertirCaracteres($header), 1, 0, 'C', true);
+        }
         $pdf->Ln();
-    }
 
-    // Total ganado
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Text(15, $pdf->GetY() + 10, "Total Ganado: Bs. $totalGanado");
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->SetFillColor(255, 255, 255);
 
-    // Guardar el PDF en una ruta temporal dentro del directorio public/docs
-    $publicPath = public_path('docs/reporteVentasDiarias.pdf');
-    $pdf->Output('F', $publicPath);
+        foreach ($ventas as $venta) {
+            $pdf->Cell($columnsWidths[0], 10, convertirCaracteres($venta['cliente']), 1, 0, 'C', true);
+            $pdf->Cell($columnsWidths[1], 10, convertirCaracteres($venta['articulo']), 1, 0, 'C', true);
+            $pdf->Cell($columnsWidths[2], 10, $venta['cantidad'], 1, 0, 'C', true);
+            $pdf->Cell($columnsWidths[3], 10, $venta['precio'], 1, 0, 'C', true);
+            $pdf->Cell($columnsWidths[4], 10, number_format($venta['precio'] * $venta['cantidad'], 2), 1, 0, 'C', true);
+            $pdf->Cell($columnsWidths[5], 10, convertirCaracteres($venta['num_comprobante']), 1, 1, 'C', true);
+        }
 
-    // Generar la URL pública para el PDF
-    $pdfUrl = url('public/docs/reporteVentasDiarias.pdf');
 
-    // Datos para el envío por WhatsApp
-    $token = 'EAALJ0bAhaD0BOxSs0dfU8xDpZBoj5O1bW7AkLH8HLZBvAHx8UCO0bf3rQgELNY5qUq6tWJVRKShy9S0f9zrBDzXScpGEBPuScAkfr4X6WBnvcsGFWJVQo5hQP1IWQxexzE3yqDC1rtI2ITgh1iLR2b8DimfYZCbCoLHEZAJ9BGKCikWNamlKYuZC02MfVSWQFFvX1YRmsItRpwZBrx';
-    $telefono = '+591 71714343';
-    $url = 'https://graph.facebook.com/v19.0/319231637939539/messages';
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Text(15, $pdf->GetY() + 10, convertirCaracteres("Total Ganado: Bs. $totalGanado"));
 
-    // Configuración del mensaje con la plantilla
-    $messageConfig = [
-        'messaging_product' => 'whatsapp',
-        'to' => $telefono,
-        'type' => 'template',
-        'template' => [
-            'name' => 'plantilla_prueba',
-            'language' => [
-                'code' => 'es'
-            ],
-            'components' => [
-                [
-                    'type' => 'header',
-                    'parameters' => [
-                        [
-                            'type' => 'document',
-                            'document' => [
-                                'link' => 'http://laniatita.restobar365.com/docs/reporteVentasDiarias.pdf'
+        $publicPath = public_path('docs/reporteVentasDiarias.pdf');
+        $pdf->Output('F', $publicPath);
+
+        $pdfUrl = url('public/docs/reporteVentasDiarias.pdf');
+
+        // Datos para el envío por WhatsApp
+        $token = 'EAALJ0bAhaD0BOxSs0dfU8xDpZBoj5O1bW7AkLH8HLZBvAHx8UCO0bf3rQgELNY5qUq6tWJVRKShy9S0f9zrBDzXScpGEBPuScAkfr4X6WBnvcsGFWJVQo5hQP1IWQxexzE3yqDC1rtI2ITgh1iLR2b8DimfYZCbCoLHEZAJ9BGKCikWNamlKYuZC02MfVSWQFFvX1YRmsItRpwZBrx';
+        
+        //$telefono = '+591 72785387';
+        $telefono ='+591 '.$request->input('telefono');
+        $url = 'https://graph.facebook.com/v19.0/319231637939539/messages';
+
+        // Configuración del mensaje con la plantilla
+        $messageConfig = [
+            'messaging_product' => 'whatsapp',
+            'to' => $telefono,
+            'type' => 'template',
+            'template' => [
+                'name' => 'plantilla_prueba',
+                'language' => [
+                    'code' => 'es'
+                ],
+                'components' => [
+                    [
+                        'type' => 'header',
+                        'parameters' => [
+                            [
+                                'type' => 'document',
+                                'document' => [
+                                    'link' => 'http://laniatita.restobar365.com/docs/reporteVentasDiarias.pdf'
+                                ]
                             ]
                         ]
                     ]
                 ]
             ]
-        ]
-    ];
+        ];
 
-    $messageJson = json_encode($messageConfig);
+        $messageJson = json_encode($messageConfig);
 
-    // Configurar las cabeceras
-    $headers = [
-        'Authorization: Bearer ' . $token,
-        'Content-Type: application/json'
-    ];
+        // Configurar las cabeceras
+        $headers = [
+            'Authorization: Bearer ' . $token,
+            'Content-Type: application/json'
+        ];
 
-    // Inicializar la sesión curl
-    $curl = curl_init($url);
+        // Inicializar la sesión curl
+        $curl = curl_init($url);
 
-    // Establecer las opciones de curl
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $messageJson);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        // Establecer las opciones de curl
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $messageJson);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    // Ejecutar la solicitud curl
-    $response = json_decode(curl_exec($curl), true);
+        // Ejecutar la solicitud curl
+        $response = json_decode(curl_exec($curl), true);
 
-    // Obtener el código de estado
-    $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        // Obtener el código de estado
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-    // Cerrar la sesión curl
-    curl_close($curl);
+        // Cerrar la sesión curl
+        curl_close($curl);
 
 
-    // Devolver la respuesta del servidor de WhatsApp
-    return response()->json($response);
-}
+        // Devolver la respuesta del servidor de WhatsApp
+        return response()->json($response);
+    }
+
 
 
 }
