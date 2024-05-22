@@ -112,6 +112,15 @@
                             <li @click="menu=45" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Reporte Ventas Diarias</a>
                             </li>
+                            <li @click="menu=45" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Reporte Ventas del Mes</a>
+                            </li>
+                            <li @click="menu=45" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Reporte de Compras</a>
+                            </li>
+                            <li @click="menu=45" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Reporte Inventario</a>
+                            </li>
                         </ul>
                     </li>
 

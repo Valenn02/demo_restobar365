@@ -387,6 +387,8 @@ Route::group(['middleware' => ['auth']], function () {
         //API RECUPERAR CLIENTE
         Route::get('/api/clientes', 'ClienteController@buscarPorDocumento');
         Route::get('/api/clientes/existe', 'ClienteController@verificarExistencia');
+
+        Route::post('/enviarWhatsapp','WhatsappController@enviaReporte');
         
     });
 
