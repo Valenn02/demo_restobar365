@@ -2278,7 +2278,6 @@ export default {
                     this.email = '';
                     this.imagen = '';
                     this.serie_comprobante = '';
-                    this.num_comprob = '';
                     this.impuesto = 0.18;
                     this.total = 0.0;
                     this.codigoComida = 0;
