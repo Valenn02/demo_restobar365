@@ -103,10 +103,10 @@
                                     <p v-text="proveedor"></p>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <!--<div class="col-md-3">
                                 <label for=""><strong>Impuesto</strong></label>
                                 <p v-text="impuesto"></p>
-                            </div>
+                            </div>-->
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label><strong>Tipo Comprobante</strong></label>

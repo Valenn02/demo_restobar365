@@ -25,13 +25,13 @@ class ProductosBajoStockExport implements FromQuery, WithHeadings, WithColumnWid
             'articulos.codigo',
             'articulos.nombre as nombre_producto',
             'almacens.ubicacion',
-            'articulos.unidad_envase',
+            'articulos.unidad_paquete',
             'inventarios.saldo_stock',
-            'articulos.stock',
+            'articulos.stockmin',
             'almacens.nombre_almacen',
             'personas.nombre as nombre_proveedor',
         )
-        ->whereRaw('articulos.stock > inventarios.saldo_stock')
+        ->whereRaw('articulos.stockmin > inventarios.saldo_stock')
         ->orderBy('inventarios.id', 'desc');
     }
 

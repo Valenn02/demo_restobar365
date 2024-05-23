@@ -1,47 +1,48 @@
 <template>
     <div class="card-body border">
         <div class="table-responsive">
-            <div>
-                <button type="button" @click="cargarExcel()" class="btn btn-info">
-                    <i class="icon-doc"></i>&nbsp;Reporte
-                </button>
-            </div>
-            <table class="table table-bordered table-striped table-sm">
+            <table class="table">
                 <thead>
-                    <tr class="table-info"> <!-- Agrega la clase "table-info" para dar estilo al título -->
-                        <th colspan="10">Productos por vencerse (necesita su venta rapida)</th>
-                        <!-- Colspan="7" para que el título abarque todas las columnas -->
+                    <tr class="table-light"> <!-- Agrega la clase "table-info" para dar estilo al título -->
+                        <th colspan="10">Productos por vencerse (necesita su venta rapida)
+
+                            <button type="button" @click="cargarExcel()" class="btn btn-light">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                                &nbsp;Descargar
+                            </button>
+                        </th>
                     </tr>
                     <tr>
-                        <th>Opciones</th>
                         <th>Codigo</th>
                         <th>Producto</th>
-                        <th>Ubicacion</th>
-                        <th>Unidad X Paq.</th>
-                        <th>Saldo Stock</th>
-                        <th>Almacen</th>
-                        <th>Dias vencimiento</th>
-                        <th>Fecha vencimiento</th>
                         <th>Proveedor</th>
+                        <th>Almacen</th>
+                        <th>En Stock</th>
+                        <th>Fecha vencimiento</th>
+                        <th>Dias vencimiento</th>
+                        <th></th>
+
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="inventario in arrayInventario" :key="inventario.id">
-                        <td>
-                            <button type="button" @click="abrirModal('almacenes', 'actualizar', inventario)"
-                                class="btn btn-warning btn-sm">
-                                <i class="icon-pencil"></i>
-                            </button> &nbsp;
+                
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.codigo"></td>
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_producto"></td>
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_proveedor"></td>
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_almacen"></td>
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.saldo_stock"></td>
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.fecha_vencimiento"></td>
+                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }"> {{ inventario.dias_restantes >0 ?inventario.dias_restantes:0 }}</td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }">
+                            <template v-if="inventario.vencido === 0">
+                                <span class="badge badge-pill badge-danger">Articulo vencido</span>
+                            </template>
+                            <template v-else>
+                                <span class="badge badge-pill badge-warning">Quedan pocos dias para vencerse</span>
+                            </template>
                         </td>
-                        <td v-text="inventario.codigo"></td>
-                        <td v-text="inventario.nombre_producto"></td>
-                        <td v-text="inventario.ubicacion"></td>
-                        <td v-text="inventario.unidad_envase"></td>
-                        <td v-text="inventario.saldo_stock"></td>
-                        <td v-text="inventario.nombre_almacen"></td>
-                        <td>{{ Math.floor((new Date(inventario.fecha_vencimiento) - new Date()) / (1000 * 60 * 60 * 24))+1 }} dias</td>
-                        <td v-text="inventario.fecha_vencimiento"></td>
-                        <td v-text="inventario.nombre_proveedor"></td>
+
                     </tr>
                 </tbody>
             </table>

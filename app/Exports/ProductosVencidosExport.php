@@ -24,7 +24,7 @@ class ProductosVencidosExport implements FromQuery, WithHeadings, WithColumnWidt
         ->select(
             'articulos.codigo',
             'articulos.nombre as nombre_producto',
-            'articulos.unidad_envase',
+            'articulos.unidad_paquete',
 
             'inventarios.saldo_stock',
 

@@ -26,7 +26,7 @@ class ProductosPorVencerseExport implements FromQuery, WithHeadings, WithColumnW
             'articulos.codigo', 
             'articulos.nombre', 
             'almacens.ubicacion',
-            'articulos.unidad_envase',
+            'articulos.unidad_paquete',
             'inventarios.saldo_stock',
             'almacens.nombre_almacen',
             DB::raw('DATEDIFF(inventarios.fecha_vencimiento, NOW()) AS dias_restantes'), 

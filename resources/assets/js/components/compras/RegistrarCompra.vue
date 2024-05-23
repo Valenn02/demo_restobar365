@@ -17,13 +17,13 @@
                 </div>
             </div>
 
-            <div class="col-md-1">
+            <!--<div class="col-md-1">
                 <label for="" class="font-weight-bold">Impuesto</label>
             <div>
                 <input type="text" class="form-control" v-model="impuesto" ref="impuestoRef" v-if="actualizarIva === 1">
                 <input type="text" class="form-control" v-model="impuesto" ref="impuestoRef" readonly v-else>
             </div>
-        </div>
+        </div>-->
 
         <div class="col-md-2">
             <div class="form-group">
@@ -121,13 +121,13 @@
         </div>
         <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
             <div class="form-group">
-                <label for="campo2">Fecha vencimiento</label>
+                <label for="campo2"><strong>Fecha vencimiento</strong></label>
                 <input type="date" class="form-control" v-model="fechavencimiento">
             </div>
         </div>
         <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
             <div class="form-group">
-                <label for="campo2">Precio total</label>
+                <label for="campo2"><strong>Precio total</strong></label>
                 <input disabled type="number" class="form-control" v-model="resultadoMultiplicacion">
             </div>
         </div>

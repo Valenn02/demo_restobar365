@@ -2638,7 +2638,8 @@ export default {
     }
 }
 </script>
-<style>    .card-error {
+<style>    
+    .card-error {
         margin-bottom: 10px;
         width: 100%;
         padding: 15px;

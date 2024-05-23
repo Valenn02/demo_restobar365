@@ -564,6 +564,8 @@ import * as XLSX from 'xlsx-js-style';
             },
             
             abrirModal(modelo, accion, data = []) {
+                console.log("Se presiono abrir modal 1" + accion + modelo);
+                this.modal = 1;
                 this.almacenseleccionada = false;
                 this.articuloseleccionada = false;
                 this.lineaseleccionada = false;

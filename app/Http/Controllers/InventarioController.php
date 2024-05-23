@@ -149,59 +149,41 @@ class InventarioController extends Controller
     {
         if (!$request->ajax())
             return redirect('/');
-
+    
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-
-        if ($buscar == '') {
-            $inventarios = Inventario::join('almacens', 'inventarios.idalmacen', '=', 'almacens.id')
-                ->join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
-                ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
-                ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select(
-                    'inventarios.id',
-                    'inventarios.fecha_vencimiento',
-                    'inventarios.saldo_stock',
-
-                    'almacens.nombre_almacen',
-                    'almacens.ubicacion',
-
-                    'articulos.codigo',
-                    'articulos.nombre as nombre_producto',
-                    'articulos.unidad_paquete',
-
-                    'personas.nombre as nombre_proveedor',
-                )
-                ->whereRaw('DATEDIFF(inventarios.fecha_vencimiento, CURDATE()) <= 30')
-                ->whereDate('inventarios.fecha_vencimiento', '>', DB::raw('CURDATE()'))
-                ->orderBy('inventarios.id', 'desc')->paginate(3);
-        } else {
-            $inventarios = Inventario::join('almacens', 'inventarios.idalmacen', '=', 'almacens.id')
-                ->join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
-                ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
-                ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select(
-
-                    'inventarios.id',
-                    'inventarios.fecha_vencimiento',
-                    'inventarios.saldo_stock',
-
-                    'almacens.nombre_almacen',
-                    'almacens.ubicacion',
-
-                    'articulos.codigo',
-                    'articulos.nombre as nombre_producto',
-                    'articulos.precio_costo_unid',
-
-                    'personas.nombre as nombre_proveedor',
-                )
-                ->whereRaw('DATEDIFF(inventarios.fecha_vencimiento, CURDATE()) <= 30')
-                ->whereDate('inventarios.fecha_vencimiento', '>', DB::raw('CURDATE()'))
-                ->where('inventarios.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('inventarios.id', 'desc')->paginate(3);
+    
+        // Obtener la fecha actual
+        $fechaActual = now()->toDateString();
+    
+        $inventarios = Inventario::join('almacens', 'inventarios.idalmacen', '=', 'almacens.id')
+            ->join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+            ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
+            ->join('personas', 'proveedores.id', '=', 'personas.id')
+            ->select(
+                'inventarios.id',
+                'inventarios.fecha_vencimiento',
+                'inventarios.saldo_stock',
+                'almacens.nombre_almacen',
+                'almacens.ubicacion',
+                'articulos.codigo',
+                'articulos.nombre as nombre_producto',
+                'articulos.unidad_paquete',
+                'personas.nombre as nombre_proveedor',
+                // Calcular los días restantes para vencerse
+                DB::raw('DATEDIFF(inventarios.fecha_vencimiento, "' . $fechaActual . '") AS dias_restantes'),
+                // Indicar si el producto está vencido o no
+                DB::raw('IF(inventarios.fecha_vencimiento < "' . $fechaActual . '", 0, 1) AS vencido')
+            )
+            ->whereRaw('DATEDIFF(inventarios.fecha_vencimiento, "' . $fechaActual . '") <= 30')
+            ->orderBy('inventarios.id', 'desc');
+    
+        if (!empty($buscar)) {
+            $inventarios->where('inventarios.' . $criterio, 'like', '%' . $buscar . '%');
         }
-
-
+    
+        $inventarios = $inventarios->paginate(6);
+    
         return [
             'pagination' => [
                 'total' => $inventarios->total(),
@@ -249,7 +231,7 @@ class InventarioController extends Controller
 
                 )
                 ->whereDate('inventarios.fecha_vencimiento', '<=', DB::raw('CURDATE()'))
-                ->orderBy('inventarios.id', 'desc')->paginate(3);
+                ->orderBy('inventarios.id', 'desc')->paginate(6);
         } else {
             $inventarios = Inventario::join('almacens', 'inventarios.idalmacen', '=', 'almacens.id')
                 ->join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
@@ -272,7 +254,7 @@ class InventarioController extends Controller
                 )
                 ->whereDate('inventarios.fecha_vencimiento', '<=', DB::raw('CURDATE()'))
                 ->where('inventarios.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('inventarios.id', 'desc')->paginate(3);
+                ->orderBy('inventarios.id', 'desc')->paginate(6);
         }
 
 
@@ -318,13 +300,13 @@ class InventarioController extends Controller
                     'articulos.codigo',
                     'articulos.nombre as nombre_producto',
                     'articulos.unidad_paquete',
-                    'articulos.stock',
+                    'articulos.stockmin',
 
                     'personas.nombre as nombre_proveedor',
 
                 )
-                ->whereRaw('articulos.stock > inventarios.saldo_stock')
-                ->orderBy('inventarios.id', 'desc')->paginate(3);
+                ->whereRaw('articulos.stockmin > inventarios.saldo_stock')
+                ->orderBy('inventarios.id', 'desc')->paginate(6);
         } else {
             $inventarios = Inventario::join('almacens', 'inventarios.idalmacen', '=', 'almacens.id')
                 ->join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
@@ -345,9 +327,9 @@ class InventarioController extends Controller
 
                     'personas.nombre as nombre_proveedor',
                 )
-                ->whereRaw('articulos.stock > inventarios.saldo_stock')
+                ->whereRaw('articulos.stockmin > inventarios.saldo_stock')
                 ->where('inventarios.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('inventarios.id', 'desc')->paginate(3);
+                ->orderBy('inventarios.id', 'desc')->paginate(6);
         }
 
 
@@ -531,6 +513,37 @@ class InventarioController extends Controller
             // Si falta alguno de los valores, regresar respuesta vacía
             return ['invenstock' => []];
         }
+    }
+    public function reporteAlmacenes(Request $request)
+    {
+        if (!$request->ajax())
+            return redirect('/');
+        $idAlmacen = $request->idAlmacen;
+
+        $inventarios = Inventario::join('almacens', 'inventarios.idalmacen', '=', 'almacens.id')
+            ->join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+            ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
+            ->join('personas', 'proveedores.id', '=', 'personas.id')
+            ->select(
+                'articulos.nombre as nombre_producto',
+                'articulos.unidad_envase',
+                'almacens.nombre_almacen',
+                DB::raw('SUM(inventarios.saldo_stock) as saldo_stock_total')
+            )
+            ->where('inventarios.idalmacen', '=', $idAlmacen)
+            ->groupBy('articulos.nombre', 'almacens.nombre_almacen','articulos.unidad_envase')
+            ->orderBy('articulos.nombre')
+            ->orderBy('almacens.nombre_almacen');
+            //->get();
+        //---------------------------------------
+        
+        $inventarios = $inventarios->get();
+
+        if ($inventarios->isEmpty()) {
+            return response()->json(['mensaje' => 'No existe articulos en el almacen seleccionado']);
+        }
+        //---------------------------------
+        return  response()->json(['inventarios' => $inventarios]);
     }
     // public function store(Request $request)
     // {
