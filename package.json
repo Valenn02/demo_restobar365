@@ -34,6 +34,7 @@
         "vue-template-compiler": "^2.7.16",
         "vue-toasted": "^1.1.28",
         "xlsx": "^0.18.5",
+        "xlsx-js-style": "^1.2.0",
         "yup": "^1.4.0"
     }
 }

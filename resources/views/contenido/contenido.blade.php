@@ -172,6 +172,14 @@
                 <reporteventastabla></reporteventastabla>
             </template>
 
+            <template v-if="menu==50">
+                <reporteventasdetallado></reporteventasdetallado>
+            </template>
+
+            <template v-if="menu==51">
+                <reporteinventariofisico></reporteinventariofisico>
+            </template>
+
             @elseif (Auth::user()->idrol == 2)
             <template v-if="menu==0">
                 <facturafueralinea></facturafueralinea>

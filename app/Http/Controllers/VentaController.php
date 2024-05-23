@@ -350,25 +350,46 @@ class VentaController extends Controller
 
         return ['venta' => $venta];
     }
+
+    
     public function obtenerDetalles(Request $request)
     {
         if (!$request->ajax())
             return redirect('/');
 
         $id = $request->id;
-        $detalles = DetalleVenta::join('articulos', 'detalle_ventas.codigoComida', '=', 'articulos.id')
+        $detalles = DetalleVenta::leftJoin('articulos', 'detalle_ventas.codigoComida', '=', 'articulos.codigo')
+            ->leftJoin('menu', 'detalle_ventas.codigoComida', '=', 'menu.codigo')
             ->select(
                 'detalle_ventas.cantidad',
                 'detalle_ventas.precio',
                 'detalle_ventas.descuento',
-                'articulos.nombre as articulo',
-                'articulos.unidad_envase'
+                'articulos.nombre as articulo_nombre',
+                'menu.nombre as menu_nombre',
             )
             ->where('detalle_ventas.idventa', '=', $id)
-            ->orderBy('detalle_ventas.id', 'desc')->get();
+            ->orderBy('detalle_ventas.id', 'desc')
+            ->get();
+
+        $detalles = $detalles->map(function ($detalle) {
+            // Verificar si el código pertenece a artículos o menú y asignar los valores correspondientes
+            if ($detalle->articulo_nombre) {
+                $detalle->nombre = $detalle->articulo_nombre;
+            } else {
+                $detalle->nombre = $detalle->menu_nombre;
+            }
+
+            // Eliminar los campos no necesarios después de la asignación
+            unset($detalle->articulo_nombre);
+            unset($detalle->menu_nombre);
+
+            return $detalle;
+        });
 
         return ['detalles' => $detalles];
     }
+
+
     public function pdf(Request $request, $id)
     {
         $venta = Venta::join('personas', 'ventas.idcliente', '=', 'personas.id')

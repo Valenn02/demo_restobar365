@@ -91,6 +91,8 @@ Vue.component('categoriamenu', require('./components/CategoriaMenu.vue'));
 Vue.component('qr', require('./components/Qrvista.vue'));
 Vue.component('reporteventastabla', require('./components/ReporteVentasTabla.vue'));
 
+Vue.component("reporteventasdetallado", require("./components/ReporteVentasDetallado.vue"));
+Vue.component("reporteinventariofisico",require("./components/ReporteInventarioFisico.vue"));
 
 const app = new Vue({
     el: '#app',
