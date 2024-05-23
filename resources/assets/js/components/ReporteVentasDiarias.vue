@@ -152,6 +152,7 @@ methods : {
         generarReporte() {
             let me = this;
             var url = '/ventas-diarias?fecha=' + me.fecha + '&idCategoria=' + me.idcategoria;
+            console.log(url);
 
         axios.get(url)
             .then(function (response) {
