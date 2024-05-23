@@ -246,63 +246,61 @@
                         <div class="col-md-4 " style="max-width: none ;margin: 0 auto;">
                             <h6 class="mt-3">DETALLES DE LA VENTA</h6>
                             <div class="form-group row border">
-                                <div class="col-md-3">
-                                    <div v-show="!paraLlevar" class="form-group">
-                                        <label for=""><strong>Mesero(*)</strong></label>
-                                        <input type="text" id="mesero" class="form-control" placeholder="Nombre del Mesero"
-                                        v-model="usuario_autenticado" ref="mesero" readonly>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="tipo_documento" class="form-control" readonly value="5">
-                                <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id" ref="complementoIdRef" readonly>
-                                <input type="hidden" id="usuarioAutenticado" class="form-control" v-model="usuarioAutenticado" readonly>
-                                <input type="hidden" id="idAlmacen" class="form-control" readonly value="1">
-                                <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id"
-                                ref="complementoIdRef" readonly>
-                                <input type="hidden" id="puntoVentaAutenticado" class="form-control" v-model="puntoVentaAutenticado"
-                                readonly>
+                                        <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for=""><strong>Mesero(*)</strong></label>
+                                            <input type="text" id="mesero" class="form-control" placeholder="Nombre del Mesero" v-model="usuario_autenticado" ref="mesero" readonly>
+                                        </div>
+                                        </div>
 
-                                <div  v-show="!paraLlevar" class="col-md-2">
-                                    <div class="form-group">
-                                        <label><strong>Num Mesa(*)</strong></label>
-                                        <input type="number" id="mesa" class="form-control" v-model="mesa">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label><strong>Número Ticket</strong></label>
-                                        <input type="text" id="num_comprobante" class="form-control" v-model="num_comprob" :readonly="scodigorecepcion !== 5 && scodigorecepcion !== 6 && scodigorecepcion !== 7">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label><strong>Tipo Comprobante(*)</strong></label>
-                                        <select class="form-control" v-model="tipo_comprobante" ref="tipoComprobanteRef">
+                                        <input type="hidden" id="tipo_documento" class="form-control" readonly value="5">
+                                        <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id" ref="complementoIdRef" readonly>
+                                        <input type="hidden" id="usuarioAutenticado" class="form-control" v-model="usuarioAutenticado" readonly>
+                                        <input type="hidden" id="idAlmacen" class="form-control" readonly value="1">
+                                        <input type="hidden" id="complemento_id" class="form-control" v-model="complemento_id" ref="complementoIdRef" readonly>
+                                        <input type="hidden" id="puntoVentaAutenticado" class="form-control" v-model="puntoVentaAutenticado" readonly>
+
+                                        <div v-show="mostrarMesa" class="col-md-2">
+                                        <div class="form-group">
+                                            <label><strong>Num Mesa(*)</strong></label>
+                                            <input type="number" id="mesa" class="form-control" v-model="mesa">
+                                        </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><strong>Número Ticket</strong></label>
+                                            <input type="text" id="num_comprobante" class="form-control" v-model="num_comprob" ref="numeroComprobanteRef" readonly>
+                                        </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><strong>Tipo Comprobante(*)</strong></label>
+                                            <select class="form-control" v-model="tipo_comprobante" ref="tipoComprobanteRef">
                                             <option value="0">Seleccione</option>
                                             <option value="TICKET">Ticket</option>
                                             <option value="FACTURA">Factura</option>
                                             <option value="BOLETA">Boleta</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="" class="font-weight-bold">Para llevar:
-                                            <span class="text-danger">*</span>
+                                            </select>
+                                        </div>
+                                        </div>
 
-                                        </label>
-                                    </div>
-                                    <div><InputSwitch v-model="paraLlevar" style="transform: scale(0.75);"/></div>
-                                </div>
+                                        <div class="col-md-4">
+                                            <select v-model="tipo_entrega" class="form-control">
+                                                <option disabled value="">Seleccione</option>
+                                                <option v-for="tipo in tipoEntregaOptions" :key="tipo" :value="tipo">{{ tipo }}</option>
+                                            </select>    
+                                        </div>
 
-                                <div class="col-md-12">
-                                    <div v-show="errorVenta" class="form-group row div-error">
-                                        <div class="text-center text-error">
+                                        <div class="col-md-12">
+                                        <div v-show="errorVenta" class="form-group row div-error">
+                                            <div class="text-center text-error">
                                             <div v-for="error in errorMostrarMsjVenta" :key="error" v-text="error"></div>
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
@@ -973,6 +971,9 @@ export default {
             estadoTransaccion: null,
             currency: 'BOB', // Define tu moneda
 
+            tipo_entrega: '',
+            tipoEntregaOptions: ['Llevar', 'Aqui', 'Entregas'],
+
             // primeVue variables
             paraLlevar: false,
             categoria_busqueda: '',
@@ -1136,10 +1137,18 @@ export default {
         },
         documento(newDocumento) {
             this.mostrarCampoCorreo = (newDocumento === '99002' || newDocumento === '99003');
+        },
+
+        tipo_entrega(newVal) {
+            console.log('Tipo de entrega seleccionado:', newVal);
         }
     },
 
     computed: {
+        mostrarMesa() {
+            return this.tipo_entrega === 'Aqui';
+        },
+
         isActived: function () {
             return this.pagination.current_page;
         },
@@ -2218,7 +2227,14 @@ export default {
                 return;
             }
 
-            let tipoEntregaValor = this.mesa;
+            let tipoEntregaValor;
+            if (this.tipo_entrega === 'Aqui') {
+                tipoEntregaValor = this.mesa;
+            } else if (this.tipo_entrega === 'Llevar') {
+                tipoEntregaValor = 'L';
+            } else if (this.tipo_entrega === 'Entregas') {
+                tipoEntregaValor = 'D';
+            }
 
             this.mostrarSpinner = true;
             this.idtipo_pago = idtipo_pago;
