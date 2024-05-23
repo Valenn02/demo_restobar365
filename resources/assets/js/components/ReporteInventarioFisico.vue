@@ -390,7 +390,7 @@ import * as XLSX from 'xlsx-js-style';
 
                 //FILTROS
                 tituloModal2: '',
-                modal: 0,
+                modal: 1,
                 modal2: false,
                 errores: {},
                 nombre: '',

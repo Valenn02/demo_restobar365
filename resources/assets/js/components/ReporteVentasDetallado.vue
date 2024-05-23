@@ -1678,85 +1678,7 @@ export default {
 
 
 
-        exportarExcel() {
-            const workbook = XLSX.utils.book_new();
-            const worksheet = XLSX.utils.aoa_to_sheet([]);
-            const startRow = 5;
-            
-            // Merge de celdas para el título
-            worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 9 } }];
-            // Título del reporte
-            worksheet['A1'] = { t: 's', v: 'RESUMEN DE VENTAS POR DOCUMENTOS', s: { 
-                font: { sz: 16, bold: true, color: { rgb: 'FFFFFF' } },
-                alignment: { horizontal: 'center', vertical: 'center' },
-                fill: { fgColor: { rgb: '3669a8' } } } };
 
-            // Estilo para la fecha
-            const fechaStyle = { font: { bold: true, color: { rgb: '000000' } } };
-            // Fechas de inicio y fin
-            worksheet['A2'] = { t: 's', v: `Fecha inicio: ${this.fechaInicio}`, s: fechaStyle };
-            worksheet['C2'] = { t: 's', v: `Fecha fin: ${this.fechaFin}`, s: fechaStyle };
-            worksheet['F2'] = { t: 's', v: `Sucursal: ${this.sucursalseleccionada.nombre}`, s: fechaStyle };
-            worksheet['A3'] = { t: 's', v: `Ventas: ${this.criterioEstado}`, s: fechaStyle };
-            worksheet['C3'] = { t: 's', v: `Cliente: ${this.clienteseleccionada.nombre}`, s: fechaStyle };
-
-
-            // Estilo para los encabezados
-            const headerStyle = { font: { bold: true, color: { rgb: 'FFFFFF' } }, fill: { fgColor: { rgb: '3669a8' } } };
-            // Cabeceras de las columnas
-            const headers = ['Factura', 'Sucursal', 'Fecha', 'Tipo de cambio','Tipo de venta','Ejecutivo de Venta','Nombre Ejecutivo de Venta','Cliente','Importe Bs','Importe US'];
-
-            // Añadir las cabeceras a la hoja de cálculo
-            headers.forEach((header, index) => {
-                worksheet[XLSX.utils.encode_cell({ r: 3, c: index })] = { t: 's', v: header, s: headerStyle };
-            });
-
-            // Añadir los datos al kardex
-            Object.values(this.arrayReporte).forEach((item, rowIndex) => {
-                const rowData = [
-                    item.Factura,
-                    item.Nombre_sucursal,
-                    item.fecha_hora,
-                    item.Tipo_Cambio,
-                    item.Tipo_venta,
-                    item.nombre_rol,
-                    item.usuario,
-                    item.nombre,
-                    item.importe_BS,
-                    item.importe_usd,
-                ];
-
-                // Añadir la fila al kardex
-                XLSX.utils.sheet_add_aoa(worksheet, [rowData], { origin: `A${startRow + rowIndex}` });
-            });
-
-            // Añadir el total ganado al final del reporte
-            
-           // const totalRow = [`Total Ganado: Bs. ${this.total_saldo}`];
-            //worksheet['!merges'].push({ s: { r: startRow + Object.values(this.sortedResultados).length, c: 0 }, e: { r: startRow + Object.values(this.sortedResultados).length, c: 3 } });
-
-            // Establecer el ancho de las columnas
-            const columnWidths = [
-                { wch: 21.56 },
-                { wch: 16.0 },   
-                { wch: 22.22 },
-                { wch: 15.14 },
-                { wch: 14.78 },
-                { wch: 17.11 },
-                { wch: 25.0 },
-                { wch: 26.67 },
-                { wch: 13.11 },
-                { wch: 12.78 },
-
-            ];
-            worksheet['!cols'] = columnWidths;
-
-            // Añadir la hoja de cálculo al libro
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Resumen Ventas por Documento');
-
-            // Descargar el archivo
-            XLSX.writeFile(workbook, 'reporte_resumen_ventas_por_documento.xlsx');
-        },
         
         exportarExcelDetallado() {
             const workbook = XLSX.utils.book_new();
@@ -1791,8 +1713,7 @@ export default {
                 
                 // Encabezados generales
                 const headersGenerales = [
-                    'Factura', 'Sucursal', 'Fecha', 'Tipo_Cambio', 'Tipo de venta',
-                    'Ejecutivo de Venta', 'Nombre Ejecutivo de Venta', 'Cliente', 'Importe Bs', 'Importe Bs'
+                    'Factura', 'Sucursal', 'Fecha', 'Tipo_entrega', 'Tipo_venta', 'Vendedor', 'Cliente', 'Importe_Bs'
                 ];
 
                 // Estilo para los encabezados generales
@@ -1820,7 +1741,7 @@ export default {
                 worksheet[XLSX.utils.encode_cell({ r: startRow + 2, c: 0 })] = { t: 's', v: '', s: {} };
 
                 // Encabezados del detalle
-                const headersDetalle = ['Codigo item', 'Marca', 'Linea', 'Industria', 'Descripcion', 'Unidad', 'Cantidad', 'P/U', 'Importe Bs', 'Importe US'];
+                const headersDetalle = ['Codigo item', 'Descripcion', 'Cantidad', 'P/U', 'Importe Bs'];
 
                 // Estilo para los encabezados del detalle
                 const headerDetalleStyle = { font: { bold: true, color: { rgb: 'FFFFFF' } }, fill: { fgColor: { rgb: '2F75B5' } } };
@@ -1837,16 +1758,11 @@ export default {
                 // Datos del detalle de la venta
                 venta.forEach((item, rowIndex) => {
                     const rowDataDetalle = [
-                        item.codigo_item,
-                        item.nombre_marca,
-                        item.nombre_categoria,
-                        item.nombre_industria,
+                        item.codigoComida,
                         item.nombre_articulo,
-                        item.medida,
                         item.cantidad,
                         item.precio_unitario,
                         item.precio,
-                        item.importe_usd
                     ];
                     XLSX.utils.sheet_add_aoa(worksheet, [rowDataDetalle], { origin: `A${startRow +5 + rowIndex}` });
                 });
