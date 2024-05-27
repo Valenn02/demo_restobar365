@@ -85,40 +85,25 @@ class MenuController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
 
-        if ($buscar == '') {
-            $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
-
-                ->select(
-                    'menu.id',
-                    'menu.idcategoria_menu',
-                    'menu.codigo',
-                    'menu.nombre',
-                    'menu.precio_venta',
-                    'menu.descripcion',
-                    'menu.condicion',
-                    'menu.fotografia',
-                    'categoria_menu.nombre as nombre_categoria',
-                    'categoria_menu.codigo as codigoProductoSin'
-
-                )
-                ->orderBy('menu.id', 'desc')->get();
-        } else {
-            $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu', '=', 'categoria_menu.id')
-
-                ->select(
-                    'menu.id',
-                    'menu.idcategoria_menu',
-                    'menu.nombre',
-                    'menu.precio_venta',
-                    'menu.descripcion',
-                    'menu.condicion',
-                    'menu.fotografia',
-                    'categoria_menu.nombre as nombre_categoria',
-
-                )
-                ->where('menu.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('menu.id', 'desc')->get();
-        }
+        $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu','=','categoria_menu.id')
+            ->select(
+                'menu.id',
+                'menu.idcategoria_menu',
+                'menu.codigo',
+                'menu.nombre',
+                'menu.precio_venta',
+                'menu.descripcion',
+                'menu.condicion',
+                'menu.fotografia',
+                'categoria_menu.nombre as nombre_categoria',
+                'categoria_menu.codigo as codigoProductoSin',
+                'categoria_menu.descripcion',
+                'categoria_menu.condicion'
+            )
+            ->where('menu.condicion','=',1)
+            ->where('categoria_menu.condicion','=',1)
+            ->orderBy('menu.id', 'desc')
+            ->get();
 
         return ['articulos' => $menu];
     }
@@ -195,7 +180,22 @@ class MenuController extends Controller
             $ruta = public_path("img/menu/");
 
             // Copiar la imagen al directorio
-            copy($imagen->getRealPath(), $ruta . $nombreimagen);
+            //copy($imagen->getRealPath(), $ruta . $nombreimagen);
+            //$menu->fotografia = $nombreimagen;
+
+            $image = Image::make($imagen);
+
+            $width = $image->width();
+            $height = $image->height();
+
+            if ($height > $width) {
+                $image->fit(500, 500);
+            } else {
+                $image->fit(500, 500);
+            }
+
+            $image->save($ruta . $nombreimagen);
+
             $menu->fotografia = $nombreimagen;
         }
         $menu->save();

@@ -37,7 +37,7 @@
             </form>
         </div>
         <div class="right">
-            <img class="portada" src="img/logoahuma2.jpg" alt="">
+            <img class="portada" src="img/kurkuma3.png" alt="">
         </div>
     </div>
 </div>
