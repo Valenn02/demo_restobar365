@@ -430,6 +430,7 @@ class VentaController extends Controller
         return $pdf->setPaper('a4', 'landscape')->download('venta-' . $numventa[0]->num_comprobante . '.pdf');
 
     }
+
     public function store(Request $request)
     {
         if (!$request->ajax())
@@ -441,7 +442,7 @@ class VentaController extends Controller
             $descu = '';
             $valorMaximoDescuentoEmpresa = Empresa::first();
             $valorMaximo = $valorMaximoDescuentoEmpresa->valorMaximoDescuento;
-            $detalles = $request->data; //Array de detalles
+            $detalles = $request->data; // Array de detalles
             $idAlmacen = $request->idAlmacen;
 
             foreach ($detalles as $ep => $det) {
@@ -459,9 +460,38 @@ class VentaController extends Controller
 
                 if ($ultimaCaja) {
                     if ($ultimaCaja->estado == '1') {
+
+                        foreach ($detalles as $det) {
+                            $enMenu = Menu::where('codigo', $det['codigoComida'])->exists();
+                            $enInventario = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+                                                    ->where('inventarios.idalmacen', $idAlmacen)
+                                                    ->where('articulos.codigo', $det['codigoComida'])
+                                                    ->exists();
+
+                            if (!$enMenu && !$enInventario) {
+                                return [
+                                    'id' => -1,
+                                    'error' => 'El artículo ' . $det['codigoComida'] . ' no está en el inventario ni en el menú'
+                                ];
+                            }
+
+                            if ($enInventario) {
+                                $stockArticulo = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
+                                                        ->where('inventarios.idalmacen', $idAlmacen)
+                                                        ->where('articulos.codigo', $det['codigoComida'])
+                                                        ->first();
+
+                                if ($stockArticulo->saldo_stock < $det['cantidad']) {
+                                    return [
+                                        'id' => -1,
+                                        'error' => 'Stock insuficiente para el artículo ' . $det['codigoComida']
+                                    ];
+                                }
+                            }
+                        }
+
                         $venta = new Venta();
                         $venta->idcliente = $request->idcliente;
-                        //$venta->idcliente = NULL;
                         $venta->idusuario = \Auth::user()->id;
                         $venta->idtipo_pago = $request->idtipo_pago;
                         $venta->cliente = $request->cliente;
@@ -476,7 +506,6 @@ class VentaController extends Controller
                         $venta->observacion = $request->observacion;
                         $venta->estado = 'Registrado';
                         $venta->idcaja = $ultimaCaja->id;
-                        //---------registro credito_Ventas---
                         Log::info('DATOS REGISTRO ARTICULO VENTA:', [
                             'idcliente' => $request->idcliente,
                             'idusuario' => $request->id,
@@ -487,47 +516,9 @@ class VentaController extends Controller
                             'fecha_hora' => $request->fecha_hora,
                             'impuesto' => $request->impuesto,
                             'total' => $request->total,
-                            //'estado' => $request->precio_venta,
                             'idcaja' => $request->id,
                         ]);
                         $venta->save();
-                        //-----hasta aqui----
-
-                        /*if($request->idtipo_pago == 2){
-                            //----REGIStRADO DE CREDITOS_VENTAAS--
-                            $creditoventa = new CreditoVenta();
-                            $creditoventa->idventa = $venta->id;
-                            $creditoventa->idpersona = $request->idpersona;
-                            $creditoventa->numero_cuotas = $request->numero_cuotas;
-                            $creditoventa->tiempo_dias_cuota = $request->tiempo_dias_cuota;
-                            $creditoventa->estado = $request->estadocrevent;//--OJO CON ESTO REPIDE EN VARIOS
-                            Log::info('LLEGA_2 CREDITOS_VENTAS:', [
-                                'DATOS' => $creditoventa,
-                            ]);
-                            $creditoventa->save();
-                            //----HASTA AQUI REGIStRADO DE CREDITOS_VENTAS--
-
-                            //------para Ver que daTos llega
-                            $detallescuota = $request->cuotaspago;//Array de detalles
-                            //Recorro todos los elementos
-                            Log::info('LLEGA_3 CUOTAS_CREDITO:', [
-                                'DATOS' => $detallescuota,
-                            ]);
-                             //----REGIStRADO DE CUOTAS_CREDITO--
-                            foreach ($detallescuota as $detalle) {
-                                $cuotascredito = new CuotasCredito();
-                                $cuotascredito->idcredito = $creditoventa->id;
-                                $cuotascredito->fecha_pago = $detalle['fechaPago'];
-                                $cuotascredito->fecha_cancelado = $detalle['fechaCancelado'];
-                                $cuotascredito->precio_cuota = $detalle['precioCuota'];
-                                $cuotascredito->total_cancelado = $detalle['totalCancelado'];
-                                $cuotascredito->saldo = $detalle['saldo'];
-                                $cuotascredito->estado = $detalle['estadocuocre'];
-                                $cuotascredito->save();
-                            }
-                            //---hastaa qui REGIStRADO DE CUOTAS_CREDITO--
-
-                        }*/
 
                         $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
                         $ultimaCaja->save();
@@ -538,16 +529,12 @@ class VentaController extends Controller
                         ]);
 
                         foreach ($detalles as $ep => $det) {
-                            // Verificar si el código de comida está en la tabla Menu
                             $enMenu = Menu::where('codigo', $det['codigoComida'])->exists();
-                            
-                            // Verificar si el código de comida está en la tabla Inventario
                             $enInventario = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
-                                                       ->where('inventarios.idalmacen', $idAlmacen)
-                                                       ->where('articulos.codigo', $det['codigoComida'])
-                                                       ->exists();
-                        
-                            // Si el código de comida está en alguna de las dos tablas, guardar el detalle de venta
+                                                    ->where('inventarios.idalmacen', $idAlmacen)
+                                                    ->where('articulos.codigo', $det['codigoComida'])
+                                                    ->exists();
+
                             if ($enMenu || $enInventario) {
                                 $detalle = new DetalleVenta();
                                 $detalle->idventa = $venta->id;
@@ -559,19 +546,17 @@ class VentaController extends Controller
 
                                 $_SESSION['sidAlmacen'] = $idAlmacen;
                                 $_SESSION['sdetalle'] = $detalles;
-                        
-                                // Si el código de comida está en la tabla Inventario, disminuir el stock
+
                                 if ($enInventario) {
                                     $disminuirStock = Inventario::join('articulos', 'inventarios.idarticulo', '=', 'articulos.id')
-                                                                 ->where('inventarios.idalmacen', $idAlmacen)
-                                                                 ->where('articulos.codigo', $det['codigoComida'])
-                                                                 ->firstOrFail();
+                                                                ->where('inventarios.idalmacen', $idAlmacen)
+                                                                ->where('articulos.codigo', $det['codigoComida'])
+                                                                ->firstOrFail();
                                     $disminuirStock->saldo_stock -= $det['cantidad'];
                                     $disminuirStock->save();
                                 }
                             }
                         }
-                        
 
                         $fechaActual = date('Y-m-d');
                         $numVentas = DB::table('ventas')->whereDate('created_at', $fechaActual)->count();
@@ -612,8 +597,13 @@ class VentaController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
+            return [
+                'id' => -1,
+                'error' => 'Ha ocurrido un error al registrar la venta'
+            ];
         }
     }
+
 
     public function revertirInventario($id)
     {
@@ -662,7 +652,7 @@ class VentaController extends Controller
         }
     }
     
-    /*public function eliminarVenta($id)
+    public function eliminarVenta($id)
     {
         try {
             $venta = Venta::findOrFail($id);
@@ -672,7 +662,37 @@ class VentaController extends Controller
         } catch (\Exception $e) {
             return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
         }
-    }*/
+    }
+
+    public function eliminarVentaFalloSiat($id)
+{
+    try {
+        DB::beginTransaction();
+
+        // Eliminar todas las facturas relacionadas con la venta
+        $facturas = Factura::where('idventa', $id)->get();
+        foreach ($facturas as $factura) {
+            $factura->delete();
+        }
+
+        // Eliminar todos los detalles de la venta
+        $detallesVenta = DetalleVenta::where('idventa', $id)->get();
+        foreach ($detallesVenta as $detalle) {
+            $detalle->delete();
+        }
+
+        // Eliminar la venta
+        $venta = Venta::findOrFail($id);
+        $venta->delete();
+
+        DB::commit();
+        return response()->json('Venta eliminada correctamente', 200);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
+    }
+}
+
 
     public function desactivar(Request $request)
     {

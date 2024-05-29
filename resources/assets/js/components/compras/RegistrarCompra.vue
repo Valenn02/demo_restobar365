@@ -103,7 +103,7 @@
     </div>
         <!-- Parte Derecha con la Imagen -->
         <div class="col-md-2" v-if="arrayArticuloSeleccionado.id">
-            <img :src="'img/articulo/' + this.arrayArticuloSeleccionado.fotografia + '?t=' + new Date().getTime()"
+            <img :src="'img/menu/' + this.arrayArticuloSeleccionado.fotografia + '?t=' + new Date().getTime()"
             v-if="this.arrayArticuloSeleccionado.fotografia"      width="50" height="50"  ref="imagen" class="card-img">
             <img v-else src="https://www.bicifan.uy/wp-content/uploads/2016/09/producto-sin-imagen.png"  alt="Imagen del Card" class="card-img">
         </div>

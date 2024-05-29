@@ -114,7 +114,7 @@
         @foreach ($venta as $v)
         <header>
             <div id="logo">
-                <img src="img/logo2.png" alt="CompartiendoCodigo" id="imagen">
+                <img src="img/kurkuma3.png" alt="CompartiendoCodigo" id="imagen">
             </div>
             <div id="datos">
                 <p id="encabezado">

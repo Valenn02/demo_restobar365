@@ -31,7 +31,7 @@
             <notification :notifications="notifications"></notification>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img src="img/usuarios/ahuma2.jpg" class="img-avatar" alt="Fotografia">
+                    <img src="img/kurkuma3.png" class="img-avatar" alt="Fotografia">
                     <span class="d-md-down-none">{{Auth::user()->usuario}}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
