@@ -33,16 +33,11 @@ class CajaController extends Controller
                         'salidas', 
                         'ventas',
                         'ventasContado',
-                        'ventasCredito',
-                        'pagosEfectivoVentas', 
-                        'pagosEfecivocompras', 
                         'compras', 
                         'comprasContado',
                         'saldoFaltante', 
-                        'PagoCuotaEfectivo', 
                         'saldoCaja', 
                         'estado',
-                        'cuotasventasCredito'
                     )
                     ->where('cajas.idsucursal', '=', $user->idsucursal);
 

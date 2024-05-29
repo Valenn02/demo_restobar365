@@ -62,55 +62,105 @@ class VentaController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
-        
+        $idrol = $usuario->idrol;
+        $idsucursal = $usuario->idsucursal;
 
         $codigoPuntoVenta = '';
-            if (!empty($usuario->idpuntoventa)) {
-                $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
-                if ($puntoVenta) {
-                    $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
-                }
+        if (!empty($usuario->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
             }
+        }
 
-        if ($buscar == '') {
-            $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
-                ->join('users', 'ventas.idusuario', '=', 'users.id')
-                ->select(
-                    'facturas.*',
-                    'facturas.correo as correo',
-                    'ventas.tipo_comprobante as tipo_comprobante',
-                    'ventas.serie_comprobante',
-                    'ventas.num_comprobante as num_comprobante',
-                    'ventas.fecha_hora as fecha_hora',
-                    'ventas.impuesto as impuesto',
-                    'ventas.total as total',
-                    'ventas.idtipo_pago',
-                    'ventas.estado as estado',
-                    'ventas.cliente as razonSocial',
-                    'ventas.documento as documentoid',
-                    'users.usuario as usuario'
-                )
-                ->orderBy('facturas.id', 'desc')->paginate(3);
-        } else {
-            $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
-                ->join('users', 'ventas.idusuario', '=', 'users.id')
-                ->select(
-                    'facturas.*',
-                    'facturas.correo as correo',
-                    'ventas.tipo_comprobante as tipo_comprobante',
-                    'ventas.serie_comprobante',
-                    'ventas.num_comprobante as num_comprobante',
-                    'ventas.fecha_hora as fecha_hora',
-                    'ventas.impuesto as impuesto',
-                    'ventas.total as total',
-                    'ventas.idtipo_venta',
-                    'ventas.estado as estado',
-                    'ventas.cliente as razonSocial',
-                    'ventas.documento as documentoid',
-                    'users.usuario as usuario'
-                )
-                ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('facturas.id', 'desc')->paginate(3);
+        if ($idrol == 1) {
+            // Mostrar todas las ventas de la sucursal del administrador
+            if ($buscar == '') {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_pago',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('users.idsucursal', '=', $idsucursal)
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            } else {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_venta',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('users.idsucursal', '=', $idsucursal)
+                    ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            }
+        } else if ($idrol == 2) {
+            // Mostrar solo las ventas del usuario logueado
+            if ($buscar == '') {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_pago',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('ventas.idusuario', '=', $usuario->id)
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            } else {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_venta',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('ventas.idusuario', '=', $usuario->id)
+                    ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            }
         }
 
         return [
@@ -127,6 +177,7 @@ class VentaController extends Controller
             'codigoPuntoVenta' => $codigoPuntoVenta
         ];
     }
+
 
     public function ventaOffline(Request $request)
     {
