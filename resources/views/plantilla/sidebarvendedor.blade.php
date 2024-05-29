@@ -8,16 +8,19 @@
                         Ventas
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-basket"></i> Ventas</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-basket"></i>Ventas</a>
                         <ul class="nav-dropdown-items">
                         <li @click="menu=16" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Apertura/Cierre Caja</a>
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Apertura/Cierre Caja</a>
                             </li>
                             <li @click="menu=39" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Ventas</a>
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Ventas</a>
                             </li>
                             <li @click="menu=6" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Clientes</a>
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Clientes</a>
+                            </li>
+                            <li @click="menu=49" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i>Ventas Listadas</a>
                             </li>
                         </ul>
                     </li>

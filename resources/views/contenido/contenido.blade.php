@@ -184,13 +184,18 @@
             <template v-if="menu==0">
                 <facturafueralinea></facturafueralinea>
             </template>
-
+            <template v-if="menu==39">
+                <facturafueralinea></facturafueralinea>
+            </template>
             <template v-if="menu==42">
                 <dashboard></dashboard>
             </template>
             
-            <template v-if="menu==5">
-                <venta></venta>
+            <template v-if="menu==49">
+                <reporteventastabla></reporteventastabla>
+            </template>
+            <template v-if="menu==16">
+                <caja></caja>
             </template>
 
             <template v-if="menu==6">

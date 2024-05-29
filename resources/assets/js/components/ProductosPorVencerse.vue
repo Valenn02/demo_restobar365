@@ -3,9 +3,8 @@
         <div class="table-responsive">
             <table class="table">
                 <thead>
-                    <tr class="table-light"> <!-- Agrega la clase "table-info" para dar estilo al título -->
-                        <th colspan="10">Productos por vencerse (necesita su venta rapida)
-
+                    <tr class="table-light"> <!-- Clase para el encabezado de la tabla -->
+                        <th colspan="8">Productos por vencerse (necesita su venta rápida)
                             <button type="button" @click="cargarExcel()" class="btn btn-light">
                                 <i class="fa fa-download" aria-hidden="true"></i>
                                 &nbsp;Descargar
@@ -13,36 +12,31 @@
                         </th>
                     </tr>
                     <tr>
-                        <th>Codigo</th>
+                        <th>Código</th>
                         <th>Producto</th>
                         <th>Proveedor</th>
-                        <th>Almacen</th>
+                        <th>Almacén</th>
                         <th>En Stock</th>
                         <th>Fecha vencimiento</th>
-                        <th>Dias vencimiento</th>
-                        <th></th>
-
+                        <th>Días vencimiento</th>
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="inventario in arrayInventario" :key="inventario.id">
-                
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.codigo"></td>
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_producto"></td>
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_proveedor"></td>
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_almacen"></td>
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.saldo_stock"></td>
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.fecha_vencimiento"></td>
-                        <td :style="{ backgroundColor: inventario.vencido == 0 ? '#f3dedf' : '#fdf8e2' }"> {{ inventario.dias_restantes >0 ?inventario.dias_restantes:0 }}</td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.codigo"></td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_producto"></td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_proveedor"></td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.nombre_almacen"></td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.saldo_stock"></td>
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }" v-text="inventario.fecha_vencimiento"></td>
                         <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }">
-                            <template v-if="inventario.vencido === 0">
-                                <span class="badge badge-pill badge-danger">Articulo vencido</span>
-                            </template>
-                            <template v-else>
-                                <span class="badge badge-pill badge-warning">Quedan pocos dias para vencerse</span>
-                            </template>
+                            {{ inventario.dias_restantes > 0 ? inventario.dias_restantes : 0 }}
                         </td>
-
+                        <td :style="{ backgroundColor: inventario.vencido === 0 ? '#f3dedf' : '#fdf8e2' }">
+                            <span v-if="inventario.vencido === 0" class="badge badge-pill badge-danger">Artículo vencido</span>
+                            <span v-else class="badge badge-pill badge-warning">Quedan pocos días para vencerse</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -50,20 +44,19 @@
         <nav>
             <ul class="pagination">
                 <li class="page-item" v-if="pagination.current_page > 1">
-                    <a class="page-link" href="#"
-                        @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
+                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
                 </li>
-                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page === isActived ? 'active' : '']">
                     <a class="page-link" href="#" @click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
                 </li>
                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                    <a class="page-link" href="#"
-                        @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
+                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
                 </li>
             </ul>
         </nav>
     </div>
 </template>
+
 <script>
 export default {
     data() {

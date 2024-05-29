@@ -6,7 +6,7 @@
         </ol> -->
         <div class="container-fluid">
             <div class="row d-flex mt-2 mb-2 justify-content-end align-items-center">
-                <label class="col-auto text-primary">Período</label>
+                <label class="col-auto text-primary">Periodo</label>
                 <div class="col-md-2 col-auto">
                     <select class="form-select" v-model="tipoPeriodo">
                         <option selected value="Mes">Este mes</option>
@@ -36,13 +36,13 @@
             </div>
 
             <div class="row d-flex justify-content-between">
-                <square-item :icono="'fa fa-usd'" :titulo="'Ventas'" :moneda="monedaPrincipal[1]"
+                <square-item :icono="'fa fa-usd'" :titulo="'Ventas'" :moneda="'BS'"
                     :cantidad="(sumaVentas).toFixed(2)"
                     :fondoDegradado="'linear-gradient(35deg, #028bd2, #6dd3dd)'" />
-                <square-item :icono="'fa fa-shopping-cart'" :titulo="'Gastos'" :moneda="monedaPrincipal[1]"
+                <square-item :icono="'fa fa-shopping-cart'" :titulo="'Gastos'" :moneda="'BS'"
                     :cantidad="(sumaCompras).toFixed(2)"
                     :fondoDegradado="'linear-gradient(35deg, #f67318, #f9ca38)'" />
-                <square-item :icono="'fa fa-angle-double-up'" :titulo="'Ganancias'" :moneda="monedaPrincipal[1]"
+                <square-item :icono="'fa fa-angle-double-up'" :titulo="'Ganancias'" :moneda="'BS'"
                     :cantidad="sumaVentas - sumaCompras" :fondoDegradado="'linear-gradient(35deg, #3b9c3f, #41d445)'" />
 
             </div>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <!--<div class="row">
                     <div class="col-md-4">
                         <TopArticulos :fechaInicio="fechaInicio" :fechaFin="fechaFin" />
                     </div>
@@ -95,9 +95,7 @@
                     <div class="col-md-4">
                         <TopVendedores :fechaInicio="fechaInicio" :fechaFin="fechaFin" :moneda="monedaPrincipal"/>
                     </div>
-
-
-                </div>
+                </div>-->
 
                 <div class="row">
                     <div class="col-md-6">
@@ -192,12 +190,12 @@ export default {
                 .then(response => {
                     const respuesta = response.data;
                     this.ingresos = respuesta.ingresos.map(item => {
-                        item.total *= parseFloat(this.monedaPrincipal[0]);
+                        item.total;
                         return item;
                     });
                     console.log(this.ingresos);
                     this.ventas = respuesta.ventas.map(item => {
-                        item.total *= parseFloat(this.monedaPrincipal[0]);
+                        item.total;
                         return item;
                     });
                     this.loadIngresos();

@@ -9,12 +9,17 @@ import Vue from 'vue'
 
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
+import Toasted from "vue-toasted";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
 import 'primeflex/primeflex.css';
 
 import 'primevue/resources/themes/lara-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(PrimeVue);
 Vue.use(ToastService);
@@ -32,6 +37,17 @@ window.Vue = require('vue');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+Vue.component("square-item", require("./components/dashboard/squareItem.vue"));
+Vue.component(
+  "TopVendedores",
+  require("./components/dashboard/TopVendedores.vue")
+);
+Vue.component("TopClientes", require("./components/dashboard/TopClientes.vue"));
+Vue.component(
+  "TopArticulos",
+  require("./components/dashboard/TopArticulos.vue")
+);
+Vue.component("icon-button", require("./components/buttons/IconButton.vue"));
 
 Vue.component('empresa', require('./components/Empresa.vue'));
 Vue.component('sucursal', require('./components/Sucursal.vue'));
@@ -93,6 +109,9 @@ Vue.component('reporteventastabla', require('./components/ReporteVentasTabla.vue
 
 Vue.component("reporteventasdetallado", require("./components/ReporteVentasDetallado.vue"));
 Vue.component("reporteinventariofisico",require("./components/ReporteInventarioFisico.vue"));
+
+Vue.use(BootstrapVue);
+Vue.use(Toasted);
 
 const app = new Vue({
     el: '#app',
