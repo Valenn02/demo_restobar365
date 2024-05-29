@@ -40,7 +40,7 @@
                             <td v-text="caja.fechaCierre"></td>
                             <td v-text="caja.saldoInicial"></td>
                           
-                            <td v-text="caja.ventas"></td>
+                            <td v-text="caja.ventasContado"></td>
                             <td v-text="caja.saldoFaltante"></td>
                            
                             <td v-text="caja.depositos"></td>

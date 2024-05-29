@@ -87,34 +87,68 @@ class CajaController extends Controller
     public function depositar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $caja = Caja::findOrFail($request->id);
-        $caja->depositos = ($request->depositos)+($caja->depositos);
-        $caja->save();
+        DB::beginTransaction();
 
-        $transacciones = new TransaccionesCaja();
-        $transacciones->idcaja = $request->id;
-        $transacciones->idusuario = \Auth::user()->id; 
-        $transacciones->fecha = now()->setTimezone('America/La_Paz');
-        $transacciones->transaccion = $request->transaccion;
-        $transacciones->importe = ($request->depositos);
-        $transacciones->save();
+        try {
+            $caja = Caja::findOrFail($request->id);
+            $caja->depositos = ($request->depositos)+($caja->depositos);
+            $caja->saldoCaja += $request->depositos;
+
+            $transacciones = new TransaccionesCaja();
+            $transacciones->idcaja = $request->id;
+            $transacciones->idusuario = \Auth::user()->id; 
+            $transacciones->fecha = now()->setTimezone('America/La_Paz');
+            $transacciones->transaccion = $request->transaccion;
+            $transacciones->importe = ($request->depositos);
+
+            $transacciones->save();
+
+            $caja->save();
+            DB::commit();
+
+            return response()->json('Retiro realizado correctamente', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json('Error al realizar el deposito: ' . $e->getMessage(), 500);
+        }
+        
+
+        
     }
 
     public function retirar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        $caja = Caja::findOrFail($request->id);
-        $caja->salidas = ($request->salidas)+($caja->salidas);
-        $caja->save();
 
-        $transacciones = new TransaccionesCaja();
-        $transacciones->idcaja = $request->id;
-        $transacciones->idusuario = \Auth::user()->id; 
-        $transacciones->fecha = now()->setTimezone('America/La_Paz');
-        $transacciones->transaccion = $request->transaccion;
-        $transacciones->importe = ($request->salidas);
-        $transacciones->save();
+        DB::beginTransaction();
+
+        try {
+            $caja = Caja::findOrFail($request->id);
+            $caja->salidas = ($request->salidas) + ($caja->salidas);
+            $caja->saldoCaja -= $request->salidas;
+
+            $transacciones = new TransaccionesCaja();
+            $transacciones->idcaja = $request->id;
+            $transacciones->idusuario = \Auth::user()->id;
+            $transacciones->fecha = now()->setTimezone('America/La_Paz');
+            $transacciones->transaccion = $request->transaccion;
+            $transacciones->importe = $request->salidas;
+
+            // Guardar la transacción primero
+            $transacciones->save();
+
+            // Si la transacción se guarda correctamente, guardar los cambios en la caja
+            $caja->save();
+
+            DB::commit();
+
+            return response()->json('Retiro realizado correctamente', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json('Error al realizar el retiro: ' . $e->getMessage(), 500);
+        }
     }
+
 
     public function arqueoCaja(Request $request)
     {
