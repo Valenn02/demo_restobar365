@@ -521,6 +521,7 @@ class VentaController extends Controller
                         $venta->save();
 
                         $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
+                        $ultimaCaja->saldoCaja += $request->total;
                         $ultimaCaja->save();
 
                         Log::info('venta', [
@@ -607,6 +608,8 @@ class VentaController extends Controller
 
     public function revertirInventario($id)
     {
+        $ultimaCaja = Caja::latest()->first();
+
         $idAlmacen = $_SESSION['sidAlmacen'];
         $detalles = $_SESSION['sdetalle'];
     
@@ -645,6 +648,9 @@ class VentaController extends Controller
 
         try {
             $venta = Venta::findOrFail($id);
+            $ultimaCaja->saldoCaja -= $venta->total;
+            $ultimaCaja->ventasContado -= $venta->total;
+            $ultimaCaja->save(); 
             $venta->delete();
             return response()->json('Venta eliminada correctamente', 200);
         } catch (\Exception $e) {
@@ -665,33 +671,37 @@ class VentaController extends Controller
     }
 
     public function eliminarVentaFalloSiat($id)
-{
-    try {
-        DB::beginTransaction();
+    {
+        $ultimaCaja = Caja::latest()->first();
 
-        // Eliminar todas las facturas relacionadas con la venta
-        $facturas = Factura::where('idventa', $id)->get();
-        foreach ($facturas as $factura) {
-            $factura->delete();
+        try {
+            DB::beginTransaction();
+            // Eliminar todas las facturas relacionadas con la venta
+            $facturas = Factura::where('idventa', $id)->get();
+            foreach ($facturas as $factura) {
+                $factura->delete();
+            }
+
+            // Eliminar todos los detalles de la venta
+            $detallesVenta = DetalleVenta::where('idventa', $id)->get();
+            foreach ($detallesVenta as $detalle) {
+                $detalle->delete();
+            }
+
+            // Eliminar la venta
+            $venta = Venta::findOrFail($id);
+            $ultimaCaja->saldoCaja -= $venta->total;
+            $ultimaCaja->ventasContado -= $venta->total;
+            $ultimaCaja->save();  
+            $venta->delete();
+
+            DB::commit();
+            return response()->json('Venta eliminada correctamente', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
         }
-
-        // Eliminar todos los detalles de la venta
-        $detallesVenta = DetalleVenta::where('idventa', $id)->get();
-        foreach ($detallesVenta as $detalle) {
-            $detalle->delete();
-        }
-
-        // Eliminar la venta
-        $venta = Venta::findOrFail($id);
-        $venta->delete();
-
-        DB::commit();
-        return response()->json('Venta eliminada correctamente', 200);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
     }
-}
 
 
     public function desactivar(Request $request)
