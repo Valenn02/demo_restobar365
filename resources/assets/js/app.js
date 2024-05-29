@@ -109,6 +109,9 @@ Vue.component('reporteventastabla', require('./components/ReporteVentasTabla.vue
 
 Vue.component("reporteventasdetallado", require("./components/ReporteVentasDetallado.vue"));
 Vue.component("reporteinventariofisico",require("./components/ReporteInventarioFisico.vue"));
+Vue.component("TransaccionErgeso", require("./components/Tables/TransaccionEgreso.vue"));
+Vue.component("TransaccionIngreso", require("./components/Tables/TransaccionIngreso.vue"));
+Vue.component("TransaccionExtra", require("./components/Tables/TransaccionExtra.vue"));
 
 Vue.use(BootstrapVue);
 Vue.use(Toasted);

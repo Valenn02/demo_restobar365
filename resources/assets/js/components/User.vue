@@ -36,7 +36,7 @@
                 <div class="table-responsive">
 
                     <table class="table table-bordered table-striped table-sm">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr>
                                 <th>Foto</th>
                                 <th>Nombre</th>
@@ -703,5 +703,31 @@ export default {
     .text-error {
         color: red !important;
         font-weight: bold;
+    }
+
+    .table-responsive {
+    margin: 20px 0;
+    }
+
+    .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    }
+
+    .btn-sm {
+    padding: 0.25rem 0.5rem;
+    }
+
+    .thead-dark th {
+    background-color: #343a40;
+    color: white;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+    border: 1px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
     }
 </style>

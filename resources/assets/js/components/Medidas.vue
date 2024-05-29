@@ -24,7 +24,7 @@
           </div>
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
-            <thead>
+            <thead class="thead-dark">
               <tr>
                 <th>Codigo Clasificador</th>
                 <th>Nombre</th>
@@ -98,11 +98,6 @@
                 </div>
               </div>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-            <button type="button" v-if="tipoAccion === 1" class="btn btn-primary" @click="registrarMedida()">Guardar</button>
-            <button type="button" v-if="tipoAccion === 2" class="btn btn-primary" @click="actualizarMedida()">Actualizar</button>
           </div>
         </div>
       </div>
@@ -186,123 +181,7 @@ export default {
       me.paginationMedida.current_page = page;
       me.listarMedidas(page, buscar, criterio);
     },
-    registrarMedida() {
-      if (this.validarMedida()) {
-        return;
-      }
-
-      let me = this;
-      axios
-        .post('/medida/registrar', {
-          descripcion_medida: this.descripcionMedida,
-          descripcion_corta: this.descripcionCorta,
-        })
-        .then(function (response) {
-          me.cerrarModal();
-          me.listarMedidas(1, '', 'descripcion_medida');
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    actualizarMedida() {
-      if (this.validarMedida()) {
-        return;
-      }
-
-      let me = this;
-      axios
-        .put('/medida/actualizar', {
-          descripcion_medida: this.descripcionMedida,
-          descripcion_corta: this.descripcionCorta,
-          id: this.medida_id,
-        })
-        .then(function (response) {
-          me.cerrarModal();
-          me.listarMedidas(1, '', 'descripcion_medida');
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    desactivarMedida(id){
-     swal({
-      title: 'Esta seguro de desactivar esta Medida?',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Aceptar!',
-      cancelButtonText: 'Cancelar',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false,
-      reverseButtons: true
-      }).then((result) => {
-      if (result.value) {
-          let me = this;
-
-          axios.put('/medida/desactivar',{
-              'id': id
-          }).then(function (response) {
-              me.listarMedidas(1,'','nombre');
-              swal(
-              'Desactivado!',
-              'El registro ha sido desactivado con éxito.',
-              'success'
-              )
-          }).catch(function (error) {
-              console.log(error);
-          });
-          
-          
-      } else if (
-          // Read more about handling dismissals
-          result.dismiss === swal.DismissReason.cancel
-      ) {
-          
-      }
-      }) 
-  },
-  activarMedida(id){
-     swal({
-      title: 'Esta seguro de activar esta Medida?',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Aceptar!',
-      cancelButtonText: 'Cancelar',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: false,
-      reverseButtons: true
-      }).then((result) => {
-      if (result.value) {
-          let me = this;
-
-          axios.put('/medida/activar',{
-              'id': id
-          }).then(function (response) {
-              me.listarMedidas(1,'','nombre');
-              swal(
-              'Activado!',
-              'El registro ha sido activado con éxito.',
-              'success'
-              )
-          }).catch(function (error) {
-              console.log(error);
-          });
-          
-          
-      } else if (
-          // Read more about handling dismissals
-          result.dismiss === swal.DismissReason.cancel
-      ) {
-          
-      }
-      }) 
-  },
+    
     // ... Métodos para desactivar y activar medidas ...
     validarMedida() {
       this.errorMedida = 0;
@@ -354,5 +233,29 @@ export default {
 </script>
 
 <style>
-/* ... Estilos ... */
+  .table-responsive {
+    margin: 20px 0;
+    }
+
+    .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    }
+
+    .btn-sm {
+    padding: 0.25rem 0.5rem;
+    }
+
+    .thead-dark th {
+    background-color: #343a40;
+    color: white;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+    border: 1px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+    }
 </style>

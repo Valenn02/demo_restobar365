@@ -507,7 +507,8 @@ class VentaController extends Controller
                 ];
             } else {
 
-                $ultimaCaja = Caja::latest()->first();
+                $ultimaCaja = Caja::where('idusuario', \Auth::user()->id)->latest()->first();
+                //dd($ultimaCaja);
 
                 if ($ultimaCaja) {
                     if ($ultimaCaja->estado == '1') {
