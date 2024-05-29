@@ -18,27 +18,29 @@ class IngresoController extends Controller
     public function index(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
- 
+
         $buscar = $request->buscar;
         $criterio = $request->criterio;
-         
-        if ($buscar==''){
-            $ingresos = Ingreso::join('personas','ingresos.idproveedor','=','personas.id')
-            ->join('users','ingresos.idusuario','=','users.id')
-            ->select('ingresos.id','ingresos.tipo_comprobante','ingresos.serie_comprobante',
-            'ingresos.num_comprobante','ingresos.fecha_hora','ingresos.impuesto','ingresos.total',
-            'ingresos.estado','personas.nombre','users.usuario')
-            ->orderBy('ingresos.id', 'desc')->paginate(3);
+
+        $user = \Auth::user();
+        $userRole = $user->idrol;
+
+        $query = Ingreso::join('personas', 'ingresos.idproveedor', '=', 'personas.id')
+            ->join('users', 'ingresos.idusuario', '=', 'users.id')
+            ->select('ingresos.id', 'ingresos.tipo_comprobante', 'ingresos.serie_comprobante',
+                    'ingresos.num_comprobante', 'ingresos.fecha_hora', 'ingresos.impuesto', 'ingresos.total',
+                    'ingresos.estado', 'personas.nombre', 'users.usuario');
+
+        if ($userRole == 3) {
+            $query->where('ingresos.idusuario', $user->id);
         }
-        else{
-            $ingresos = Ingreso::join('personas','ingresos.idproveedor','=','personas.id')
-            ->join('users','ingresos.idusuario','=','users.id')
-            ->select('ingresos.id','ingresos.tipo_comprobante','ingresos.serie_comprobante',
-            'ingresos.num_comprobante','ingresos.fecha_hora','ingresos.impuesto','ingresos.total',
-            'ingresos.estado','personas.nombre','users.usuario')
-            ->where('ingresos.'.$criterio, 'like', '%'. $buscar . '%')->orderBy('ingresos.id', 'desc')->paginate(3);
+
+        if ($buscar != '') {
+            $query->where('ingresos.' . $criterio, 'like', '%' . $buscar . '%');
         }
-         
+
+        $ingresos = $query->orderBy('ingresos.id', 'desc')->paginate(3);
+
         return [
             'pagination' => [
                 'total'        => $ingresos->total(),
@@ -51,6 +53,7 @@ class IngresoController extends Controller
             'ingresos' => $ingresos
         ];
     }
+
     public function obtenerCabecera(Request $request){
         if (!$request->ajax()) return redirect('/');
  

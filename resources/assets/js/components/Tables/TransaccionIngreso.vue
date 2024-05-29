@@ -64,6 +64,10 @@ export default {
 
                 },
                 {
+                    key: 'nombre_tipo_pago',
+                    label: 'Tipo Pago'
+                },
+                {
                     key: 'usuario',
                     label: 'Usuario',
                 }
@@ -91,7 +95,8 @@ export default {
         },
         getDatawithPage(pageNumber) {
             const url = new URL(this.data.path);
-            const ruta = url.pathname.substring(1); // Elimina 
+            const ruta = url.pathname.substring(1);
+            console.log(ruta);
             console.log(`${ruta}?page=${pageNumber}`);
             axios.get(`${ruta}?page=${pageNumber}`)
                 .then((response) => {

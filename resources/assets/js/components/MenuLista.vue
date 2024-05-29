@@ -33,7 +33,7 @@
                     </div>
                     <div style="overflow-x: auto;">
                         <table class="table table-bordered table-striped table-sm">
-                            <thead>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Codigo</th>
@@ -47,6 +47,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="articulo in listaArticulosConImagenSrc" :key="articulo.id">
+                                    <td>
                                     <button type="button" @click="abrirModal('articulo', 'actualizar', articulo)"
                                             class="btn btn-warning btn-sm">
                                             <i class="icon-pencil"></i>
@@ -63,6 +64,7 @@
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
+                                    </td>
                                     <td v-text="articulo.codigo"></td>
                                     <td v-text="articulo.nombre"></td>
                                     <td v-text="articulo.nombre_categoria"></td>
@@ -2268,5 +2270,30 @@ export default {
     }
     .border-red {
         border-color: red !important;
+    }
+    .table-responsive {
+    margin: 20px 0;
+    }
+
+    .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    }
+
+    .btn-sm {
+    padding: 0.25rem 0.5rem;
+    }
+
+    .thead-dark th {
+    background-color: #343a40;
+    color: white;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+    border: 1px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
     }
 </style>
