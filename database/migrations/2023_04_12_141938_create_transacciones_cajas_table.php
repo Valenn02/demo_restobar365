@@ -18,7 +18,7 @@ class CreateTransaccionesCajasTable extends Migration
             $table->integer('idcaja')->unsigned();
             $table->integer('idusuario')->unsigned();
             $table->dateTime('fecha');
-            $table->string('transaccion', 50);
+            $table->string('transaccion', 500);
             $table->decimal('importe', 11, 2);
             $table->timestamps();
 

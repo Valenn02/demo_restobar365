@@ -228,7 +228,7 @@
 
             @elseif (Auth::user()->idrol == 3)
             <template v-if="menu==0">
-                <facturafueralinea></facturafueralinea>
+                <dashboard></dashboard>
             </template>
 
             <template v-if="menu==42">

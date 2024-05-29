@@ -62,55 +62,105 @@ class VentaController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         $usuario = \Auth::user();
-        
+        $idrol = $usuario->idrol;
+        $idsucursal = $usuario->idsucursal;
 
         $codigoPuntoVenta = '';
-            if (!empty($usuario->idpuntoventa)) {
-                $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
-                if ($puntoVenta) {
-                    $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
-                }
+        if (!empty($usuario->idpuntoventa)) {
+            $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
+            if ($puntoVenta) {
+                $codigoPuntoVenta = $puntoVenta->codigoPuntoVenta;
             }
+        }
 
-        if ($buscar == '') {
-            $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
-                ->join('users', 'ventas.idusuario', '=', 'users.id')
-                ->select(
-                    'facturas.*',
-                    'facturas.correo as correo',
-                    'ventas.tipo_comprobante as tipo_comprobante',
-                    'ventas.serie_comprobante',
-                    'ventas.num_comprobante as num_comprobante',
-                    'ventas.fecha_hora as fecha_hora',
-                    'ventas.impuesto as impuesto',
-                    'ventas.total as total',
-                    'ventas.idtipo_pago',
-                    'ventas.estado as estado',
-                    'ventas.cliente as razonSocial',
-                    'ventas.documento as documentoid',
-                    'users.usuario as usuario'
-                )
-                ->orderBy('facturas.id', 'desc')->paginate(3);
-        } else {
-            $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
-                ->join('users', 'ventas.idusuario', '=', 'users.id')
-                ->select(
-                    'facturas.*',
-                    'facturas.correo as correo',
-                    'ventas.tipo_comprobante as tipo_comprobante',
-                    'ventas.serie_comprobante',
-                    'ventas.num_comprobante as num_comprobante',
-                    'ventas.fecha_hora as fecha_hora',
-                    'ventas.impuesto as impuesto',
-                    'ventas.total as total',
-                    'ventas.idtipo_venta',
-                    'ventas.estado as estado',
-                    'ventas.cliente as razonSocial',
-                    'ventas.documento as documentoid',
-                    'users.usuario as usuario'
-                )
-                ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('facturas.id', 'desc')->paginate(3);
+        if ($idrol == 1) {
+            // Mostrar todas las ventas de la sucursal del administrador
+            if ($buscar == '') {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_pago',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('users.idsucursal', '=', $idsucursal)
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            } else {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_venta',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('users.idsucursal', '=', $idsucursal)
+                    ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            }
+        } else if ($idrol == 2) {
+            // Mostrar solo las ventas del usuario logueado
+            if ($buscar == '') {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_pago',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('ventas.idusuario', '=', $usuario->id)
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            } else {
+                $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
+                    ->join('users', 'ventas.idusuario', '=', 'users.id')
+                    ->select(
+                        'facturas.*',
+                        'facturas.correo as correo',
+                        'ventas.tipo_comprobante as tipo_comprobante',
+                        'ventas.serie_comprobante',
+                        'ventas.num_comprobante as num_comprobante',
+                        'ventas.fecha_hora as fecha_hora',
+                        'ventas.impuesto as impuesto',
+                        'ventas.total as total',
+                        'ventas.idtipo_venta',
+                        'ventas.estado as estado',
+                        'ventas.cliente as razonSocial',
+                        'ventas.documento as documentoid',
+                        'users.usuario as usuario'
+                    )
+                    ->where('ventas.idusuario', '=', $usuario->id)
+                    ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
+                    ->orderBy('facturas.id', 'desc')->paginate(3);
+            }
         }
 
         return [
@@ -127,6 +177,7 @@ class VentaController extends Controller
             'codigoPuntoVenta' => $codigoPuntoVenta
         ];
     }
+
 
     public function ventaOffline(Request $request)
     {
@@ -456,7 +507,8 @@ class VentaController extends Controller
                 ];
             } else {
 
-                $ultimaCaja = Caja::latest()->first();
+                $ultimaCaja = Caja::where('idusuario', \Auth::user()->id)->latest()->first();
+                //dd($ultimaCaja);
 
                 if ($ultimaCaja) {
                     if ($ultimaCaja->estado == '1') {
@@ -521,6 +573,7 @@ class VentaController extends Controller
                         $venta->save();
 
                         $ultimaCaja->ventasContado = ($request->total) + ($ultimaCaja->ventasContado);
+                        $ultimaCaja->saldoCaja += $request->total;
                         $ultimaCaja->save();
 
                         Log::info('venta', [
@@ -607,6 +660,8 @@ class VentaController extends Controller
 
     public function revertirInventario($id)
     {
+        $ultimaCaja = Caja::latest()->first();
+
         $idAlmacen = $_SESSION['sidAlmacen'];
         $detalles = $_SESSION['sdetalle'];
     
@@ -645,6 +700,9 @@ class VentaController extends Controller
 
         try {
             $venta = Venta::findOrFail($id);
+            $ultimaCaja->saldoCaja -= $venta->total;
+            $ultimaCaja->ventasContado -= $venta->total;
+            $ultimaCaja->save(); 
             $venta->delete();
             return response()->json('Venta eliminada correctamente', 200);
         } catch (\Exception $e) {
@@ -665,33 +723,37 @@ class VentaController extends Controller
     }
 
     public function eliminarVentaFalloSiat($id)
-{
-    try {
-        DB::beginTransaction();
+    {
+        $ultimaCaja = Caja::latest()->first();
 
-        // Eliminar todas las facturas relacionadas con la venta
-        $facturas = Factura::where('idventa', $id)->get();
-        foreach ($facturas as $factura) {
-            $factura->delete();
+        try {
+            DB::beginTransaction();
+            // Eliminar todas las facturas relacionadas con la venta
+            $facturas = Factura::where('idventa', $id)->get();
+            foreach ($facturas as $factura) {
+                $factura->delete();
+            }
+
+            // Eliminar todos los detalles de la venta
+            $detallesVenta = DetalleVenta::where('idventa', $id)->get();
+            foreach ($detallesVenta as $detalle) {
+                $detalle->delete();
+            }
+
+            // Eliminar la venta
+            $venta = Venta::findOrFail($id);
+            $ultimaCaja->saldoCaja -= $venta->total;
+            $ultimaCaja->ventasContado -= $venta->total;
+            $ultimaCaja->save();  
+            $venta->delete();
+
+            DB::commit();
+            return response()->json('Venta eliminada correctamente', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
         }
-
-        // Eliminar todos los detalles de la venta
-        $detallesVenta = DetalleVenta::where('idventa', $id)->get();
-        foreach ($detallesVenta as $detalle) {
-            $detalle->delete();
-        }
-
-        // Eliminar la venta
-        $venta = Venta::findOrFail($id);
-        $venta->delete();
-
-        DB::commit();
-        return response()->json('Venta eliminada correctamente', 200);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json('Error al eliminar la venta: ' . $e->getMessage(), 500);
     }
-}
 
 
     public function desactivar(Request $request)

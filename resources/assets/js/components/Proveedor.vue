@@ -32,7 +32,7 @@
       <thead class="thead-dark">
         <tr>
           <th>Opciones</th>
-          <th>Nombre_proveedor</th>
+          <th>Nombre Proveedor</th>
           <th>Tipo Documento</th>
           <th>NIT/CI</th>
           <th>Dirección</th>
@@ -49,7 +49,7 @@
               @click="abrirModal('persona', 'actualizar', persona)"
               class="btn btn-warning btn-sm"
             >
-              <i class="fas fa-pencil-alt"></i>
+              <i class="icon-pencil"></i>
             </button>
           </td>
           <td>{{ persona.nombre }}</td>

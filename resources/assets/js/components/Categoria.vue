@@ -21,13 +21,13 @@
                                       <option value="nombre">Nombre</option>
                                       <option value="descripcion">Descripción</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarCategoria(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    
                                 </div>
                             </div>
                         </div>
                         <table class="table table-bordered table-striped table-sm">
-                            <thead>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Codigo</th>
@@ -446,5 +446,30 @@
     .text-error{
         color: red !important;
         font-weight: bold;
+    }
+    .table-responsive {
+    margin: 20px 0;
+    }
+
+    .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    }
+
+    .btn-sm {
+    padding: 0.25rem 0.5rem;
+    }
+
+    .thead-dark th {
+    background-color: #343a40;
+    color: white;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+    border: 1px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
     }
 </style>

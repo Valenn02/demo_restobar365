@@ -17,7 +17,7 @@
                 <div class="table-responsive">
 
                 <table class="table table-bordered table-striped table-sm">
-                    <thead>
+                    <thead class="thead-dark">
                         <tr>
                             <th>N°</th>
                             <th>Fecha Apertura</th>
@@ -40,7 +40,7 @@
                             <td v-text="caja.fechaCierre"></td>
                             <td v-text="caja.saldoInicial"></td>
                           
-                            <td v-text="caja.ventas"></td>
+                            <td v-text="caja.ventasContado"></td>
                             <td v-text="caja.saldoFaltante"></td>
                            
                             <td v-text="caja.depositos"></td>
@@ -263,111 +263,13 @@
                     <div class="modal-body">
                         <div>
                             <b-tabs content-class="mt-3">
-                                <b-tab title="Compras Realizadas (egresos)" active>
-
-                                    <TransaccionErgeso v-if="egreso" :data="egreso" />
-                                    <!-- <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>N°</th>
-                                                    <th>Fecha</th>
-                                                    <th>Proveedor</th>
-                                                    <th>Tipo Comprobante</th>
-                                                    <th>Número Comprobante</th>
-                                                    <th>importe</th>
-                                                    <th>Usuario</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-if="ArrayEgresos.length <= 0">
-                                                    <td colspan="100">
-                                                        Parece que aún no has realizado ningún egreso.
-                                                    </td>
-                                                </tr>
-                                                <tr v-for="(ingreso, index) in ArrayEgresos" :key="ingreso.id">
-                                                    <td v-text="index + 1"></td>
-                                                    <td v-text="ingreso.fecha_hora"></td>
-                                                    <td v-text="ingreso.nombre"></td>
-                                                    <td v-text="ingreso.tipo_comprobante"></td>
-                                                    <td v-text="ingreso.num_comprobante"></td>
-                                                    <td v-text="ingreso.total"></td>
-                                                    <td v-text="ingreso.usuario"></td>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div> -->
-                                </b-tab>
-                                <b-tab title="Ventas Realizadas (ingresos)">
+                                <b-tab title="Ventas Realizadas">
                                     <div class="table-responsive">
                                         <TransaccionIngreso v-if="ingreso" :data="ingreso" />
-
-                                        <!-- <table class="table table-bordered table-striped table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>N°</th>
-                                                    <th>Fecha</th>
-                                                    <th>Cliente</th>
-                                                    <th>Tipo Comprobante</th>
-                                                    <th>Número Comprobante</th>
-                                                    <th>importe</th>
-                                                    <th>Usuario</th>
-
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-if="ArrayIngresos.length <= 0">
-                                                    <td colspan="100">
-                                                        Parece que aún no has realizado ningún ingreso.
-                                                    </td>
-                                                </tr>
-                                                <tr v-for="(venta, index) in ArrayIngresos" :key="venta.id">
-                                                    <td v-text="index + 1"></td>
-                                                    <td v-text="venta.fecha_hora"></td>
-                                                    <td v-text="venta.nombre"></td>
-                                                    <td v-text="venta.tipo_comprobante"></td>
-                                                    <td v-text="venta.num_comprobante"></td>
-                                                    <td v-text="venta.total"></td>
-                                                    <td v-text="venta.usuario"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table> -->
                                     </div>
                                 </b-tab>
                                 <b-tab title="Transacciones Extras">
                                     <TransaccionExtra v-if="extra" :data="extra" />
-                                    <!-- <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>N°</th>
-                                                    <th>Fecha</th>
-                                                    <th>Transacción</th>
-                                                    <th>Importe</th>
-                                                    <th>Usuario</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-if="arrayTransacciones.length <= 0">
-                                                    <td colspan="100">
-                                                        Parece que aún no has realizado ninguna transacción.
-                                                    </td>
-                                                </tr>
-                                                <tr v-for="(transacciones, index) in arrayTransacciones"
-                                                    :key="transacciones.id">
-                                                    <td v-text="index + 1"></td>
-                                                    <td v-text="transacciones.fecha" width="90"></td>
-                                                    <td v-text="transacciones.transaccion"></td>
-                                                    <td v-text="transacciones.importe"></td>
-                                                    <td v-text="transacciones.usuario"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div> -->
                                 </b-tab>
                             </b-tabs>
                         </div>
@@ -1016,4 +918,29 @@ justify-content: center;
 color: red !important;
 font-weight: bold;
 }
+.table-responsive {
+    margin: 20px 0;
+    }
+
+    .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    }
+
+    .btn-sm {
+    padding: 0.25rem 0.5rem;
+    }
+
+    .thead-dark th {
+    background-color: #343a40;
+    color: white;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+    border: 1px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+    }
 </style>

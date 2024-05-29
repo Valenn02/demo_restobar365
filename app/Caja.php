@@ -17,16 +17,11 @@ class Caja extends Model
         'salidas', 
         'ventas',
         'ventasContado',
-        'ventasCredito',
-        'pagosEfectivoVentas', 
-        'pagosEfecivocompras', 
         'compras', 
         'comprasContado',
         'saldoFaltante', 
-        'PagoCuotaEfectivo', 
         'saldoCaja', 
-        'estado',
-        'cuotasventasCredito'
+        'estado'
     ];
 
     public function sucursal(){

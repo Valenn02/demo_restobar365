@@ -42,7 +42,7 @@
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-sm">
-                                <thead>
+                                <thead class="thead-dark">
                                     <tr>
                                         <th>Opciones</th>
                                         <th>ID</th>
@@ -2914,6 +2914,32 @@ export default {
         padding: 0;
         cursor: pointer;
         font-size: 18px; /* Ajusta el tamaño del icono según sea necesario */
+    }
+
+    .table-responsive {
+    margin: 20px 0;
+    }
+
+    .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    }
+
+    .btn-sm {
+    padding: 0.25rem 0.5rem;
+    }
+
+    .thead-dark th {
+    background-color: #343a40;
+    color: white;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+    border: 1px solid #dee2e6;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
     }
 
 </style>
