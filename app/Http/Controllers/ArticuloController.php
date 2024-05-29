@@ -32,6 +32,7 @@ class ArticuloController extends Controller
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
                 ->join('medidas', 'articulos.idmedida', '=', 'medidas.id')
+                ->leftJoin('inventarios', 'inventarios.idarticulo', '=', 'articulos.id')
 
                 ->select(
                     'articulos.id',
@@ -57,7 +58,8 @@ class ArticuloController extends Controller
                     'articulos.descripcion',
                     'articulos.condicion',
                     'articulos.fotografia',
-                    'articulos.unidad_paquete'
+                    'articulos.unidad_paquete',
+                    'inventarios.saldo_stock'
                 )
                 ->orderBy('articulos.id', 'desc')->get();
         } else {
@@ -79,7 +81,8 @@ class ArticuloController extends Controller
                     'articulos.descripcion',
                     'articulos.condicion',
                     'articulos.fotografia',
-                    'articulos.unidad_paquete'
+                    'articulos.unidad_paquete',
+                    'inventarios.saldo_stock'
                 )
                 ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
                 ->orderBy('articulos.id', 'desc')->get();
@@ -296,32 +299,24 @@ class ArticuloController extends Controller
                 $ruta = public_path("img/menu/");
 
                 // Copiar la imagen al directorio
-                copy($imagen->getRealPath(), $ruta . $nombreimagen);
+                //copy($imagen->getRealPath(), $ruta . $nombreimagen);
+                //$articulo->fotografia = $nombreimagen;
 
+                $image = Image::make($imagen);
+
+                $width = $image->width();
+                $height = $image->height();
+
+                if ($height > $width) {
+                    $image->fit(500, 500);
+                } else {
+                    $image->fit(500, 500);
+                }
+
+                $image->save($ruta . $nombreimagen);
 
                 $articulo->fotografia = $nombreimagen;
             }
-            Log::info('DATOS ACTUALIZADOS DE ARTICULO:', [
-                'idcategoria' => $request->idcategoria,
-                'idmarca' => $request->idmarca,
-                'idindustria' => $request->idindustria,
-                'idgrupo' => $request->idgrupo,
-                'idproveedor' => $request->idproveedor,
-                'codigo' => $request->codigo,
-                'nombre' => $request->nombre,
-                'nombre_generico' => $request->nombre_generico,
-                //'unidad_envase'=>$request->unidad_envase,
-                'precio_venta' => $request->precio_venta,
-                'stock' => $request->stock,
-                'descripcion' => $request->descripcion,
-                'fotografia' => $nombreimagen,
-                'idmedida' => $request->idmedida,
-                'precio_uno' => $request->precio_uno,
-                'precio_dos' => $request->precio_dos,
-                'precio_tres' => $request->precio_tres,
-                'precio_cuatro' => $request->precio_cuatro,
-
-            ]);
 
             $articulo->save();
 
