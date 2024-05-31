@@ -18,8 +18,8 @@ import 'primevue/resources/themes/lara-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+//import "bootstrap/dist/css/bootstrap.css";
+//import "bootstrap-vue/dist/bootstrap-vue.css";
 
 Vue.use(PrimeVue);
 Vue.use(ToastService);
@@ -28,9 +28,6 @@ require('./bootstrap');
 
 window.$ = window.jQuery = require('jquery');
 window.Vue = require('vue');
-
-//import Button from 'primevue/button';
-//Vue.component('Button', Button);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
