@@ -31,37 +31,39 @@
 
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-sm">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Opciones</th>
-                                        <th>Usuario</th>
-                                        <th>Cliente</th>
-                                        <th>Documento</th>
-                                        <th>Número Factura</th>
-                                        <th>Fecha Hora</th>
-                                        <th>Total</th>
-                                        <th>Estado</th>
-                                        <th> </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="venta in arrayVenta" :key="venta.idventa">
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Opciones</th>
+                                    <th>Usuario</th>
+                                    <th>Cliente</th>
+                                    <th>Documento</th>
+                                    <th>Número Factura</th>
+                                    <th>Fecha Hora</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="venta in arrayVenta" :key="venta.idventa" 
+                                    :class="{'table-success': venta.estado === 'Registrado', 
+                                                'table-danger': venta.estado !== 'Registrado' && venta.usuario !== 'admin',
+                                                'table-warning': venta.usuario === 'admin'}">
                                     <td>
-                                    <button type="button" @click="verVenta(venta.idventa)" class="btn btn-success btn-sm">
-                                        <i class="icon-eye"></i>
-                                    </button> &nbsp;
-
-                                    <template v-if="venta.estado == 'Registrado'">
-                                        <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
-                                        <i class="icon-trash"></i>
+                                        <button type="button" @click="verVenta(venta.idventa)" class="btn btn-success btn-sm">
+                                            <i class="icon-eye"></i>
                                         </button> &nbsp;
-                                    </template>
 
-                                    <button type="button" @click="imprimirTicket(venta.idventa)" class="btn btn-info btn-sm" >
-                                        Imprimir Ticket
-                                    </button>
+                                        <template v-if="venta.estado == 'Registrado'">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
+                                                <i class="icon-trash"></i>
+                                            </button> &nbsp;
+                                        </template>
 
+                                        <button type="button" @click="imprimirTicket(venta.idventa)" class="btn btn-info btn-sm">
+                                            Imprimir Ticket
+                                        </button>
                                     </td>
                                     <td v-text="venta.usuario"></td>
                                     <td v-text="venta.razonSocial"></td>
@@ -69,17 +71,21 @@
                                     <td v-text="venta.num_comprobante"></td>
                                     <td v-text="venta.fecha_hora"></td>
                                     <td v-text="venta.total"></td>
+                                    <td v-text="venta.estado"></td>
                                     <td>
-                                        <a @click="verificarFactura(venta.cuf, venta.numeroFactura)" target="_blank" class="btn btn-info"><i class="icon-note"></i></a>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary" type="button" @click="imprimirFactura(venta.id, venta.correo)"><i class="icon-printer"></i></button>
-                                            <button class="btn btn-danger" type="button" @click="anularFactura(venta.id, venta.cuf)"><i class="icon-close"></i></button>
+                                        <a @click="verificarFactura(venta.cuf, venta.numeroFactura)" target="_blank" class="btn btn-info">
+                                            <i class="icon-note"></i>
+                                        </a>
+                                        <button class="btn btn-primary" type="button" @click="imprimirFactura(venta.id, venta.correo)">
+                                            <i class="icon-printer"></i>
+                                        </button>
+                                        <button class="btn btn-danger" type="button" @click="anularFactura(venta.id, venta.cuf)">
+                                            <i class="icon-close"></i>
+                                        </button>
                                     </td>
                                 </tr>
-                                </tbody>
-
-                            </table>
+                            </tbody>
+                        </table>
                         </div>
                         <nav>
                             <ul class="pagination">
@@ -1774,4 +1780,9 @@ export default {
     .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, 0.05);
     }
+
+    .table-warning {
+        background-color: yellow;
+    }
+
 </style>
