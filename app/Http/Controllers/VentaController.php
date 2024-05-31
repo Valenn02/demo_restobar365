@@ -546,6 +546,7 @@ class VentaController extends Controller
                         $venta->idcliente = $request->idcliente;
                         $venta->idusuario = \Auth::user()->id;
                         $venta->idtipo_pago = $request->idtipo_pago;
+                        $venta->idsucursal = $request->idsucursal;
                         $venta->cliente = $request->cliente;
                         $venta->documento = $request->documento;
                         $venta->tipo_comprobante = $request->tipo_comprobante;

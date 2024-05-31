@@ -10,6 +10,7 @@ class Venta extends Model
         'idcliente', 
         'idusuario',
         'idtipo_pago',
+        'idsucursal',
         'cliente',
         'documento',
         'tipo_comprobante',
