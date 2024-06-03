@@ -1,9 +1,9 @@
 webpackJsonp([2],{
 
-/***/ 609:
+/***/ 944:
 /***/ (function(module, exports, __webpack_require__) {
 
-/*! @license DOMPurify 2.5.4 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.5.4/LICENSE */
+/*! @license DOMPurify 2.5.5 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.5.5/LICENSE */
 
 (function (global, factory) {
    true ? module.exports = factory() :
@@ -121,10 +121,6 @@ webpackJsonp([2],{
   var stringTrim = unapply(String.prototype.trim);
   var regExpTest = unapply(RegExp.prototype.test);
   var typeErrorCreate = unconstruct(TypeError);
-  function numberIsNaN(x) {
-    // eslint-disable-next-line unicorn/prefer-number-properties
-    return typeof x === 'number' && isNaN(x);
-  }
   function unapply(func) {
     return function (thisArg) {
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -296,7 +292,7 @@ webpackJsonp([2],{
      * Version label, exposed for easier checks
      * if DOMPurify is up to date or not
      */
-    DOMPurify.version = '2.5.4';
+    DOMPurify.version = '2.5.5';
 
     /**
      * Array of elements that DOMPurify removed during sanitation.
@@ -521,9 +517,6 @@ webpackJsonp([2],{
 
     /* Keep a reference to config to pass to hooks */
     var CONFIG = null;
-
-    /* Specify the maximum element nesting depth to prevent mXSS */
-    var MAX_NESTING_DEPTH = 255;
 
     /* Ideally, do not touch anything below this line */
     /* ______________________________________________ */
@@ -919,7 +912,7 @@ webpackJsonp([2],{
      * @return {Boolean} true if clobbered, false if safe
      */
     var _isClobbered = function _isClobbered(elm) {
-      return elm instanceof HTMLFormElement && (typeof elm.__depth !== 'undefined' && typeof elm.__depth !== 'number' || typeof elm.__removalCount !== 'undefined' && typeof elm.__removalCount !== 'number' || typeof elm.nodeName !== 'string' || typeof elm.textContent !== 'string' || typeof elm.removeChild !== 'function' || !(elm.attributes instanceof NamedNodeMap) || typeof elm.removeAttribute !== 'function' || typeof elm.setAttribute !== 'function' || typeof elm.namespaceURI !== 'string' || typeof elm.insertBefore !== 'function' || typeof elm.hasChildNodes !== 'function');
+      return elm instanceof HTMLFormElement && (typeof elm.nodeName !== 'string' || typeof elm.textContent !== 'string' || typeof elm.removeChild !== 'function' || !(elm.attributes instanceof NamedNodeMap) || typeof elm.removeAttribute !== 'function' || typeof elm.setAttribute !== 'function' || typeof elm.namespaceURI !== 'string' || typeof elm.insertBefore !== 'function' || typeof elm.hasChildNodes !== 'function');
     };
 
     /**
@@ -1078,7 +1071,7 @@ webpackJsonp([2],{
     // eslint-disable-next-line complexity
     var _isValidAttribute = function _isValidAttribute(lcTag, lcName, value) {
       /* Make sure attribute cannot clobber */
-      if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement || value === '__depth' || value === '__removalCount')) {
+      if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement)) {
         return false;
       }
 
@@ -1267,32 +1260,9 @@ webpackJsonp([2],{
         if (_sanitizeElements(shadowNode)) {
           continue;
         }
-        var parentNode = getParentNode(shadowNode);
-
-        /* Set the nesting depth of an element */
-        if (shadowNode.nodeType === 1) {
-          if (parentNode && parentNode.__depth) {
-            /*
-              We want the depth of the node in the original tree, which can
-              change when it's removed from its parent.
-            */
-            shadowNode.__depth = (shadowNode.__removalCount || 0) + parentNode.__depth + 1;
-          } else {
-            shadowNode.__depth = 1;
-          }
-        }
-
-        /*
-         * Remove an element if nested too deeply to avoid mXSS
-         * or if the __depth might have been tampered with
-         */
-        if (shadowNode.__depth >= MAX_NESTING_DEPTH || numberIsNaN(shadowNode.__depth)) {
-          _forceRemove(shadowNode);
-        }
 
         /* Deep shadow DOM detected */
         if (shadowNode.content instanceof DocumentFragment) {
-          shadowNode.content.__depth = shadowNode.__depth;
           _sanitizeShadowDOM(shadowNode.content);
         }
 
@@ -1422,32 +1392,9 @@ webpackJsonp([2],{
         if (_sanitizeElements(currentNode)) {
           continue;
         }
-        var parentNode = getParentNode(currentNode);
-
-        /* Set the nesting depth of an element */
-        if (currentNode.nodeType === 1) {
-          if (parentNode && parentNode.__depth) {
-            /*
-              We want the depth of the node in the original tree, which can
-              change when it's removed from its parent.
-            */
-            currentNode.__depth = (currentNode.__removalCount || 0) + parentNode.__depth + 1;
-          } else {
-            currentNode.__depth = 1;
-          }
-        }
-
-        /*
-         * Remove an element if nested too deeply to avoid mXSS
-         * or if the __depth might have been tampered with
-         */
-        if (currentNode.__depth >= MAX_NESTING_DEPTH || numberIsNaN(currentNode.__depth)) {
-          _forceRemove(currentNode);
-        }
 
         /* Shadow DOM detected, sanitize it */
         if (currentNode.content instanceof DocumentFragment) {
-          currentNode.content.__depth = currentNode.__depth;
           _sanitizeShadowDOM(currentNode.content);
         }
 
