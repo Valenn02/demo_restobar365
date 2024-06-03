@@ -802,12 +802,12 @@ class SiatController extends Controller
         return $result;        
     }
 
-    public function registroPuntoVenta($nombre, $descripcion, $nit, $idtipopuntoventa, $idsucursal, $puntoVenta, $codSucursal){
+    public function registroPuntoVenta($nombre, $descripcion, $nit, $idtipopuntoventa, $idsucursal, $puntoVenta, $codigoSucursal){
         $wsdl="https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionOperaciones?wsdl";
         $codigoAmbiente = 2;
         $codigoModalidad = 2;
         $codigoSistema = "77535546B712DD409D7A387";
-        $codigoSucursal = $codSucursal;
+        $codigoSucursal = $codigoSucursal;
         $codigoTipoPuntoVenta = $idtipopuntoventa;
         $cuis = $_SESSION['scuis'];
         $descripcion = $descripcion;
@@ -826,6 +826,7 @@ class SiatController extends Controller
             'nit' => $nit,
             'nombrePuntoVenta' => $nombrePuntoVenta
         ));
+        dd($params);
 
         $options = array(
             'http' => array(

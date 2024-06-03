@@ -34,6 +34,7 @@ use App\Medida;
 use App\MotivoAnulacion;
 use App\PuntoVenta;
 use App\Rol;
+use App\Sucursales;
 use Illuminate\Support\Facades\File;
 use Phar;
 use PharData;
@@ -56,8 +57,9 @@ class VentaController extends Controller
 
     public function index(Request $request)
     {
-        if (!$request->ajax())
+        if (!$request->ajax()) {
             return redirect('/');
+        }
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -65,6 +67,7 @@ class VentaController extends Controller
         $idrol = $usuario->idrol;
         $idsucursal = $usuario->idsucursal;
 
+        // Obtener el codigoPuntoVenta
         $codigoPuntoVenta = '';
         if (!empty($usuario->idpuntoventa)) {
             $puntoVenta = PuntoVenta::find($usuario->idpuntoventa);
@@ -73,6 +76,14 @@ class VentaController extends Controller
             }
         }
 
+        // Obtener el codigoSucursal
+        $codigoSucursal = '';
+        $sucursal = Sucursales::find($idsucursal);
+        if ($sucursal) {
+            $codigoSucursal = $sucursal->codigoSucursal;
+        }
+
+        // Construir la consulta en función del rol del usuario
         if ($idrol == 1) {
             // Mostrar todas las ventas de la sucursal del administrador
             if ($buscar == '') {
@@ -107,7 +118,7 @@ class VentaController extends Controller
                         'ventas.fecha_hora as fecha_hora',
                         'ventas.impuesto as impuesto',
                         'ventas.total as total',
-                        'ventas.idtipo_venta',
+                        'ventas.idtipo_pago',
                         'ventas.estado as estado',
                         'ventas.cliente as razonSocial',
                         'ventas.documento as documentoid',
@@ -118,7 +129,7 @@ class VentaController extends Controller
                     ->orderBy('facturas.id', 'desc')->paginate(3);
             }
         } else if ($idrol == 2) {
-            // Mostrar solo las ventas del usuario logueado
+            // Mostrar las ventas del usuario logueado y las ventas de los usuarios con idrol = 1 en la misma sucursal
             if ($buscar == '') {
                 $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
                     ->join('users', 'ventas.idusuario', '=', 'users.id')
@@ -137,7 +148,13 @@ class VentaController extends Controller
                         'ventas.documento as documentoid',
                         'users.usuario as usuario'
                     )
-                    ->where('ventas.idusuario', '=', $usuario->id)
+                    ->where(function($query) use ($usuario) {
+                        $query->where('ventas.idusuario', '=', $usuario->id)
+                            ->orWhere(function($query) use ($usuario) {
+                                $query->where('users.idrol', '=', 1)
+                                        ->where('users.idsucursal', '=', $usuario->idsucursal);
+                            });
+                    })
                     ->orderBy('facturas.id', 'desc')->paginate(3);
             } else {
                 $ventas = Factura::join('ventas', 'facturas.idventa', '=', 'ventas.id')
@@ -151,13 +168,19 @@ class VentaController extends Controller
                         'ventas.fecha_hora as fecha_hora',
                         'ventas.impuesto as impuesto',
                         'ventas.total as total',
-                        'ventas.idtipo_venta',
+                        'ventas.idtipo_pago',
                         'ventas.estado as estado',
                         'ventas.cliente as razonSocial',
                         'ventas.documento as documentoid',
                         'users.usuario as usuario'
                     )
-                    ->where('ventas.idusuario', '=', $usuario->id)
+                    ->where(function($query) use ($usuario, $criterio, $buscar) {
+                        $query->where('ventas.idusuario', '=', $usuario->id)
+                            ->orWhere(function($query) use ($usuario) {
+                                $query->where('users.idrol', '=', 1)
+                                        ->where('users.idsucursal', '=', $usuario->idsucursal);
+                            });
+                    })
                     ->where('ventas.' . $criterio, 'like', '%' . $buscar . '%')
                     ->orderBy('facturas.id', 'desc')->paginate(3);
             }
@@ -174,9 +197,11 @@ class VentaController extends Controller
             ],
             'ventas' => $ventas,
             'usuario' => $usuario,
-            'codigoPuntoVenta' => $codigoPuntoVenta
+            'codigoPuntoVenta' => $codigoPuntoVenta,
+            'codigoSucursal' => $codigoSucursal,
         ];
     }
+
 
 
     public function ventaOffline(Request $request)
@@ -1661,9 +1686,15 @@ class VentaController extends Controller
         $idtipopuntoventa = $request->idtipopuntoventa;
         $idsucursal = $request->idsucursal;
 
+        $codigoSucursal = '';
+        $sucursal = Sucursales::find($idsucursal);
+            if ($sucursal) {
+                $codigoSucursal = $sucursal->codigoSucursal;
+        }
+
         require "SiatController.php";
         $siat = new SiatController();
-        $res = $siat->registroPuntoVenta($nombre, $descripcion, $nit, $idtipopuntoventa, $idsucursal, $puntoVenta, $codSucursal);
+        $res = $siat->registroPuntoVenta($nombre, $descripcion, $nit, $idtipopuntoventa, $idsucursal, $puntoVenta, $codigoSucursal);
         // Verificar el valor de transacción y asignar el mensaje correspondiente
         if ($res->RespuestaRegistroPuntoVenta->transaccion === true) {
             $mensaje = $res->RespuestaRegistroPuntoVenta->codigoPuntoVenta;
