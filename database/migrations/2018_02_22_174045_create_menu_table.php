@@ -24,6 +24,8 @@ class CreateMenuTable extends Migration
             $table->string('descripcion', 256)->nullable(); //stock maximo
             $table->boolean('condicion');
 
+            $table->integer('idsucursal')->unsigned();
+            $table->foreign('idsucursal')->references('id')->on('sucursales');
 
             $table->timestamps();
         });

@@ -235,7 +235,18 @@
                                         @input="codigoVacio = false"
                                         placeholder="Codigo del plato">
                                     </div>              
-                                </div>             
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-control-label" for="email-input"><strong>Sucursal</strong></label>
+                                    <select v-model="idsucursal" class="form-control">
+                                        <option value="0" disabled>Seleccione</option>
+                                        <option v-for="sucursal in arraySucursal" :key="sucursal.id" :value="sucursal.id"
+                                            v-text="sucursal.nombre"></option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -905,6 +916,8 @@ export default {
             fotoMuestra: 'img/articulo/defecto.jpg',
             arrayArticulo: [],
             arrayBuscador: [],
+            arraySucursal: [],
+            idsucursal: '',
             modal: 0,
 
             tituloModal: '',
@@ -1117,6 +1130,19 @@ export default {
             }
             this.arrayBuscador = [];
             this.modal6 = false;
+        },
+
+        selectSucursal() {
+            let me = this;
+            var url = '/sucursal/selectSucursal';
+            axios.get(url).then(function (response) {
+                //console.log(response);
+                var respuesta = response.data;
+                me.arraySucursal = respuesta.sucursales;
+            })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         consultaProductosServicios() {
@@ -1496,6 +1522,7 @@ export default {
             formData.append('precio_venta', this.precio_venta);
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);
+            formData.append('idsucursal', this.idsucursal);
             
             console.log("FORMDATA",formData);
             axios.post('/menu/registrar', formData, {
@@ -1530,7 +1557,7 @@ export default {
             formData.append('precio_venta', this.precio_venta);
             formData.append('descripcion', this.descripcion);
             formData.append('fotografia', this.fotografia);
-
+            formData.append('idsucursal', this.idsucursal);
 
             axios.post('/menu/actualizar', formData, {
                 headers: {
@@ -1825,6 +1852,8 @@ export default {
             //if (!this.costo_compra) this.errorMostrarMsjArticulo.push("sin costo compra");
             if (!this.fotografia) this.errorMostrarMsjArticulo.push("Sin fotografia");
 
+            if (!this.idsucursal) this.errorMostrarMsjArticulo.push("Sin sucursal");
+
             if (this.errorMostrarMsjArticulo.length) this.errorArticulo = 1;
 
             return this.errorArticulo;
@@ -1832,6 +1861,7 @@ export default {
         cerrarModal() {
             this.modal = 0;
             this.tituloModal = '';
+            this.idsucursal = '';
 
             this.nombreProductoVacio= false;
             this.descripcionVacio= false;
@@ -2234,6 +2264,7 @@ export default {
         this.listarArticulo(1, this.buscar, this.criterio);
         this.listarPrecio();
         this.consultaProductosServicios();
+        this.selectSucursal();
     }
 }
 </script>

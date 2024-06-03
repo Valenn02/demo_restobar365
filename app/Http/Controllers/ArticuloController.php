@@ -27,12 +27,16 @@ class ArticuloController extends Controller
         $buscar = $request->buscar;
         $criterio = $request->criterio;
 
-        if ($buscar == '') {
+        $sucursalId = $request->idSucursalActual;
+
+        if ($buscar == null) {
             $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
                 ->join('medidas', 'articulos.idmedida', '=', 'medidas.id')
                 ->leftJoin('inventarios', 'inventarios.idarticulo', '=', 'articulos.id')
+                ->leftJoin('almacens', 'almacens.id','=','inventarios.idalmacen')
+                ->leftJoin('sucursales', 'sucursales.id','=','almacens.sucursal')
 
                 ->select(
                     'articulos.id',
@@ -59,13 +63,27 @@ class ArticuloController extends Controller
                     'articulos.condicion',
                     'articulos.fotografia',
                     'articulos.unidad_paquete',
-                    'inventarios.saldo_stock'
+                    'inventarios.saldo_stock',
+                    'inventarios.idalmacen as almacen_id',
+                    'sucursales.id as sucursal_id',
+                    'almacens.nombre_almacen',
+                    'sucursales.nombre as nombre_sucursal'
                 )
-                ->orderBy('articulos.id', 'desc')->get();
+                ->orderBy('articulos.id', 'desc');
+                //->where('sucursales.id','=',$sucursalId);
+                //->get();
+
+                //if ($sucursalId != 'todos'){
+                //    $articulos->where('sucursales.id','=',$sucursalId)->get();
+                //}
+
         } else {
             $articulos = Articulo::join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
                 ->join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
+                ->leftJoin('inventarios', 'inventarios.idarticulo', '=', 'articulos.id')
+                ->leftJoin('almacens', 'almacens.id','=','inventarios.idalmacen')
+                ->leftJoin('sucursales', 'sucursales.id','=','almacens.sucursal')
 
                 ->select(
                     'articulos.id',
@@ -82,15 +100,76 @@ class ArticuloController extends Controller
                     'articulos.condicion',
                     'articulos.fotografia',
                     'articulos.unidad_paquete',
-                    'inventarios.saldo_stock'
+                    'inventarios.saldo_stock',
+                    'inventarios.idalmacen as almacen_id',
+                    'sucursales.id as sucursal_id',
+                    'almacens.nombre_almacen',
+                    'sucursales.nombre as nombre_sucursal'
                 )
-                ->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
-                ->orderBy('articulos.id', 'desc')->get();
+                //->where('articulos.' . $criterio, 'like', '%' . $buscar . '%')
+                ->orderBy('articulos.id', 'desc')
+                ->get();
         }
 
+        if ($sucursalId != 'todos') {
+            $articulos->where('sucursales.id','=',$sucursalId);
+        }
+
+        $articulos = $articulos->get();
 
         return ['articulos' => $articulos];
     }
+
+    public function listarArticuloSinRepetir(Request $request) {
+
+        if (!$request->ajax())
+            return redirect('/');
+
+        $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
+                ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
+                ->join('personas', 'proveedores.id', '=', 'personas.id')
+                ->join('medidas', 'articulos.idmedida', '=', 'medidas.id')
+                //->leftJoin('inventarios', 'inventarios.idarticulo', '=', 'articulos.id')
+                //->leftJoin('almacens', 'almacens.id','=','inventarios.idalmacen')
+                //->leftJoin('sucursales', 'sucursales.id','=','almacens.sucursal')
+
+                ->select(
+                    'articulos.id',
+                    'articulos.idcategoria_producto',
+                    'articulos.idproveedor',
+                    //aumente 7 julio
+                    'articulos.idmedida',
+                    'articulos.nombre',
+                    'articulos.codigo',
+
+                    'articulos.nombre_generico',
+
+                    'categoria_producto.nombre as nombre_categoria',
+                    'categoria_producto.codigo as codigoProductoSin',
+
+                    'medidas.descripcion_medida',
+                    //aumente 5 julio
+                    'articulos.precio_costo_unid',
+                    'articulos.precio_costo_paq',
+                    'articulos.precio_venta',
+                    'articulos.stockmin',
+                    'personas.nombre as nombre_proveedor',
+                    'articulos.descripcion',
+                    'articulos.condicion',
+                    'articulos.fotografia',
+                    'articulos.unidad_paquete',
+                    //'inventarios.saldo_stock',
+                    //'inventarios.idalmacen as almacen_id',
+                    //'sucursales.id as sucursal_id',
+                    //'almacens.nombre_almacen',
+                    //'sucursales.nombre as nombre_sucursal'
+                )
+                ->orderBy('articulos.id', 'desc')
+                ->get();
+
+        return ['articulos' => $articulos];
+    }
+
     public function listarArticulo(Request $request)
     {
         if (!$request->ajax())
@@ -104,7 +183,20 @@ class ArticuloController extends Controller
             $articulos = Articulo::join('categoria_producto', 'articulos.idcategoria_producto', '=', 'categoria_producto.id')
                 ->join('proveedores', 'articulos.idproveedor', '=', 'proveedores.id')
                 ->join('personas', 'proveedores.id', '=', 'personas.id')
-                ->select('articulos.id', 'articulos.idcategoria_producto', 'articulos.nombre', 'categoria_producto.nombre as nombre_categoria', 'articulos.stockmin', 'personas.nombre as nombre_proveedor', 'articulos.descripcion', 'articulos.condicion', 'articulos.unidad_paquete', 'articulos.fotografia', 'articulos.precio_costo_unid', 'articulos.precio_costo_paq')
+                ->select(
+                    'articulos.id', 
+                    'articulos.idcategoria_producto', 
+                    'articulos.nombre', 
+                    'categoria_producto.nombre as nombre_categoria', 
+                    'articulos.stockmin', 
+                    'personas.nombre as nombre_proveedor', 
+                    'articulos.descripcion', 
+                    'articulos.condicion', 
+                    'articulos.unidad_paquete', 
+                    'articulos.fotografia', 
+                    'articulos.precio_costo_unid', 
+                    'articulos.precio_costo_paq'
+                    )
                 ->where('proveedores.id', '=', $idProveedor)
                 ->orderBy('articulos.id', 'desc')->get();
         } else {

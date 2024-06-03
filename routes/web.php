@@ -112,6 +112,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::put('/marca/activar', 'MarcaController@activar');
 
 
+        Route::get('/articulo/listarSinRepetir', 'ArticuloController@listarArticuloSinRepetir');
         Route::get('/articulo', 'ArticuloController@index');
         Route::post('/articulo/registrar', 'ArticuloController@store');
         Route::post('/articulo/actualizar', 'ArticuloController@update');

@@ -25,7 +25,7 @@
                                     <option value="nombre">Nombre</option>
                                     <option value="descripcion">Descripción</option>
                                 </select>
-                                <input type="text" v-model="buscar" @keyup="listarArticulo(1, buscar, criterio)"
+                                <input type="text" v-model="buscar" @keyup="listarArticulo(1, buscar, criterio, id_sucursal_actual)"
                                     class="form-control" placeholder="Texto a buscar">
                             </div>
                         </div>
@@ -964,6 +964,7 @@ import VueBarcode from 'vue-barcode';
 export default {
     data() {
         return {
+            id_sucursal_actual: '',
 
             codigo_producto: '',
 
@@ -1160,9 +1161,28 @@ export default {
         }
     },
     methods: {
+        obtenerDatosUsuario() {
+            axios.get('/venta')
+                .then(response => {
+                    //this.usuarioAutenticado = response.data.usuario.usuario;
+                    //this.usuario_autenticado = this.usuarioAutenticado;
+                    //this.idrol = response.data.usuario.idrol;
+                    //this.idsucursalusuario = response.data.usuario.idsucursal;
+                    this.id_sucursal_actual = response.data.usuario.idsucursal;
+                    //this.puntoVentaAutenticado = response.data.codigoPuntoVenta;
+                    
+                    //this.listarArticulo(1, this.buscar, this.criterio, 'todos');
+
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+
         uniqueId() {
-        return new Date().getTime(); 
-    },
+            return new Date().getTime(); 
+        },
+
         calculatePages: function(paginationObject, offset) {
             if (!paginationObject.to) {
             return [];
@@ -1363,9 +1383,9 @@ export default {
             }
         },
 
-        listarArticulo(page, buscar, criterio) {
+        listarArticulo(page, buscar, criterio, idSucursalActual) {
             let me = this;
-            var url = '/articulo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+            var url = '/articulo/listarSinRepetir';
             axios.get(url).then(function (response) {
                 var respuesta = response.data;
                 me.arrayArticulo = respuesta.articulos;
@@ -1375,6 +1395,7 @@ export default {
                     console.log(error);
                 });
         },
+
         listarMarca(page, buscar, criterio) {
             let me = this;
             console.log("Listano");
@@ -1671,7 +1692,7 @@ export default {
 
             }).then(function (response) {
                 me.cerrarModal();
-                me.listarArticulo(1, '', 'nombre');
+                me.listarArticulo(1, '', 'nombre', me.id_sucursal_actual);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -1735,7 +1756,7 @@ export default {
                 //alert("Datos actualizados con éxito");
                 console.log("datos actuales",formData);
                 me.cerrarModal();
-                me.listarArticulo(1, '', 'nombre');
+                me.listarArticulo(1, '', 'nombre', me.id_sucursal_actual);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -1760,7 +1781,7 @@ export default {
                     axios.put('/articulo/desactivar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarArticulo(1, '', 'nombre');
+                        me.listarArticulo(1, '', 'nombre', me.id_sucursal_actual);
                         swal(
                             'Desactivado!',
                             'El registro ha sido desactivado con éxito.',
@@ -1799,7 +1820,7 @@ export default {
                     axios.put('/articulo/activar', {
                         'id': id
                     }).then(function (response) {
-                        me.listarArticulo(1, '', 'nombre');
+                        me.listarArticulo(1, '', 'nombre', me.id_sucursal_actual);
                         swal(
                             'Activado!',
                             'El registro ha sido activado con éxito.',
@@ -2496,9 +2517,10 @@ export default {
 
     },
     mounted() {
+        this.obtenerDatosUsuario();
         this.recuperarIdRol();
         this.datosConfiguracion();
-        this.listarArticulo(1, this.buscar, this.criterio);
+        this.listarArticulo();
         this.consultaProductosServicios();
         
     }
