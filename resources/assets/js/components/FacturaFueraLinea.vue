@@ -241,7 +241,7 @@
                                     incrementButtonClass="p-button-success"
                                     incrementButtonIcon="pi pi-plus"
                                     decrementButtonIcon="pi pi-minus"
-                                    @change="actualizarArrayProductos(slotProps.index)"
+                                    @input="actualizarArrayProductos(slotProps.index)"
                                 />
                             </template>
                         </Column>
