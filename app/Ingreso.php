@@ -26,9 +26,5 @@ class Ingreso extends Model
      {
          return $this->belongsTo('App\Proveedor');
      }
-     
-     public function caja(){
-        return $this->belongsTo('App\Caja', 'id');
-    }
   
 }

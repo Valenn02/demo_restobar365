@@ -15,12 +15,15 @@ class Caja extends Model
         'saldoInicial', 
         'depositos', 
         'salidas', 
+        'tarifaqrdelivery',
         'ventas',
         'ventasContado',
+        'ventasQR',
         'compras', 
         'comprasContado',
         'saldoFaltante', 
         'saldoCaja', 
+        'saldototalventas',
         'estado'
     ];
 

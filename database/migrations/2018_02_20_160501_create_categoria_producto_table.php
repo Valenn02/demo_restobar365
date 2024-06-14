@@ -15,7 +15,7 @@ class CreateCategoriaProductoTable extends Migration
     {
         Schema::create('categoria_producto', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('codigo');
+            $table->integer('codigo')->nullable();
             $table->string('nombre', 50);
             $table->string('descripcion', 256)->nullable();
             $table->boolean('condicion')->default(1);

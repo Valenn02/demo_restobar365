@@ -23,6 +23,9 @@ class CreateVentasTable extends Migration
             $table->foreign('idtipo_pago')->references('id')->on('tipo_pagos');
             $table->integer('idsucursal')->unsigned();
             $table->foreign('idsucursal')->references('id')->on('sucursales');
+            $table->integer('iddelivery')->unsigned()->nullable();
+            $table->foreign('iddelivery')->references('id')->on('deliveries');
+            $table->integer('tarifaDelivery')->nullable();
             $table->string('cliente', 250)->nullable();
             $table->string('documento', 40)->nullable();
             $table->string('tipo_comprobante', 20);

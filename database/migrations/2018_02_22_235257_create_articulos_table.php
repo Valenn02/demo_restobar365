@@ -21,7 +21,7 @@ class CreateArticulosTable extends Migration
             $table->integer('idproveedor')->unsigned(); //aumente 5 juio
             $table->integer('idmedida')->unsigned(); //new
 
-            $table->string('nombre', 100)->unique(); //Nombre comercial
+            $table->string('nombre', 100); //Nombre comercial
             $table->string('nombre_generico', 100); //aumente 5_julio
             $table->integer('unidad_paquete')->nullable(); //aumente
 
@@ -38,6 +38,14 @@ class CreateArticulosTable extends Migration
             $table->foreign('idproveedor')->references('id')->on('proveedores');
             $table->foreign('idmedida')->references('id')->on('medidas');
         });
+
+        DB::unprepared('
+            CREATE TRIGGER before_insert_articulo
+            BEFORE INSERT ON articulos FOR EACH ROW
+            BEGIN
+                SET NEW.codigo = (SELECT COALESCE(MAX(codigo), 19999) + 1 FROM articulos);
+            END
+        ');
     }
 
     /**

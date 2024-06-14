@@ -180,6 +180,10 @@
                 <reporteinventariofisico></reporteinventariofisico>
             </template>
 
+            <template v-if="menu==52">
+                <delivery></delivery>
+            </template>
+
             @elseif (Auth::user()->idrol == 2)
             <template v-if="menu==0">
                 <facturafueralinea></facturafueralinea>

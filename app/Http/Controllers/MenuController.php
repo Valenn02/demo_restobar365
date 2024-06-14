@@ -82,27 +82,27 @@ class MenuController extends Controller
         if (!$request->ajax())
             return redirect('/');
 
-        $sucursalId = $request->idSucursalActual;
+        //$sucursalId = $request->idSucursalActual;
 
         $menu = Menu::join('categoria_menu', 'menu.idcategoria_menu','=','categoria_menu.id')
-            ->leftJoin('sucursales', 'sucursales.id','=','menu.idsucursal')
+            //->leftJoin('sucursales', 'sucursales.id','=','menu.idsucursal')
             ->select(
                 'menu.id',
-                'menu.idcategoria_menu',
+                'menu.idcategoria_menu as idcategoria_articulo',
                 'menu.codigo',
                 'menu.nombre',
                 'menu.precio_venta',
                 'menu.descripcion',
                 'menu.condicion',
                 'menu.fotografia',
-                'menu.idsucursal',
+                //'menu.idsucursal',
                 'categoria_menu.nombre as nombre_categoria',
                 'categoria_menu.codigo as codigoProductoSin',
                 'categoria_menu.descripcion',
                 'categoria_menu.condicion',
-                'sucursales.nombre as nombre_sucursal'
+                //'sucursales.nombre as nombre_sucursal'
             )
-            ->where('menu.idsucursal','=',$sucursalId)
+            //->where('menu.idsucursal','=',$sucursalId)
             ->where('menu.condicion','=',1)
             ->where('categoria_menu.condicion','=',1)
             ->orderBy('menu.id', 'desc')
@@ -122,7 +122,6 @@ class MenuController extends Controller
         $menu->precio_venta = $request->precio_venta;
         $menu->descripcion = $request->descripcion;
         $menu->idcategoria_menu = $request->idcategoria_menu;
-        $menu->idsucursal = $request->idsucursal;
         $menu->condicion = true;
 
         if ($request->hasFile('fotografia')) {

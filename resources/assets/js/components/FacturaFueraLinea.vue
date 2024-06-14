@@ -1,5 +1,4 @@
 <template>
-    <!--<div v-if="menu===0">-->
         <main class="main">
             <Panel header="Menu Completo" style="font-size: 1.5rem;" :toggleable="false">
                 <span class="badge bg-secondary" id="comunicacionSiat" style="color: white;" v-show="mostrarElementos">Desconectado</span>
@@ -159,12 +158,14 @@
                                 <div class="p-col-6 p-md-6" v-if="idrol === 1">
                                     <span class="p-float-label">
                                     <Dropdown
+                                        class="p-inputtext-sm"
                                         id="sucursal" 
                                         v-model="sucursalSeleccionada" 
                                         :options="listaSucursales" 
                                         optionLabel="nombre" 
                                         optionValue="id" 
-                                        placeholder="Seleccione Sucursal" 
+                                        placeholder="Seleccione Sucursal"
+                                        @change="onSucursalChange" 
                                     />
                                     <label for="sucursal">Sucursal</label>
                                     </span>
@@ -183,7 +184,7 @@
                     </div>
 
 
-                    <!--<div v-show="mostrarDelivery" class="p-grid p-fluid">
+                    <div v-show="mostrarDelivery" class="p-grid p-fluid">
                         <Divider />
                         <div class="p-col-12 p-md-4">
                             <div class="p-inputgroup">
@@ -204,15 +205,22 @@
                         </div>
 
                         <div class="p-col-12 p-md-4">
-                            <div class="p-inputgroup">
-                                <span class="p-inputgroup-addon">
-                                    <i class="pi pi-shopping-bag"></i>
-                                </span>
-                                <InputText class="p-inputtext-sm" placeholder="Pedido completo" v-model="pedido_delivery" ref="pedidoDelivery"/>
-                            </div>
+                        <span class="p-float-label">
+                            <Dropdown
+                            class="p-inputtext-sm"
+                            id="delivery"
+                            v-model="deliverySeleccionado"
+                            :options="listaDeliverys"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            placeholder="Seleccione un Delivery"
+                            @change="onSucursalChange"
+                            />
+                            <label for="delivery">Seleccione su Delivery</label>
+                        </span>
                         </div>
                         <Divider />
-                    </div>-->
+                    </div>
 
 
 
@@ -243,6 +251,12 @@
                                     decrementButtonIcon="pi pi-minus"
                                     @input="actualizarArrayProductos(slotProps.index)"
                                 />
+                            </template>
+                        </Column>
+
+                        <Column field="observacion" header="Observaciones">
+                            <template #body="slotProps">
+                                <Textarea v-model="slotProps.data.observacion" class="p-inputtext-sm" :autoResize="true" rows="1" cols="20" />
                             </template>
                         </Column>
 
@@ -935,10 +949,13 @@ export default {
             direccion_delivery: '',
             pedido_delivery: '',
             listaSucursales: [],
-            sucursalSeleccionada: null, 
+            sucursalSeleccionada: 1, 
+            listaDeliverys : [],
+            deliverySeleccionado: 1,
             idrol: '',
             idsucursalusuario: '',
             idsucursalventa: '',
+            idusuario: '',
 
             // -----------------------
 
@@ -1104,6 +1121,9 @@ export default {
         },
 
         mostrarDelivery() {
+            this.telefono_delivery = '',
+            this.direccion_delivery = ''
+
             return this.tipo_entrega === 'Entregas';
         },
 
@@ -1452,6 +1472,18 @@ export default {
                     });
         },
 
+        cargarDeliverys() {
+            let me = this;
+                axios.get('/delivery/selectDelivery')
+                    .then(function (response) {
+                        var respuesta = response.data;
+                        me.listaDeliverys = respuesta.deliverys;
+                    })
+                    .catch(function (error) {
+                        console.error('Error al cargar los deliverys:', error);
+                    });
+        },
+
         async fetchClienteData() {
             if (this.documento) {
                 try {
@@ -1539,11 +1571,45 @@ export default {
                 });
         },
 
-        nextNumber() {
+        async obtenerDatosSesionYComprobante() {
+            console.log("El id usuario en comprobante es: " + this.idusuario);
+            try {
+                const sesionResponse = await axios.get('/obtener-datos-sesion');
+                this.scodigorecepcion = sesionResponse.data.scodigorecepcion;
+                console.log('Valor de scodigorecepcion:', this.scodigorecepcion);
+
+                const idsucursal = this.idusuario === 1 ? this.sucursalSeleccionada : this.idsucursalusuario;
+                const comprobanteResponse = await axios.get('/obtener-ultimo-comprobante', {
+                    params: {
+                        idsucursal: idsucursal
+                    }
+                });
+                this.num_comprob = comprobanteResponse.data.next_comprobante;
+                console.log('Next comprobante:', this.num_comprob);
+            } catch (error) {
+                console.error('Error al obtener datos de sesión o el último comprobante:', error);
+            }
+        },
+
+        async onSucursalChange() {
+            await this.ejecutarFlujoCompleto();
+        },
+
+        async ejecutarFlujoCompleto() {
+            await this.obtenerDatosUsuario();
+            await this.obtenerDatosSesionYComprobante();
+        },
+
+        /*nextNumber() {
             if (!this.num_comprob || this.num_comprob === "") {
                 this.last_comprobante++;
                 this.num_comprob = this.last_comprobante.toString().padStart(5, "0");
             }
+        },*/
+
+        nextNumber() {
+            const nextComprobanteNumber = this.last_comprobante + 1;
+            console.log('Next comprobante number:', nextComprobanteNumber);
         },
 
         selectCliente(search, loading) {
@@ -1663,7 +1729,7 @@ export default {
             }
             else {
 
-                let actividadEconomica = 749000;
+                let actividadEconomica = 620100;
                 let unidadMedida = 57;
                 let montoDescuento = 0;
                 let numeroSerie = null;
@@ -2058,6 +2124,7 @@ export default {
                     'idtipo_pago': idtipo_pago,
                     'idtipo_venta': this.idtipo_venta,
                     'idsucursal': this.idsucursalventa,
+                    'iddelivery': this.deliverySeleccionado,
                     'primer_precio_cuota': this.primer_precio_cuota,
                     'cliente': this.cliente,
                     'documento': this.documento,
@@ -2075,33 +2142,90 @@ export default {
                 console.log("El ID es: " + idVentaRecienRegistrada);
                 this.actualizarFechaHora();
 
+
+
                 if (ventaResponse.data.id > 0) {
-                    this.emitirFactura(idVentaRecienRegistrada);
-                    this.listado = 1;
-                    this.cerrarModal2();
-                    this.idproveedor = 0;
-                    this.tipo_comprobante = 'FACTURA';
-                    this.nombreCliente = '';
-                    this.idcliente = 0;
-                    this.tipo_documento = 0;
-                    this.complemento_id = '';
-                    this.cliente = '';
-                    this.documento = '';
-                    this.email = '';
-                    this.imagen = '';
-                    this.serie_comprobante = '';
-                    this.impuesto = 0.18;
-                    this.total = 0.0;
-                    this.codigoComida = 0;
-                    this.articulo = '';
-                    this.cantidad = 0;
-                    this.precio = 0;
-                    this.stock = 0;
-                    this.codigo = '';
-                    this.descuento = 0;
-                    this.arrayDetalle = [];
-                    this.primer_precio_cuota = 0;
-                    this.recibido = 0;
+                    let numeroDelivery = '';
+                    if(tipoEntregaValor === 'D'){
+                        try {
+                            const responsee = await axios.get(`/api/delivery/telf`, {
+                                params: {
+                                    id: this.deliverySeleccionado
+                                }
+                            });
+                            const numDelivery = responsee.data.telefono;
+                            numeroDelivery = numDelivery;
+                        }catch (error){
+                            console.error('Error al recuperar el telefono:', error);
+                        }
+
+                        const detallesVenta = this.arrayDetalle.map(detalle => `${detalle.cantidad} ${detalle.articulo}`).join(', ');
+                        await this.enviarVentaPorWhatsApp({
+                            id: idVentaRecienRegistrada,
+                            cliente: this.cliente,
+                            articulo: detallesVenta,
+                            total: this.calcularTotal,
+                            num_comprobante: this.num_comprob,
+                            telefono: numeroDelivery,
+                            direccion: this.direccion_delivery,
+                            sucursal: this.filtrarSucursalPorId(this.sucursalSeleccionada),
+                            tarifa: this.tarifa_delivery
+
+                        });
+                        this.emitirFactura(idVentaRecienRegistrada);
+                        this.listado = 1;
+                        this.cerrarModal2();
+                        this.idproveedor = 0;
+                        this.tipo_comprobante = 'FACTURA';
+                        this.nombreCliente = '';
+                        this.idcliente = 0;
+                        this.tipo_documento = 0;
+                        this.complemento_id = '';
+                        this.cliente = '';
+                        this.documento = '';
+                        this.email = '';
+                        this.imagen = '';
+                        this.serie_comprobante = '';
+                        this.impuesto = 0.18;
+                        this.total = 0.0;
+                        this.codigoComida = 0;
+                        this.articulo = '';
+                        this.cantidad = 0;
+                        this.precio = 0;
+                        this.stock = 0;
+                        this.codigo = '';
+                        this.descuento = 0;
+                        this.arrayDetalle = [];
+                        this.primer_precio_cuota = 0;
+                        this.recibido = 0;
+                    }else{
+                        this.emitirFactura(idVentaRecienRegistrada);
+                        this.listado = 1;
+                        this.cerrarModal2();
+                        this.idproveedor = 0;
+                        this.tipo_comprobante = 'FACTURA';
+                        this.nombreCliente = '';
+                        this.idcliente = 0;
+                        this.tipo_documento = 0;
+                        this.complemento_id = '';
+                        this.cliente = '';
+                        this.documento = '';
+                        this.email = '';
+                        this.imagen = '';
+                        this.serie_comprobante = '';
+                        this.impuesto = 0.18;
+                        this.total = 0.0;
+                        this.codigoComida = 0;
+                        this.articulo = '';
+                        this.cantidad = 0;
+                        this.precio = 0;
+                        this.stock = 0;
+                        this.codigo = '';
+                        this.descuento = 0;
+                        this.arrayDetalle = [];
+                        this.primer_precio_cuota = 0;
+                        this.recibido = 0;
+                    }
 
                     //window.open('/factura/imprimir/' + ventaResponse.data.id);
                 } else {
@@ -2141,13 +2265,26 @@ export default {
             } 
         },
 
+        async enviarVentaPorWhatsApp(venta) {
+            try {
+                const response = await axios.post('/enviarWhatsappVenta', {
+                    venta: venta
+                });
+                console.log('Mensaje de WhatsApp enviado:', response.data);
+            } catch (error) {
+                console.error('Error al enviar mensaje de WhatsApp:', error);
+            }
+        },
+
         async emitirFactura(idVentaRecienRegistrada) {
 
         let me = this;
 
         let idventa = idVentaRecienRegistrada;
         //let numeroFactura = document.getElementById("num_comprobante").value;
-        let numeroFactura = this.num_comprob;
+        let numeroFacturaPrueba = this.num_comprob;
+        let numeroFacturaSoloNumeros = numeroFacturaPrueba.replace(/\D/g, '');
+        let numeroFactura = numeroFacturaSoloNumeros.padStart(5, '0');
         let cuf = "464646464";
         let cufdValor = document.getElementById("cufdValor");
         console.log("hola aaaa: ", this.cufdValor);
@@ -2407,7 +2544,7 @@ export default {
     },
 
     created() {
-        axios.get('/obtener-datos-sesion')
+        /*axios.get('/obtener-datos-sesion')
         .then(response => {
             this.scodigorecepcion = response.data.scodigorecepcion;
             console.log('Valor de scodigorecepcion:', this.scodigorecepcion);
@@ -2420,7 +2557,7 @@ export default {
         })
         .catch(error => {
             console.error('Error al obtener datos de sesión o el último comprobante:', error);
-        });
+        });*/
     },
 
 
@@ -2432,7 +2569,7 @@ export default {
         this.verificarComunicacion();
         this.cuis();
         this.cufd();
-        this.obtenerDatosUsuario();
+        //this.obtenerDatosUsuario();
         
         //this.listarProducto(1, this.buscar, this.criterio);
         this.getCategoriasMenu();
@@ -2443,7 +2580,9 @@ export default {
 
         this.actualizarFechaHora();
         this.cargarSucursales();
+        this.cargarDeliverys();
         this.selectSucursal();
+        this.ejecutarFlujoCompleto();
     },
 
     beforeDestroy() {

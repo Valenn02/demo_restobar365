@@ -22,7 +22,10 @@
                             </li>
                             <li @click="menu=41" class="nav-item">
                             <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Puntos de Venta</a>
-                    </li>
+                            </li>
+                            <li @click="menu=52" class="nav-item">
+                                <a class="nav-link" href="#"><i class="icon-list" style="font-size: 11px;"></i> Deliverys</a>
+                            </li>
                         </ul>
                     </li>
 

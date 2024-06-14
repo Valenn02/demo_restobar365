@@ -310,6 +310,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Obtener último numero de comprobante
         Route::get('/ruta-a-tu-endpoint-laravel-para-obtener-ultimo-comprobante', 'VentaController@obtenerUltimoComprobante');
+        Route::get('/obtener-ultimo-comprobante', 'VentaController@obtenerUltimoComprobante');
 
         //Obtener último numero de codigoSucursal
         Route::get('/ruta-api-para-obtener-ultimo-codigo-sucursal', 'SucursalController@obtenerUltimoCodigoSucursal');
@@ -405,6 +406,16 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/api/clientes/existe', 'ClienteController@verificarExistencia');
 
         Route::post('/enviarWhatsapp','WhatsappController@enviaReporte');
+        Route::post('/enviarWhatsappVenta','WhatsappController@enviarVentaPorWhatsApp');
+
+        //DELIVERY
+        Route::get('/delivery', 'DeliveryController@index');
+        Route::post('/delivery/registrar', 'DeliveryController@store');
+        Route::put('/delivery/actualizar', 'DeliveryController@update');
+        Route::put('/delivery/desactivar', 'DeliveryController@desactivar');
+        Route::put('/delivery/activar', 'DeliveryController@activar');
+        Route::get('/delivery/selectDelivery', 'DeliveryController@selectDelivery');
+        Route::get('/api/delivery/telf', 'DeliveryController@recuperarTelf');
         
     });
 

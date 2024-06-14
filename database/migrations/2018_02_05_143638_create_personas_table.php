@@ -15,7 +15,7 @@ class CreatePersonasTable extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre', 100)->unique();
+            $table->string('nombre', 100);
             $table->string('tipo_documento', 20)->nullable();
             $table->string('num_documento', 20)->nullable();
             $table->string('complemento_id', 20)->nullable();
@@ -25,11 +25,11 @@ class CreatePersonasTable extends Migration
             $table->boolean('estadoCli')->default(true); // Agrega el campo estadoCli de tipo booleano con valor predeterminado true
             $table->timestamps();
         });
-        DB::table('personas')->insert(array('id' => '1', 'nombre' => 'root', 'tipo_documento' => 'NA', 'num_documento' => '00000000', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'root@gmail.com', 'estadoCli' => false ));
+        DB::table('personas')->insert(array('id' => '1', 'nombre' => 'root default', 'tipo_documento' => 'NA', 'num_documento' => '00000000', 'direccion' => 'NA', 'telefono' => '00000000', 'email' => 'root@gmail.com', 'estadoCli' => false ));
 
-        DB::table('personas')->insert(array('id' => '2', 'nombre' => 'vend', 'tipo_documento' => 'NA', 'num_documento' => '00000001', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'vend@gmail.com', 'estadoCli' => false ));
+        DB::table('personas')->insert(array('id' => '2', 'nombre' => 'vendedor default', 'tipo_documento' => 'NA', 'num_documento' => '00000001', 'direccion' => 'NA', 'telefono' => '00000000', 'email' => 'vend@gmail.com', 'estadoCli' => false ));
 
-        DB::table('personas')->insert(array('id' => '3', 'nombre' => 'alma', 'tipo_documento' => 'NA', 'num_documento' => '00000002', 'direccion' => 'NA', 'telefono' => '000000', 'email' => 'alma@gmail.com', 'estadoCli' => false ));
+        DB::table('personas')->insert(array('id' => '3', 'nombre' => 'almacenero default', 'tipo_documento' => 'NA', 'num_documento' => '00000002', 'direccion' => 'NA', 'telefono' => '00000000', 'email' => 'alma@gmail.com', 'estadoCli' => false ));
     }
 
     /**

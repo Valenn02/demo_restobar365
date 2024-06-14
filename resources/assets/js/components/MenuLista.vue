@@ -237,7 +237,7 @@
                                     </div>              
                             </div>
 
-                            <div class="col-md-4">
+                            <!--<div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-control-label" for="email-input"><strong>Sucursal</strong></label>
                                     <select v-model="idsucursal" class="form-control">
@@ -246,7 +246,8 @@
                                             v-text="sucursal.nombre"></option>
                                     </select>
                                 </div>
-                            </div>
+                            </div>-->
+
                         </div>
                     </div>
 

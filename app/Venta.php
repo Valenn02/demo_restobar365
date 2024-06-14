@@ -11,6 +11,7 @@ class Venta extends Model
         'idusuario',
         'idtipo_pago',
         'idsucursal',
+        'iddelivery',
         'cliente',
         'documento',
         'tipo_comprobante',
@@ -27,5 +28,10 @@ class Venta extends Model
 
     public function caja(){
         return $this->belongsTo('App\Caja', 'id');
+    }
+
+    public function delivery()
+    {
+        return $this->belongsTo('App\Delivery', 'id');
     }
 }

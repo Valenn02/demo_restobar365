@@ -384,7 +384,7 @@ class VentaController extends Controller
         ];
     }
 
-    public function obtenerUltimoComprobante(Request $request)
+    /*public function obtenerUltimoComprobante(Request $request)
     {
         $ultimoComprobante = DB::table('ventas')
             ->select('num_comprobante')
@@ -399,6 +399,39 @@ class VentaController extends Controller
         }
 
         return response()->json(['last_comprobante' => $lastComprobante]);
+    }*/
+
+    public function obtenerUltimoComprobante(Request $request)
+    {
+        $idsucursal = $request->idsucursal;
+        $hoy = \Carbon\Carbon::today()->toDateString();
+
+        $ultimoComprobante = Venta::where('idsucursal', $idsucursal)
+            ->whereDate('created_at', $hoy)
+            ->orderBy('num_comprobante', 'desc')
+            ->value('num_comprobante');
+
+        $prefijos = [
+            1 => 'MA-',
+            2 => 'TA-',
+            3 => 'NO-',
+            4 => 'PA-',
+        ];
+
+        $prefijo = $prefijos[$idsucursal] ?? '';
+
+        if ($ultimoComprobante) {
+            $ultimoNumero = (int)substr($ultimoComprobante, 3);
+            $nuevoNumero = $ultimoNumero + 1;
+        } else {
+            $nuevoNumero = 1;
+        }
+
+        $nuevoComprobante = $prefijo . str_pad($nuevoNumero, 4, '0', STR_PAD_LEFT);
+
+        return response()->json([
+            'next_comprobante' => $nuevoComprobante
+        ]);
     }
 
     public function obtenerCabecera(Request $request)
@@ -1114,6 +1147,7 @@ class VentaController extends Controller
         require "SiatController.php";
         $siat = new SiatController();
         $res = $siat->verificarNit($codSucursal, $numeroDocumento, $codnit);
+        
         if ($res->RespuestaVerificarNit->transaccion === true) {
             $mensaje = $res->RespuestaVerificarNit->mensajesList->descripcion;
         } else if ($res->RespuestaVerificarNit->transaccion === false) {
@@ -1186,7 +1220,9 @@ class VentaController extends Controller
         $tipoEmision = 1;
         $tipoFactura = 1;
         $tipoDocSector = str_pad(1, 2, "0", STR_PAD_LEFT);
-        $numeroFactura = str_pad($valores['numeroFactura'], 10, "0", STR_PAD_LEFT);
+        $numeroFacturaPrueba = str_pad($valores['numeroFactura'], 10, "0", STR_PAD_LEFT);
+        $numeroFacturaSoloNumeros = preg_replace('/\D/', '', $numeroFacturaPrueba);
+        $numeroFactura = str_pad($numeroFacturaSoloNumeros, 10, "0", STR_PAD_LEFT);
         $puntoVentaCuf = str_pad($puntoVenta, 4, "0", STR_PAD_LEFT);
         $codigoControl = $_SESSION['scodigoControl'];
         $cadena = $nitEmisor . $fecha_formato . $sucursal . $modalidad . $tipoEmision . $tipoFactura . $tipoDocSector . $numeroFactura . $puntoVentaCuf;

@@ -21,13 +21,12 @@ class CreateIngresosTable extends Migration
             $table->foreign('idusuario')->references('id')->on('users');
             $table->string('tipo_comprobante', 20);
             $table->string('serie_comprobante', 7)->nullable();
-            $table->string('num_comprobante', 10);
+            $table->string('num_comprobante', 50);
             $table->dateTime('fecha_hora');
             $table->decimal('impuesto', 4, 2);
             $table->decimal('total', 11, 2);
             $table->string('estado', 20);
-            $table->integer('idcaja')->unsigned();
-            $table->foreign('idcaja')->references('id')->on('cajas');
+            $table->integer('idcaja')->nullable();
             $table->timestamps();
         });
     }
